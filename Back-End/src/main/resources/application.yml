@@ -1,0 +1,29 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: Ecommerce
+  datasource:
+    url: jdbc:mysql://localhost:3306/Ecommerce
+    username: springstudent
+    password: springstudent
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        enable_lazy_load_no_trans: true
+        format_sql: true
+    show-sql: true
+
+api:
+  prefix: /api/v1
+
+# swagger-ui
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /api-docs
+  show-actuator: true
