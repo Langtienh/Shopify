@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Đăng nhập",
-  description: "Đăng nhập",
+  title: "No data",
+  description: "No data",
 };
 export default function RootLayout({
   children,
