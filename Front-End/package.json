@@ -10,13 +10,19 @@
     "api": "json-server db.json -p 8081"
   },
   "dependencies": {
+    "@ant-design/nextjs-registry": "^1.0.0",
     "antd": "^5.18.3",
+    "axios": "^1.7.2",
     "json-server": "^1.0.0-beta.1",
     "next": "14.2.4",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-icons": "^5.2.1",
+    "react-toastify": "^10.0.5",
+    "sharp": "^0.33.4"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

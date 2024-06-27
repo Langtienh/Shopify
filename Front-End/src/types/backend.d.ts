@@ -4,12 +4,12 @@ type TDate = {
   updateAt: string;
 };
 
-type TCategories = {
+type TCategory = {
   id: string;
-  value: string;
+  category: string;
 };
 
-type TBrands = {
+type TBrand = {
   id: string;
   brand: string;
   categoryId: string;
@@ -21,7 +21,8 @@ type TCategoriesValue =
   | "tablet"
   | "watch"
   | "headphone"
-  | "screen";
+  | "screen"
+  | "tivi";
 
 type TSmartphoneBrandValue =
   | "iphone"
