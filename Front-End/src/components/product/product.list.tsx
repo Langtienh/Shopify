@@ -1,14 +1,10 @@
-import { get } from "@/services/axios.helper";
-import ProductItem from "@/components/global/product.item";
+import ProductItem from "@/components/product/product.item";
 
 export default async function ProductList({
-  category,
+  products,
 }: {
-  category: TCategory;
+  products: TProduct[];
 }) {
-  const products = await get<TProduct[]>(
-    `/topProducts?categoryId=${category.id}`
-  );
   return (
     <div className="grid grid-cols-5 gap-2">
       {products.map((product: TProduct) => (

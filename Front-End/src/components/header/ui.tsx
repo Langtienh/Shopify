@@ -1,11 +1,11 @@
 "use client";
+import { translateCategory } from "@/utils/translate";
 import type { MenuProps } from "antd";
 import { Dropdown, Input } from "antd";
-import Image from "next/image";
 import Link from "next/link";
 import { CiDeliveryTruck, CiLaptop } from "react-icons/ci";
 import { FaSearch } from "react-icons/fa";
-import { HiOutlinePhone, HiOutlineUserCircle } from "react-icons/hi";
+import { HiOutlineUserCircle } from "react-icons/hi";
 import { IoIosTabletPortrait, IoMdClose } from "react-icons/io";
 import { IoWatchOutline } from "react-icons/io5";
 import { LuSmartphone, LuTruck } from "react-icons/lu";
@@ -63,7 +63,7 @@ export const MenuDropdown = ({
     <Dropdown menu={{ items }} placement="bottom">
       <span className="h-9 flex gap-2 items-center justify-center flex-1 cursor-pointer uppercase text-[12px] md:text-sm text-white hover:text-white">
         {iconNode}
-        {category}
+        {!!category && translateCategory(category)}
       </span>
     </Dropdown>
   );

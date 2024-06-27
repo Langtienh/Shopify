@@ -38,8 +38,8 @@ type TScreenBrandValue = "apple" | "samsung" | "xiaomi" | "huawei" | "coros";
 
 type TProduct = {
   id: string;
-  categoryId: string;
-  brandId: string;
+  category: string;
+  brand: string;
   name: string;
   image: string;
   description: string;

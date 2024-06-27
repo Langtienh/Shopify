@@ -1,5 +1,5 @@
 import NavBrand from "@/components/global/navBrand";
-import ProductList from "@/components/global/product.list";
+import ProductTop from "@/components/product/product.top";
 
 export default async function Section({ category }: { category: TCategory }) {
   return (
@@ -7,8 +7,8 @@ export default async function Section({ category }: { category: TCategory }) {
       <h2 className="font-bold text-2xl capitalize">
         {category.category} bán chạy hôm nay
       </h2>
-      <NavBrand category={category} />
-      <ProductList category={category} />
+      <NavBrand category={category.category} />
+      <ProductTop category={category} />
     </div>
   );
 }

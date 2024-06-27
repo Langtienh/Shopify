@@ -1,8 +1,8 @@
 import { get } from "@/services/axios.helper";
-import { MenuDropdown } from "@/components/header/antd";
+import { MenuDropdown } from "@/components/header/ui";
 
 const CategoryDropDown = async ({ category }: { category: TCategory }) => {
-  const brands = await get<TBrand[]>(`/brands?categoryId=${category.id}`);
+  const brands = await get<TBrand[]>(`/brands?category=${category.category}`);
   return <MenuDropdown category={category.category} brands={brands} />;
 };
 

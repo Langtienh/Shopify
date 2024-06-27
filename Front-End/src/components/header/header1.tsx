@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Auth, Cart, Nav, SearchInput } from "@/components/header/antd";
+import { Auth, Cart, Nav, SearchInput } from "@/components/header/ui";
 import Link from "next/link";
 
 export default function Header1() {

@@ -1,8 +1,8 @@
 "use client";
 import ImageWithFallback from "@/components/global/image";
 import { converPriceToVN } from "@/utils/price";
+import { AddProductToCart } from "@/components/product/btn";
 import { Badge } from "antd";
-import { AddProductToCart } from "../product/btn";
 
 export default function ProductItem({ product }: { product: TProduct }) {
   return (
@@ -17,7 +17,9 @@ export default function ProductItem({ product }: { product: TProduct }) {
             fallbackSrc="/errorImage.png"
           />
         </div>
-        <h2 className="font-bold text-sm h-[65px]">{product.name}</h2>
+        <h2 className="font-bold text-sm h-[60px] line-clamp-3">
+          {product.name}
+        </h2>
         <div className="flex items-baseline gap-1 font-bold">
           <span className="text-[16px] text-red-500">
             {!!product.priceShow && converPriceToVN(product.priceShow, "đ")}
