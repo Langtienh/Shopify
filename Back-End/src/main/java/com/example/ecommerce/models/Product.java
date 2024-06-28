@@ -24,7 +24,7 @@ public class Product {
     private Double price;
 
     @Column(name = "discount")
-    private Double discount;
+    private Long discount;
 
     @Column(name = "stock")
     private Long stock;
@@ -45,10 +45,6 @@ public class Product {
     private boolean active;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
-
-    @ManyToOne
-    @JoinColumn(name = "provider_id")
-    private Provider provider;
+    @JoinColumn(name = "brand_id")
+    private Brand brand;
 }

@@ -1,10 +1,9 @@
 package com.example.ecommerce.repositories;
 
-import com.example.ecommerce.models.Attribute;
+import com.example.ecommerce.models.CategoryBrand;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AttributeRepository extends JpaRepository<Attribute, Long> {
-    Attribute findByName(String name);
+public interface CategoryBrandRepository extends JpaRepository<CategoryBrand, Long> {
 }

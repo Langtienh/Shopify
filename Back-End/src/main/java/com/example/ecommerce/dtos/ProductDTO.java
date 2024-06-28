@@ -1,5 +1,6 @@
 package com.example.ecommerce.dtos;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -7,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Map;
 
 @Getter
 @Setter
@@ -23,7 +26,7 @@ public class ProductDTO {
 
     @NotNull(message = "Discount must be not null")
     @Min(value = 0, message="Discount must be greater than or equal to 0")
-    private Double discount;
+    private Long discount;
 
     @NotNull(message = "Stock must be not null")
     @Min(value = 1, message="Stock must be greater than or equal to 1")
@@ -37,13 +40,14 @@ public class ProductDTO {
 
     @NotNull(message = "DiscountForMember must be not null")
     @Min(value = 1, message="DiscountForMember must be greater than or equal to 1")
+    @JsonProperty("discount_for_member")
     private Double discountForMember;
 
     private boolean active;
 
-    @NotNull(message = "Category id must be not null")
-    private Long categoryId;
+    @NotNull(message = "Brand id must be not null")
+    @JsonProperty("brand_id")
+    private Long brandId;
 
-    @NotNull(message = "Provider id must be not null")
-    private Long providerId;
+    private Map<String, String> attributes;
 }
