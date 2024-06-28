@@ -2,6 +2,14 @@ import NavBrand from "@/components/global/navBrand";
 import ProductList from "@/components/product/product.list";
 import { get } from "@/services/axios.helper";
 import { translateCategory } from "@/utils/translate";
+export async function generateStaticParams() {
+  const brands = await get<TBrand[]>(`/brands`);
+
+  return brands.map((brand) => ({
+    category: brand.category,
+    brand: brand.brand,
+  }));
+}
 
 export default async function Page({
   params,

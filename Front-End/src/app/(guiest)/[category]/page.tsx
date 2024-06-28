@@ -3,6 +3,14 @@ import ProductList from "@/components/product/product.list";
 import { get } from "@/services/axios.helper";
 import { translateCategory } from "@/utils/translate";
 
+export async function generateStaticParams() {
+  const categories = await get<TCategory[]>(`/categories`);
+
+  return categories.map((category) => ({
+    category: category.category,
+  }));
+}
+
 export default async function Page({
   params,
 }: {

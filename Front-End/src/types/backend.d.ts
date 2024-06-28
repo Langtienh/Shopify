@@ -12,7 +12,7 @@ type TCategory = {
 type TBrand = {
   id: string;
   brand: string;
-  categoryId: string;
+  category: string;
 };
 
 type TCategoriesValue =

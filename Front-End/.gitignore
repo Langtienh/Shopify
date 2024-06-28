@@ -2,6 +2,7 @@
 package-lock.json
 # dependencies
 /node_modules
+/.git2
 /.pnp
 .pnp.js
 .yarn/install-state.gz
