@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @RestControllerAdvice
@@ -25,17 +26,6 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(DuplicateValueException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ResponseError> handleDuplicateValueException(DuplicateValueException e){
-        return ResponseEntity.badRequest().body(
-                ResponseError.builder()
-                        .status(HttpStatus.BAD_REQUEST.value())
-                        .message(e.getMessage())
-                        .build()
-        );
-    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ResponseError> handleMethodArgumentNotValidException(MethodArgumentNotValidException e){
@@ -47,6 +37,18 @@ public class GlobalExceptionHandler {
                 ResponseError.builder()
                         .status(HttpStatus.BAD_REQUEST.value())
                         .message(String.join("; ", errorMessages))
+                        .build()
+        );
+    }
+
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ResponseError> handleSQLIntegrityConstraintViolationException(
+            SQLIntegrityConstraintViolationException e){
+        return ResponseEntity.badRequest().body(
+                ResponseError.builder()
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .message(e.getMessage())
                         .build()
         );
     }

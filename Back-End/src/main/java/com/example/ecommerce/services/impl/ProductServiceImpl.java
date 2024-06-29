@@ -6,10 +6,8 @@ import com.example.ecommerce.models.Attribute;
 import com.example.ecommerce.models.Brand;
 import com.example.ecommerce.models.Product;
 import com.example.ecommerce.models.ProductAttribute;
-import com.example.ecommerce.repositories.AttributeRepository;
-import com.example.ecommerce.repositories.BrandRepository;
-import com.example.ecommerce.repositories.ProductAttributeRepository;
-import com.example.ecommerce.repositories.ProductRepository;
+import com.example.ecommerce.repositories.*;
+import com.example.ecommerce.responses.PageResponse;
 import com.example.ecommerce.responses.ProductResponse;
 import com.example.ecommerce.services.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -27,13 +25,11 @@ public class ProductServiceImpl implements ProductService {
     private final ProductAttributeRepository productAttributeRepository;
     private final AttributeRepository attributeRepository;
     private final BrandRepository brandRepository;
+    private final SearchRepository searchRepository;
     @Override
-    public List<ProductResponse> getAllProducts() {
-        List<Product> products = productRepository.findAll();
-
-        return products.stream()
-                .map(p -> ProductResponse.fromProduct(p, productAttributeRepository.findAllByProduct(p)))
-                .collect(Collectors.toList());
+    public PageResponse getAllProducts(
+            int page, int limit, String brand, String[] search, String... sort) {
+        return searchRepository.getAllProducts(page, limit, brand, search, sort);
     }
 
     @Override
@@ -71,5 +67,23 @@ public class ProductServiceImpl implements ProductService {
             productAttributes.add(productAttributeRepository.save(productAttribute));
         });
         return ProductResponse.fromProduct(product, productAttributes);
+    }
+
+    @Override
+    public ProductResponse updateProduct(long id, ProductDTO productDTO) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+        Brand brand = brandRepository.findById(productDTO.getBrandId())
+                .orElseThrow(() -> new ResourceNotFoundException("Brand not found"));
+        product.setName(productDTO.getName());
+        product.setPrice(productDTO.getPrice());
+        product.setDiscount(productDTO.getDiscount());
+        product.setStock(productDTO.getStock());
+        product.setDescription(productDTO.getDescription());
+        product.setImage(productDTO.getImage());
+        product.setDiscountForMember(productDTO.getDiscountForMember());
+        product.setActive(productDTO.isActive());
+        product.setBrand(brand);
+        return ProductResponse.fromProduct(productRepository.save(product), null);
     }
 }

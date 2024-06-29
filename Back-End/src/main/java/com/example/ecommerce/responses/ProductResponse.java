@@ -2,6 +2,7 @@ package com.example.ecommerce.responses;
 
 import com.example.ecommerce.models.Product;
 import com.example.ecommerce.models.ProductAttribute;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import lombok.*;
@@ -29,6 +30,7 @@ public class ProductResponse {
     private Double discountForMember;
     private boolean active;
     private String brand;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Map<String, String> attributes;
 
     public static ProductResponse fromProduct(Product p, List<ProductAttribute> productAttributes){
@@ -45,11 +47,13 @@ public class ProductResponse {
                 .active(p.isActive())
                 .brand(p.getBrand().getName())
                 .build();
-        Map<String,String> attributes = new LinkedHashMap<>();
-        for(ProductAttribute pa : productAttributes){
-            attributes.put(pa.getAttribute().getName(), pa.getValue());
+        if(productAttributes != null){
+            Map<String,String> attributes = new LinkedHashMap<>();
+            for(ProductAttribute pa : productAttributes){
+                attributes.put(pa.getAttribute().getName(), pa.getValue());
+            }
+            productResponse.setAttributes(attributes);
         }
-        productResponse.setAttributes(attributes);
         return productResponse;
     }
 }

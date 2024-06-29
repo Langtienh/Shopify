@@ -1,7 +1,6 @@
 package com.example.ecommerce.services.impl;
 
 import com.example.ecommerce.dtos.CategoryDTO;
-import com.example.ecommerce.exceptions.DuplicateValueException;
 import com.example.ecommerce.exceptions.ResourceNotFoundException;
 import com.example.ecommerce.models.Category;
 import com.example.ecommerce.repositories.CategoryRepository;
@@ -19,8 +18,6 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public Category createCategory(CategoryDTO categoryDTO) {
-        if(categoryRepository.existsByName(categoryDTO.getName()))
-            throw new DuplicateValueException("Category name already exists");
         Category category = Category
                 .builder()
                 .name(categoryDTO.getName())
@@ -43,10 +40,6 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     public Category updateCategory(long id, CategoryDTO categoryDTO) {
         Category category = getCategoryById(id);
-        if(!category.getName().equals(categoryDTO.getName())
-                && categoryRepository.existsByName(categoryDTO.getName())){
-            throw new DuplicateValueException("Category name already exists");
-        }
         category.setName(categoryDTO.getName());
         return categoryRepository.save(category);
     }

@@ -1,6 +1,7 @@
 package com.example.ecommerce.controllers;
 
 import com.example.ecommerce.dtos.ProductDTO;
+import com.example.ecommerce.responses.PageResponse;
 import com.example.ecommerce.responses.ProductResponse;
 import com.example.ecommerce.responses.ResponseSuccess;
 import com.example.ecommerce.services.ProductService;
@@ -19,12 +20,19 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("")
-    public ResponseEntity<ResponseSuccess> getAllProducts(){
-        List<ProductResponse> productResponses = productService.getAllProducts();
+    public ResponseEntity<ResponseSuccess> getAllProducts(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int limit,
+            @RequestParam(required = false) String brand,
+            @RequestParam(required = false) String[] search,
+            @RequestParam(required = false) String... sort
+    ){
+        PageResponse pageResponse
+                = productService.getAllProducts(page, limit, brand, search, sort);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
                 .message("Get all product information successfully")
                 .status(HttpStatus.OK.value())
-                .data(productResponses)
+                .data(pageResponse)
                 .build());
     }
 
@@ -44,6 +52,16 @@ public class ProductController {
         return ResponseEntity.ok().body(ResponseSuccess.builder()
                 .message("Create product successfully")
                 .status(HttpStatus.CREATED.value())
+                .data(productResponse)
+                .build());
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseSuccess> updateProduct(@PathVariable("id") long id,
+                                                         @RequestBody @Valid ProductDTO productDTO){
+        ProductResponse productResponse = productService.updateProduct(id,productDTO);
+        return ResponseEntity.ok().body(ResponseSuccess.builder()
+                .message("Update product successfully")
+                .status(HttpStatus.OK.value())
                 .data(productResponse)
                 .build());
     }
