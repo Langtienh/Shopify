@@ -1,21 +1,27 @@
 package com.example.ecommerce.dtos;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CartDTO {
+public class CommentDTO {
+
+    @NotBlank(message = "Content must be not blank")
+    private String content;
+
+    @NotNull(message = "Rate must be not null")
+    private Long rate;
+
     @NotNull(message = "User ID must be not null")
     private Long userId;
-    @JsonProperty("cartItems")
-    private List<CartItemDTO> cartItemDTOS;
+
+    @NotNull(message = "Product ID must be not null")
+    private Long productId;
 }

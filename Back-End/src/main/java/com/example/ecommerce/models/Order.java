@@ -44,4 +44,8 @@ public class Order {
 
     @Column(name = "active")
     private boolean active;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }

@@ -26,7 +26,7 @@ public class CartItemResponse {
                 .productId(product.getId())
                 .name(product.getName())
                 .image(product.getImage())
-                .price(product.getPrice()*(1 - product.getDiscount()/100))
+                .price(product.getPrice()*(1 - (double)product.getDiscount()/100))
                 .quantity(cartItem.getQuantity())
                 .build();
     }

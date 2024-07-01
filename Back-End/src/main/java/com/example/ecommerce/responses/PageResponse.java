@@ -9,7 +9,6 @@ import lombok.Getter;
 public class PageResponse {
     private int page;
     private int limit;
-    @JsonProperty("total_page")
     private int totalPage;
     private Object result;
 }
