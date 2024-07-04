@@ -85,6 +85,7 @@ public class OrderServiceImpl implements OrderService {
                 .page(page + 1)
                 .limit(limit)
                 .totalPage(orderPage.getTotalPages())
+                .totalItem((int)orderPage.getTotalElements())
                 .result(orderPage.stream().map(OrderResponse::fromOrder).toList())
                 .build();
     }
@@ -107,6 +108,7 @@ public class OrderServiceImpl implements OrderService {
                 .page(page + 1)
                 .limit(limit)
                 .totalPage(orderPage.getTotalPages())
+                .totalItem((int)orderPage.getTotalElements())
                 .result(orderPage.stream().map(OrderResponse::fromOrder).toList())
                 .build();
     }

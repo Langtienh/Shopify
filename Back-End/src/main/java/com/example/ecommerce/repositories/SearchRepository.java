@@ -43,6 +43,8 @@ public class SearchRepository {
 
         List<Predicate> predicates = new ArrayList<>();
 
+        // Lấy ra các product có active = true
+        predicates.add(builder.equal(pRoot.get("active"), true));
         // Brand
         if(StringUtils.hasLength(brand)){
             Join<Product, Brand> bJoin = pRoot.join("brand");
@@ -121,6 +123,7 @@ public class SearchRepository {
                 .page(page+1)
                 .limit(limit)
                 .totalPage(pageImpl.getTotalPages())
+                .totalItem((int)pageImpl.getTotalElements())
                 .result(pageImpl.stream()
                         .map(p -> ProductResponse.fromProduct((Product) p,
                                 productAttributeRepository.findAllByProduct((Product) p))))

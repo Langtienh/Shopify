@@ -10,5 +10,6 @@ public class PageResponse {
     private int page;
     private int limit;
     private int totalPage;
+    private int totalItem;
     private Object result;
 }

@@ -54,6 +54,7 @@ public class CommentServiceImpl implements CommentService {
                 .page(page + 1)
                 .limit(limit)
                 .totalPage(commentPage.getTotalPages())
+                .totalItem((int)commentPage.getTotalElements())
                 .result(commentPage.stream().map(CommentResponse::fromComment).toList())
                 .build();
     }

@@ -75,6 +75,7 @@ public class CartServiceImpl implements CartService {
                 .page(page + 1)
                 .limit(limit)
                 .totalPage(pageCart.getTotalPages())
+                .totalItem((int)pageCart.getTotalElements())
                 .result(pageCart.get()
                         .map(cart -> {
                             List<CartItemResponse> cartItems = cartItemRepository.findAllByCart(cart)
