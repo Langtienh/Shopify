@@ -14,7 +14,6 @@ import lombok.Setter;
 public class RegisterDTO {
 
     @NotBlank(message = "Full name must be not blank")
-    @JsonProperty("full_name")
     private String fullName;
 
     @NotBlank(message = "Phone must be not blank")
@@ -28,6 +27,4 @@ public class RegisterDTO {
 
     @NotBlank(message = "Address must be not blank")
     private String address;
-
-    private boolean active;
 }

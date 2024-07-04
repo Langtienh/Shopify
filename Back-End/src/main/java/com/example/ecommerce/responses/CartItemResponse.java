@@ -12,7 +12,6 @@ import lombok.*;
 @Builder
 public class CartItemResponse {
     private Long id;
-    @JsonProperty("product_id")
     private Long productId;
     private String name;
     private String image;

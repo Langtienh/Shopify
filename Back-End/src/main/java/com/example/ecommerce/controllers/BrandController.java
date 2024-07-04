@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class BrandController {
     private final BrandService brandService;
 
     @PostMapping("")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseSuccess> createBrand(
             @Valid @RequestBody BrandDTO brandDTO){
         Brand brand = brandService.createBrand(brandDTO);
@@ -50,6 +52,7 @@ public class BrandController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseSuccess> updateBrand(@PathVariable long id,
                                                           @Valid @RequestBody BrandDTO brandDTO){
         Brand brand = brandService.updateBrand(id, brandDTO);

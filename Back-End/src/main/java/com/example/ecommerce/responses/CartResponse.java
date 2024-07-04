@@ -15,9 +15,7 @@ import java.util.stream.Collectors;
 public class CartResponse {
     private Long id;
     private Double total;
-    @JsonProperty("total_product")
     private Long totalProduct;
-    @JsonProperty("total_quantity")
     private Long totalQuantity;
     private List<CartItemResponse> cartItems;
 

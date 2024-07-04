@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,6 +20,7 @@ public class CartController {
     private final CartService cartService;
 
     @PostMapping("")
+    @PreAuthorize("#id == authentication.principal.id or hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseSuccess> createCart(@Valid @RequestBody CartDTO cartDTO){
         CartResponse cartResponse = cartService.createCart(cartDTO);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
@@ -29,6 +31,7 @@ public class CartController {
     }
 
     @GetMapping("")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseSuccess> getAllCarts(@RequestParam(defaultValue = "1") int page,
                                                        @RequestParam(defaultValue = "5") int limit){
         PageResponse pageResponse = cartService.getAllCarts(page, limit);
@@ -40,6 +43,7 @@ public class CartController {
     }
 
     @GetMapping("/user/{id}")
+    @PreAuthorize("#id == authentication.principal.id or hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseSuccess> getCartByUser(@PathVariable long id){
         CartResponse cartResponse = cartService.getCartByUser(id);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
@@ -50,6 +54,7 @@ public class CartController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseSuccess> getCartById(@PathVariable long id){
         CartResponse cartResponse = cartService.getCartById(id);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
@@ -60,6 +65,7 @@ public class CartController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseSuccess> updateCart(@PathVariable long id,
                                                       @Valid @RequestBody CartUpdateDTO cartUpdateDTO){
         CartResponse cartResponse = cartService.updateCart(id, cartUpdateDTO);
@@ -71,6 +77,7 @@ public class CartController {
     }
 
     @DeleteMapping("/cart-item/{id}")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseSuccess> deleteCartItem(@PathVariable long id){
         cartService.deleteCartItem(id);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
@@ -80,6 +87,7 @@ public class CartController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseSuccess> deleteCart(@PathVariable long id){
         cartService.deleteCart(id);
         return ResponseEntity.ok().body(ResponseSuccess.builder()

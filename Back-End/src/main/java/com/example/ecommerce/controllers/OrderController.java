@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,6 +20,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseSuccess> createOrder(@Valid @RequestBody OrderDTO orderDTO){
         OrderResponse orderResponse = orderService.createOrder(orderDTO);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
@@ -29,6 +31,7 @@ public class OrderController {
     }
 
     @GetMapping("")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseSuccess> getAllOrders(@RequestParam(defaultValue = "1") int page,
                                                         @RequestParam(defaultValue = "5") int limit){
         PageResponse pageResponse = orderService.getAllOrders(page, limit);
@@ -40,6 +43,7 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseSuccess> getOrderById(@PathVariable long id){
         OrderResponse orderResponse = orderService.getOrderById(id);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
@@ -50,6 +54,7 @@ public class OrderController {
     }
 
     @GetMapping("/user/{uid}")
+    @PreAuthorize("#uid == authentication.principal.id or hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseSuccess> getOrderByUser(@PathVariable long uid,
                                                               @RequestParam(defaultValue = "1") int page,
                                                               @RequestParam(defaultValue = "5") int limit){
@@ -62,6 +67,7 @@ public class OrderController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseSuccess> deleteOrder(@PathVariable long id){
         orderService.deleteOrder(id);
         return ResponseEntity.ok().body(ResponseSuccess.builder()

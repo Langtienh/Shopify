@@ -4,6 +4,8 @@ import com.example.ecommerce.models.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -12,12 +14,12 @@ import lombok.*;
 public class UserResponse {
 
     private Long id;
-    @JsonProperty("full_name")
     private String fullName;
     private String phone;
     private String email;
     private String address;
     private boolean active;
+    private List<String> roles;
 
     public static UserResponse fromUser(User user){
         return UserResponse.builder()
@@ -27,6 +29,9 @@ public class UserResponse {
                 .email(user.getEmail())
                 .address(user.getAddress())
                 .active(user.isActive())
+                .roles(user.getUserRoles().stream()
+                        .map(userRole -> userRole.getRole().getName())
+                        .toList())
                 .build();
     }
 }

@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class AttributeController {
     private final AttributeService attributeService;
 
     @PostMapping("")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseSuccess> createAttribute(
             @Valid @RequestBody AttributeDTO attributeDTO){
         Attribute attribute = attributeService.createAttribute(attributeDTO);
@@ -50,6 +52,7 @@ public class AttributeController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseSuccess> updateAttribute(@PathVariable long id,
                                                        @Valid @RequestBody AttributeDTO attributeDTO){
         Attribute attribute = attributeService.updateAttribute(id, attributeDTO);

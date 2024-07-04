@@ -30,4 +30,8 @@ public class Token {
 
     @Column(name = "is_mobile_device")
     private boolean isMobileDevice;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }

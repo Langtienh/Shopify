@@ -40,13 +40,11 @@ public class ProductDTO {
 
     @NotNull(message = "DiscountForMember must be not null")
     @Min(value = 1, message="DiscountForMember must be greater than or equal to 1")
-    @JsonProperty("discount_for_member")
     private Double discountForMember;
 
     private boolean active;
 
     @NotNull(message = "Brand id must be not null")
-    @JsonProperty("brand_id")
     private Long brandId;
 
     private Map<String, String> attributes;

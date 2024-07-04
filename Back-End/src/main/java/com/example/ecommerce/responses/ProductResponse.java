@@ -22,11 +22,9 @@ public class ProductResponse {
     private Double price;
     private Long discount;
     private Long stock;
-    @JsonProperty("view_count")
     private Long viewCount;
     private String description;
     private String image;
-    @JsonProperty("discount_for_member")
     private Double discountForMember;
     private boolean active;
     private String brand;
