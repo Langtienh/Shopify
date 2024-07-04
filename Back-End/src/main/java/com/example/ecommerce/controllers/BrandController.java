@@ -50,6 +50,15 @@ public class BrandController {
                 .data(brands)
                 .build());
     }
+    @GetMapping("/category/{cid}")
+    public ResponseEntity<ResponseSuccess> getBrandByCategory(@PathVariable("cid") long cid){
+        List<Brand> brands = brandService.getBrandByCategory(cid);
+        return ResponseEntity.ok().body(ResponseSuccess.builder()
+                .message("Get all brands by category information successfully")
+                .status(HttpStatus.OK.value())
+                .data(brands)
+                .build());
+    }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")

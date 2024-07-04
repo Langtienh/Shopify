@@ -10,5 +10,6 @@ public interface BrandService {
     Brand createBrand(BrandDTO brandDTO);
     Brand getBrandById(long id);
     List<Brand> getAllBrands();
+    List<Brand> getBrandByCategory(long cid);
     Brand updateBrand(long id, BrandDTO brandDTO);
 }

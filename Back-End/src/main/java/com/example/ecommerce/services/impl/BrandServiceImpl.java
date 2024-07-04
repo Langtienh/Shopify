@@ -4,7 +4,11 @@ import com.example.ecommerce.dtos.BrandDTO;
 import com.example.ecommerce.dtos.CategoryDTO;
 import com.example.ecommerce.exceptions.ResourceNotFoundException;
 import com.example.ecommerce.models.Brand;
+import com.example.ecommerce.models.Category;
+import com.example.ecommerce.models.CategoryBrand;
 import com.example.ecommerce.repositories.BrandRepository;
+import com.example.ecommerce.repositories.CategoryBrandRepository;
+import com.example.ecommerce.repositories.CategoryRepository;
 import com.example.ecommerce.services.BrandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +20,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BrandServiceImpl implements BrandService {
     private final BrandRepository brandRepository;
+    private final CategoryBrandRepository categoryBrandRepository;
+    private final CategoryRepository categoryRepository;
     @Override
     @Transactional
     public Brand createBrand(BrandDTO brandDTO) {
@@ -34,6 +40,16 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public List<Brand> getAllBrands() {
         return brandRepository.findAll();
+    }
+
+    @Override
+    public List<Brand> getBrandByCategory(long cid) {
+        Category category = categoryRepository.findById(cid)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+        return categoryBrandRepository.findAllByCategory(category)
+                .stream()
+                .map(CategoryBrand::getBrand)
+                .toList();
     }
 
     @Override
