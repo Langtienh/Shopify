@@ -12,5 +12,5 @@ public interface ProductService {
     ProductResponse updateProduct(long id, ProductDTO productDTO);
 
     PageResponse getAllProducts(
-            int page, int limit, String brand, String[] search, String... sort);
+            int page, int limit, String brand,String category, String[] search, String... sort);
 }

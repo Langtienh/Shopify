@@ -28,6 +28,7 @@ public class ProductResponse {
     private Double discountForMember;
     private boolean active;
     private String brand;
+    private String category;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Map<String, String> attributes;
 
@@ -44,6 +45,7 @@ public class ProductResponse {
                 .discountForMember(p.getDiscountForMember())
                 .active(p.isActive())
                 .brand(p.getBrand().getName())
+                .category(p.getCategory().getName())
                 .build();
         if(productAttributes != null){
             Map<String,String> attributes = new LinkedHashMap<>();

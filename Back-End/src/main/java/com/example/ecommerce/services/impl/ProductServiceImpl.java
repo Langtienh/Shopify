@@ -2,10 +2,7 @@ package com.example.ecommerce.services.impl;
 
 import com.example.ecommerce.dtos.ProductDTO;
 import com.example.ecommerce.exceptions.ResourceNotFoundException;
-import com.example.ecommerce.models.Attribute;
-import com.example.ecommerce.models.Brand;
-import com.example.ecommerce.models.Product;
-import com.example.ecommerce.models.ProductAttribute;
+import com.example.ecommerce.models.*;
 import com.example.ecommerce.repositories.*;
 import com.example.ecommerce.responses.PageResponse;
 import com.example.ecommerce.responses.ProductResponse;
@@ -26,10 +23,11 @@ public class ProductServiceImpl implements ProductService {
     private final AttributeRepository attributeRepository;
     private final BrandRepository brandRepository;
     private final SearchRepository searchRepository;
+    private final CategoryRepository categoryRepository;
     @Override
     public PageResponse getAllProducts(
-            int page, int limit, String brand, String[] search, String... sort) {
-        return searchRepository.getAllProducts(page, limit, brand, search, sort);
+            int page, int limit, String brand,String category, String[] search, String... sort) {
+        return searchRepository.getAllProducts(page, limit, brand,category, search, sort);
     }
 
     @Override
@@ -44,6 +42,8 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse createProduct(ProductDTO productDTO) {
         Brand brand = brandRepository.findById(productDTO.getBrandId())
                 .orElseThrow(() -> new ResourceNotFoundException("Brand not found"));
+        Category category = categoryRepository.findById(productDTO.getCategoryId())
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
         Product product = productRepository.save(Product.builder()
                 .name(productDTO.getName())
                 .price(productDTO.getPrice())
@@ -55,6 +55,7 @@ public class ProductServiceImpl implements ProductService {
                 .discountForMember(productDTO.getDiscountForMember())
                 .active(productDTO.isActive())
                 .brand(brand)
+                .category(category)
                 .build());
         List<ProductAttribute> productAttributes = new ArrayList<>();
         productDTO.getAttributes().forEach((key, value) -> {
@@ -76,6 +77,8 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
         Brand brand = brandRepository.findById(productDTO.getBrandId())
                 .orElseThrow(() -> new ResourceNotFoundException("Brand not found"));
+        Category category = categoryRepository.findById(productDTO.getCategoryId())
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
         product.setName(productDTO.getName());
         product.setPrice(productDTO.getPrice());
         product.setDiscount(productDTO.getDiscount());
@@ -85,6 +88,7 @@ public class ProductServiceImpl implements ProductService {
         product.setDiscountForMember(productDTO.getDiscountForMember());
         product.setActive(productDTO.isActive());
         product.setBrand(brand);
+        product.setCategory(category);
         return ProductResponse.fromProduct(productRepository.save(product), null);
     }
 }

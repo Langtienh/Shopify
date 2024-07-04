@@ -2,6 +2,7 @@ package com.example.ecommerce.repositories;
 
 import com.example.ecommerce.exceptions.ResourceNotFoundException;
 import com.example.ecommerce.models.Brand;
+import com.example.ecommerce.models.Category;
 import com.example.ecommerce.models.Product;
 import com.example.ecommerce.repositories.custom.SearchProduct;
 import com.example.ecommerce.responses.PageResponse;
@@ -30,10 +31,10 @@ public class SearchRepository {
     private final ProductAttributeRepository productAttributeRepository;
     private final BrandRepository brandRepository;
     /**
-     * api/v1/products?brand=iphone&search=name:iphone,price>25000000&page=1&limit=10&sort=price:desc
+     * api/v1/products?brand=iphone&category=smartphone&search=name:iphone,price>25000000&page=1&limit=10&sort=price:desc
      * */
     public PageResponse getAllProducts(
-            int page, int limit, String brand, String[] search, String... sort) {
+            int page, int limit, String brand,String category, String[] search, String... sort) {
         if(StringUtils.hasLength(brand) && brandRepository.findByName(brand) == null)
             throw new ResourceNotFoundException("Brand not found");
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
@@ -46,6 +47,13 @@ public class SearchRepository {
         if(StringUtils.hasLength(brand)){
             Join<Product, Brand> bJoin = pRoot.join("brand");
             Predicate predicate = builder.equal(bJoin.get("name"), brand);
+            predicates.add(predicate);
+        }
+
+        // Category
+        if(StringUtils.hasLength(category)){
+            Join<Product, Category> cJoin = pRoot.join("category");
+            Predicate predicate = builder.equal(cJoin.get("name"), category);
             predicates.add(predicate);
         }
 

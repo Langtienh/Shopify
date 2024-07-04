@@ -47,5 +47,8 @@ public class ProductDTO {
     @NotNull(message = "Brand id must be not null")
     private Long brandId;
 
+    @NotNull(message = "Category id must be not null")
+    private Long categoryId;
+
     private Map<String, String> attributes;
 }

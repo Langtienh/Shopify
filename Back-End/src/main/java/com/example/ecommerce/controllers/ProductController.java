@@ -25,11 +25,12 @@ public class ProductController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int limit,
             @RequestParam(required = false) String brand,
+            @RequestParam(required = false) String category,
             @RequestParam(required = false) String[] search,
             @RequestParam(required = false) String... sort
     ){
         PageResponse pageResponse
-                = productService.getAllProducts(page, limit, brand, search, sort);
+                = productService.getAllProducts(page, limit, brand,category, search, sort);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
                 .message("Get all product information successfully")
                 .status(HttpStatus.OK.value())
