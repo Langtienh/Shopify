@@ -4,7 +4,7 @@ import { converPriceToVN } from "@/utils/price";
 import { AddProductToCart } from "@/components/product/btn";
 import { Badge } from "antd";
 
-export default function ProductItem({ product }: { product: TProduct }) {
+export default function ProductItem({ product }: { product: ProductResponse }) {
   return (
     <Badge.Ribbon text={`Giảm ${product.discount}%`} color="red">
       <div className="flex gap-1 flex-col p-[10px] border shadow-md rounded-lg hover:shadow-xl cursor-pointer">
@@ -22,11 +22,14 @@ export default function ProductItem({ product }: { product: TProduct }) {
         </h2>
         <div className="flex items-baseline gap-1 font-bold">
           <span className="text-[16px] text-red-500">
-            {!!product.priceShow && converPriceToVN(product.priceShow, "đ")}
+            {!!product.price &&
+              converPriceToVN(
+                (product.price * (100 - product.discount)) / 100,
+                "đ"
+              )}
           </span>
           <span className="line-through text-gray-500 text-sm">
-            {!!product.priceThrought &&
-              converPriceToVN(product.priceThrought, "đ")}
+            {!!product.price && converPriceToVN(product.price, "đ")}
           </span>
         </div>
         <div className="h-5">

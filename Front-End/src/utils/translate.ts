@@ -30,7 +30,9 @@ const categories: { en: string; vi: string }[] = [
 ];
 
 export const translateCategory = (en: string) => {
-  const index = categories.findIndex((item: { en: string }) => en === item.en);
+  const index = categories.findIndex(
+    (item: { en: string }) => en.toUpperCase() === item.en.toUpperCase()
+  );
   if (index !== -1) return categories[index].vi;
   return en;
 };

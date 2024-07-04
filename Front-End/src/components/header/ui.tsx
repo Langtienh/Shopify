@@ -32,11 +32,11 @@ export const MenuDropdown = ({
   brands,
 }: {
   category: string;
-  brands: TBrand[];
+  brands: BrandResponse[];
 }) => {
-  let items: MenuProps["items"] = brands.map((item: TBrand) => ({
+  let items: MenuProps["items"] = brands.map((item: BrandResponse) => ({
     key: item.id,
-    label: <Link href={`/${category}/${item.brand}`}>{item.brand}</Link>,
+    label: <Link href={`/${category}/${item.name}`}>{item.name}</Link>,
   }));
   items = [
     { key: 0, label: <Link href={`/${category}`}>Xem tất cả</Link> },

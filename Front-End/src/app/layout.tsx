@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={roboto.className}>
       <head>
-        <link rel="icon" href="./nestjs-icon.ico" />
+        <link rel="icon" href="/nestjs-icon.ico" />
       </head>
       <AntdRegistry>
         <body>{children}</body>

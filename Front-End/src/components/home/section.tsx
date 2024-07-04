@@ -1,13 +1,18 @@
 import NavBrand from "@/components/global/navBrand";
 import ProductTop from "@/components/product/product.top";
+import { translateCategory } from "@/utils/translate";
 
-export default async function Section({ category }: { category: TCategory }) {
+export default async function Section({
+  category,
+}: {
+  category: CategoryResponse;
+}) {
   return (
     <div className="flex flex-col gap-3">
       <h2 className="font-bold text-2xl capitalize">
-        {category.category} bán chạy hôm nay
+        {translateCategory(category.name)} bán chạy hôm nay
       </h2>
-      <NavBrand category={category.category} />
+      <NavBrand category={category.name} />
       <ProductTop category={category} />
     </div>
   );

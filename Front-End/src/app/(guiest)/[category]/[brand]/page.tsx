@@ -1,30 +1,45 @@
 import NavBrand from "@/components/global/navBrand";
+import MyPagination from "@/components/pagination/pagination";
 import ProductList from "@/components/product/product.list";
+import ProductSort from "@/components/product/sort";
 import { get } from "@/services/axios.helper";
-import { translateCategory } from "@/utils/translate";
-export async function generateStaticParams() {
-  const brands = await get<TBrand[]>(`/brands`);
-
-  return brands.map((brand) => ({
-    category: brand.category,
-    brand: brand.brand,
-  }));
-}
+// export async function generateStaticParams() {
+//   const res = await get<ResponseSuccess<BrandResponse[]>>(`/brands`);
+//   const brands = res.data;
+//   return brands.map((brand) => ({
+//     category: brand.category,
+//     brand: brand.name,
+//   }));
+// }
 
 export default async function Page({
   params,
+  searchParams,
 }: {
   params: { category: string; brand: string };
+  searchParams: { page?: number; limit?: number; sort?: string };
 }) {
-  const products = await get<TProduct[]>(
-    `/products?category=${params.category}&brand=${params.brand}`
+  const PAGE = searchParams?.page ?? 1;
+  const LIMIT = searchParams?.limit ?? 10;
+  const SORT = searchParams?.sort ?? "id:asc";
+  const res = await get<ResponseSuccess<PageResponse<ProductResponse>>>(
+    `/products?category=${params.category}&brand=${params.brand}&page=${PAGE}&limit=${LIMIT}&sort=${SORT}`
   );
+  const products = res.data.result;
   return (
-    <>
-      {translateCategory(params.category) + " của chúng tôi"}
-      <NavBrand params={params} category={params.category} />
-      <h2 className="text-lg font-bold text-red-500">Filter???</h2>
+    <div className="flex flex-col gap-4">
+      <NavBrand category={params.category} />
+      <h2 className="text-lg font-bold ">Chọn theo tiêu chí</h2>
+      <h2 className="text-lg font-bold ">Sắp xếp theo</h2>
+      <ProductSort />
       <ProductList products={products} />
-    </>
+      <MyPagination
+        current={PAGE}
+        pageSize={LIMIT}
+        total={res.data.totalItem}
+      />
+      <div></div>
+      <div></div>
+    </div>
   );
 }

@@ -3,7 +3,7 @@
 import { Button } from "antd";
 import { FaCartPlus } from "react-icons/fa";
 
-export const AddProductToCart = ({ productId }: { productId: string }) => {
+export const AddProductToCart = ({ productId }: { productId: number }) => {
   const onClick = () => {
     console.log(productId);
   };
