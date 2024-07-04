@@ -50,9 +50,9 @@ public class BrandController {
                 .data(brands)
                 .build());
     }
-    @GetMapping("/category/{cid}")
-    public ResponseEntity<ResponseSuccess> getBrandByCategory(@PathVariable("cid") long cid){
-        List<Brand> brands = brandService.getBrandByCategory(cid);
+    @GetMapping("/category/{cname}")
+    public ResponseEntity<ResponseSuccess> getBrandByCategory(@PathVariable("cname") String cname){
+        List<Brand> brands = brandService.getBrandByCategory(cname);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
                 .message("Get all brands by category information successfully")
                 .status(HttpStatus.OK.value())

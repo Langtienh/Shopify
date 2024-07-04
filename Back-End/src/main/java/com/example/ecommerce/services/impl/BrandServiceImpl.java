@@ -43,8 +43,8 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public List<Brand> getBrandByCategory(long cid) {
-        Category category = categoryRepository.findById(cid)
+    public List<Brand> getBrandByCategory(String name) {
+        Category category = categoryRepository.findByName(name)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
         return categoryBrandRepository.findAllByCategory(category)
                 .stream()
