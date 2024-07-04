@@ -81,6 +81,7 @@ public class UserServiceImpl implements UserService {
                 .page(page + 1)
                 .limit(limit)
                 .totalPage(userPage.getTotalPages())
+                .totalItem((int)userPage.getTotalElements())
                 .result(userPage.stream().map(UserResponse::fromUser).toList())
                 .build();
     }

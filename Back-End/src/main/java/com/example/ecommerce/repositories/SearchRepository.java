@@ -115,7 +115,7 @@ public class SearchRepository {
         long totalPage = entityManager.createQuery(query).getResultList().size();
 
         List<Product> products = entityManager.createQuery(query)
-                .setFirstResult(page)
+                .setFirstResult(page * limit)
                 .setMaxResults(limit).getResultList();
         Pageable pageable = PageRequest.of(page,limit);
         Page<?> pageImpl = new PageImpl<Product>(products, pageable, totalPage);
