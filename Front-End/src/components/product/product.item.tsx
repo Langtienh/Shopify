@@ -1,6 +1,6 @@
 "use client";
 import ImageWithFallback from "@/components/global/image";
-import { converPriceToVN } from "@/utils/price";
+import { discoutForMember, priceShow, priceThrough, view } from "@/utils/price";
 import { AddProductToCart } from "@/components/product/btn";
 import { Badge } from "antd";
 
@@ -21,15 +21,9 @@ export default function ProductItem({ product }: { product: ProductResponse }) {
           {product.name}
         </h2>
         <div className="flex items-baseline gap-1 font-bold">
-          <span className="text-[16px] text-red-500">
-            {!!product.price &&
-              converPriceToVN(
-                (product.price * (100 - product.discount)) / 100,
-                "đ"
-              )}
-          </span>
+          <span className="text-[16px] text-red-500">{priceShow(product)}</span>
           <span className="line-through text-gray-500 text-sm">
-            {!!product.price && converPriceToVN(product.price, "đ")}
+            {priceThrough(product)}
           </span>
         </div>
         <div className="h-5">
@@ -37,7 +31,7 @@ export default function ProductItem({ product }: { product: ProductResponse }) {
             <p className="text-[11px]">
               S-Student giảm thêm đến{" "}
               <span className="text-red-500 text-sm font-bold">
-                {converPriceToVN(product.discountForMember, "đ")}
+                {discoutForMember(product)}
               </span>
             </p>
           )}
@@ -50,9 +44,7 @@ export default function ProductItem({ product }: { product: ProductResponse }) {
           )}
         </div>
         <div className="border-t py-1 flex justify-between items-center">
-          <p className="font-bold text-red-500">
-            {!!product.viewCount && converPriceToVN(product.viewCount)} lượt xem
-          </p>
+          <p className="font-bold text-red-500">{view(product)} lượt xem</p>
           <AddProductToCart productId={product.id} />
         </div>
       </div>

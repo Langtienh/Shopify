@@ -1,28 +1,47 @@
 "use client";
 import React from "react";
 import { notification } from "antd";
+import { NotificationPlacement } from "antd/es/notification/interface";
 
-type NotificationType = "success" | "info" | "warning" | "error";
-
-const Notification: React.FC = () => {
+export type NotificationType = {
+  message: string;
+  description: string;
+  notificationType: "success" | "info" | "warning" | "error";
+  placement?: NotificationPlacement;
+  showProgress?: boolean;
+  duration?: number;
+};
+export type NotificationProps = {
+  button: React.JSX.Element;
+  onClick: () => NotificationType;
+};
+const Notification = (props: NotificationProps) => {
   const [api, contextHolder] = notification.useNotification();
-
-  const openNotificationWithIcon = (
-    type: NotificationType,
-    message: string,
-    description: string
-  ) => {
-    api[type]({
+  const openNotification = ({
+    notificationType,
+    message,
+    description,
+    showProgress = true,
+    duration = 3,
+    placement = "topRight",
+  }: NotificationType) => {
+    api[notificationType]({
       message,
       description,
+      showProgress,
+      duration,
+      placement,
     });
   };
-  openNotificationWithIcon(
-    "success",
-    "Thêm vào giỏ hàng thành công",
-    "Thêm vào giỏ hàng thành công"
+  const handleClick = () => {
+    openNotification(props.onClick());
+  };
+  return (
+    <>
+      {contextHolder}
+      <span onClick={handleClick}>{props.button}</span>
+    </>
   );
-  return <>{contextHolder}</>;
 };
 
 export default Notification;

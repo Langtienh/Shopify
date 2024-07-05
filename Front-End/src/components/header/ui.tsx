@@ -69,19 +69,6 @@ export const MenuDropdown = ({
   );
 };
 
-export const SearchInput = () => {
-  return (
-    <div className="min-w-[300px] text-gray-500">
-      <Input
-        className="w-full px-4"
-        prefix={<FaSearch />}
-        suffix={<IoMdClose />}
-        placeholder="Bạn cần tìm gì"
-      />
-    </div>
-  );
-};
-
 const nav = [
   {
     icon: <PiPhoneThin size={34} />,
