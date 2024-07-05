@@ -53,6 +53,20 @@ public class GlobalExceptionHandler {
                         .build()
         );
     }
+    @ExceptionHandler(InvalidParamException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ResponseError> handleInvalidParamException(
+            InvalidParamException e){
+        int start = e.getMessage().indexOf("attribute");
+        int end = e.getMessage().indexOf("of") - 1;
+        String message = "Could not find " + e.getMessage().substring(start, end);
+        return ResponseEntity.badRequest().body(
+                ResponseError.builder()
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .message(message)
+                        .build()
+        );
+    }
 
     @ExceptionHandler(UnauthorizedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
