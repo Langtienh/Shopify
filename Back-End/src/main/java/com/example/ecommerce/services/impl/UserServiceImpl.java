@@ -53,6 +53,7 @@ public class UserServiceImpl implements UserService {
                 .password(passwordEncoder.encode(registerDTO.getPassword()))
                 .email(registerDTO.getEmail())
                 .address(registerDTO.getAddress())
+                .avatar(registerDTO.getAvatar())
                 .active(true)
                 .build();
         userRepository.save(user);

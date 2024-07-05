@@ -18,6 +18,7 @@ public class UserResponse {
     private String phone;
     private String email;
     private String address;
+    private String avatar;
     private boolean active;
     private List<String> roles;
 
@@ -28,6 +29,7 @@ public class UserResponse {
                 .phone(user.getPhone())
                 .email(user.getEmail())
                 .address(user.getAddress())
+                .avatar(user.getAvatar())
                 .active(user.isActive())
                 .roles(user.getUserRoles().stream()
                         .map(userRole -> userRole.getRole().getName())

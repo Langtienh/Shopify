@@ -27,4 +27,7 @@ public class RegisterDTO {
 
     @NotBlank(message = "Address must be not blank")
     private String address;
+
+    @NotBlank(message = "Avatar must be not blank")
+    private String avatar;
 }

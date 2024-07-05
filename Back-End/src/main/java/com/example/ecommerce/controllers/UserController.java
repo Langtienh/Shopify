@@ -4,7 +4,9 @@ import com.example.ecommerce.dtos.LoginDTO;
 import com.example.ecommerce.dtos.LogoutDTO;
 import com.example.ecommerce.dtos.RefreshTokenDTO;
 import com.example.ecommerce.dtos.RegisterDTO;
+import com.example.ecommerce.models.User;
 import com.example.ecommerce.responses.ResponseSuccess;
+import com.example.ecommerce.responses.UserResponse;
 import com.example.ecommerce.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -12,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -53,6 +56,17 @@ public class UserController{
         return ResponseEntity.ok().body(ResponseSuccess.builder()
                 .message("Logout successfully")
                 .status(HttpStatus.OK.value())
+                .build());
+    }
+    @GetMapping("/my-info")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    public ResponseEntity<ResponseSuccess> getMyInfo(){
+        UserResponse userResponse = UserResponse.fromUser(
+                (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        return ResponseEntity.ok().body(ResponseSuccess.builder()
+                .message("Get my info successfully")
+                .status(HttpStatus.OK.value())
+                .data(userResponse)
                 .build());
     }
 

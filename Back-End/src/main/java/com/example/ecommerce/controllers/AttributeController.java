@@ -2,6 +2,7 @@ package com.example.ecommerce.controllers;
 
 import com.example.ecommerce.dtos.AttributeDTO;
 import com.example.ecommerce.models.Attribute;
+import com.example.ecommerce.responses.AttributeResponse;
 import com.example.ecommerce.responses.ResponseSuccess;
 import com.example.ecommerce.services.AttributeService;
 import jakarta.validation.Valid;
@@ -48,6 +49,16 @@ public class AttributeController {
                 .message("Get all attributes information successfully")
                 .status(HttpStatus.OK.value())
                 .data(attributes)
+                .build());
+    }
+
+    @GetMapping("/category/{cname}")
+    public ResponseEntity<ResponseSuccess> getAttributeByCategory(@PathVariable String cname){
+        List<AttributeResponse> attributeResponses = attributeService.getAttributeByCategory(cname);
+        return ResponseEntity.ok().body(ResponseSuccess.builder()
+                .message("Get all attributes by category information successfully")
+                .status(HttpStatus.OK.value())
+                .data(attributeResponses)
                 .build());
     }
 

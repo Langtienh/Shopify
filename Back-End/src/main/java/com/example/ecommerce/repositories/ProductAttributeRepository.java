@@ -1,5 +1,6 @@
 package com.example.ecommerce.repositories;
 
+import com.example.ecommerce.models.Attribute;
 import com.example.ecommerce.models.Product;
 import com.example.ecommerce.models.ProductAttribute;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,4 +11,5 @@ import java.util.List;
 @Repository
 public interface ProductAttributeRepository extends JpaRepository<ProductAttribute, Long> {
     List<ProductAttribute> findAllByProduct(Product product);
+    List<ProductAttribute> findAllByAttribute(Attribute attribute);
 }
