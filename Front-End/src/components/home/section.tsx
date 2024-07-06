@@ -1,4 +1,4 @@
-import NavBrand from "@/components/global/navBrand";
+import NavBrand from "@/components/global/nav.brand";
 import ProductTop from "@/components/product/product.top";
 import { translateCategory } from "@/utils/translate";
 

@@ -4,8 +4,8 @@ import { Input } from "antd";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
-import { EmpytyProduct, SearchOutput } from "@/components/header/searchOutput";
-import { SearchProductAction } from "@/actions/searchProduct";
+import { EmpytyProduct, SearchOutput } from "@/components/header/search.output";
+import { SearchProductAction } from "@/actions/product.services";
 
 export default function SearchInput() {
   const [products, setProducts] = useState<ProductResponse[]>([]);

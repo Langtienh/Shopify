@@ -6,7 +6,7 @@ import {
   getDistrictByParentCode,
   getWardByParentCode,
   getProvinceAll,
-} from "@/services/vnAPI.services";
+} from "@/actions/vnAPI.services";
 import { registerAction } from "@/actions/auth.action";
 import { openNotification } from "@/lib/nofication";
 import { useRouter } from "next/navigation";

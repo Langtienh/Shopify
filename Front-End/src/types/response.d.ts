@@ -123,3 +123,8 @@ type LoginResponse = {
   username: string;
   roles: string[];
 };
+
+type AttibulteResponse = {
+  name: string;
+  values: string[];
+};

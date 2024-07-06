@@ -6,7 +6,6 @@ import { useState } from "react";
 import { FaAnglesDown, FaAnglesUp } from "react-icons/fa6";
 import { GrView } from "react-icons/gr";
 import { HiMiniGift } from "react-icons/hi2";
-import { IoIosCloseCircle } from "react-icons/io";
 
 const sorter: {
   name: string;
@@ -39,32 +38,35 @@ export default function ProductSort() {
   const { replace } = useRouter();
   const patchName = usePathname();
   const searchParams = useSearchParams();
-  const onChange = (name: string, index: number) => {
-    setSortActive(index);
-    const params = new URLSearchParams(searchParams);
-    params.set("sort", name);
-    replace(`${patchName}?${params}`);
-  };
   const onDelete = () => {
     setSortActive(-1);
     const params = new URLSearchParams(searchParams);
     params.delete("sort");
     replace(`${patchName}?${params}`);
   };
+  const onSet = (name: string, index: number) => {
+    setSortActive(index);
+    const params = new URLSearchParams(searchParams);
+    params.set("sort", name);
+    replace(`${patchName}?${params}`);
+  };
+  const onChange = (name: string, index: number) => {
+    if (index == sortActive) onDelete();
+    else onSet(name, index);
+  };
+
   return (
     <div className="flex gap-3">
       {sorter.map((item, index) => (
         <Button
           onClick={() => onChange(`${item.name}${item.order}`, index)}
-          ghost={index === sortActive}
-          type={index === sortActive ? "primary" : "default"}
+          danger={index === sortActive}
           icon={item.icon}
           key={index}
         >
           {item.label}
         </Button>
       ))}
-      <Button onClick={onDelete} shape="circle" icon={<IoIosCloseCircle />} />
     </div>
   );
 }

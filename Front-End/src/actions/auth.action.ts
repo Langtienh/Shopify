@@ -1,6 +1,6 @@
 "use server";
 
-import { get, post } from "@/services/axios.helper";
+import { get, post } from "@/actions/axios.helper";
 import { DELAY } from "@/utils/delay";
 
 import { cookies } from "next/headers";

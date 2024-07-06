@@ -1,11 +1,9 @@
 "use client";
 import { logoutAction } from "@/actions/auth.action";
-import { DELAY } from "@/utils/delay";
 import { translateCategory } from "@/utils/translate";
 import type { MenuProps } from "antd";
 import { Button, Dropdown, Image, Tooltip } from "antd";
 import Link from "next/link";
-import { useState } from "react";
 import { CiDeliveryTruck, CiLaptop } from "react-icons/ci";
 import { HiOutlineUserCircle } from "react-icons/hi";
 import { IoIosTabletPortrait } from "react-icons/io";

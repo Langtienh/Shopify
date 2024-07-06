@@ -1,7 +1,7 @@
 "use client";
 import ImageWithFallback from "@/components/global/image";
 import { discoutForMember, priceShow, priceThrough, view } from "@/utils/price";
-import { AddProductToCart } from "@/components/product/btn";
+import { AddProductToCart } from "@/components/product/product.btn";
 import { Badge } from "antd";
 
 export default function ProductItem({ product }: { product: ProductResponse }) {

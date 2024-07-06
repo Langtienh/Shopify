@@ -1,4 +1,4 @@
-import { get } from "@/services/axios.helper";
+import { get } from "@/actions/axios.helper";
 import { NavBrandButton } from "@/components/global/client";
 import Link from "next/link";
 

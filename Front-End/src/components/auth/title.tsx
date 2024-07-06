@@ -1,5 +1,5 @@
 import Image from "next/image";
-import BackBtn from "@/components/auth/backBtn";
+import BackBtn from "@/components/auth/btn.back";
 import { Divider } from "antd";
 
 const providers = [

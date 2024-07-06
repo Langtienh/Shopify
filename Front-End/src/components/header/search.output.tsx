@@ -1,7 +1,7 @@
 "use client";
 import { prodcutSlug } from "@/utils/slugtify";
 import Link from "next/link";
-import ImageWithFallback from "../global/image";
+import ImageWithFallback from "@/components/global/image";
 import { priceShow, priceThrough } from "@/utils/price";
 import { Empty } from "antd";
 
