@@ -1,17 +1,8 @@
 import Image from "next/image";
 import BackBtn from "@/components/auth/btn.back";
 import { Divider } from "antd";
+import SignProvider from "@/components/auth/sigin.provider";
 
-const providers = [
-  {
-    title: "Google",
-    image: "/logo/google.png",
-  },
-  {
-    title: "Zalo",
-    image: "/logo/zalo.png",
-  },
-];
 export default function AuthTitle({ title }: { title: string }) {
   return (
     <div className="flex flex-col items-center justify-center w-full">
@@ -23,14 +14,7 @@ export default function AuthTitle({ title }: { title: string }) {
         <h2 className="font-bold text-[22px] text-black">{title}</h2>
       </div>
       <div className="text-[18px] flex gap-7 justify-center  py-[18px]">
-        {providers.map((item) => (
-          <div key={item.title} className="flex gap-3">
-            <div>
-              <Image width={24} height={24} src={item.image} alt={item.title} />
-            </div>
-            <span>{item.title}</span>
-          </div>
-        ))}
+        <SignProvider />
       </div>
       <div className="w-full">
         <Divider orientation="center">Hoặc</Divider>

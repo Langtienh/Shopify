@@ -1,7 +1,7 @@
 "use server";
 import axios, { AxiosInstance } from "axios";
 // hardcode
-const BASEURL = "https://langtien-api-tinh-thanh.vercel.app/api/";
+const BASEURL = process.env.API_CUSTOM;
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: BASEURL,
   headers: {
