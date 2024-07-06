@@ -10,3 +10,14 @@ export async function GET(request: Request) {
     });
   return Response.json({ message: "hello world", cookiesAll });
 }
+
+export async function POST(request: Request) {
+  const body = await request.json();
+  return Response.json(
+    { body },
+    {
+      status: 200,
+      headers: { "Set-Cookie": `token=${body.token}` },
+    }
+  );
+}

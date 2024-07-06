@@ -1,39 +1,31 @@
-import { get } from "@/services/axios.helper";
-import { MenuDropdown } from "@/components/header/ui";
+import { Auth, Cart, Nav } from "@/components/header/ui";
+import Link from "next/link";
+import SearchInput from "@/components/header/search";
+import { cookies } from "next/headers";
+export default function Header2() {
+  const userCookie = cookies().get("user");
 
-const CategoryDropDown = async ({
-  category,
-}: {
-  category: CategoryResponse;
-}) => {
-  try {
-    const res = await get<ResponseSuccess<BrandResponse[]>>(
-      `/brands/category/${category.name}`
-    );
-    const brands = res.data;
-    return <MenuDropdown category={category.name} brands={brands} />;
-  } catch {
-    return <> error</>;
-  }
-};
-
-export default async function Header2() {
-  try {
-    const res = await get<ResponseSuccess<CategoryResponse[]>>("/categories");
-    const categories = res.data;
-    return (
-      <div className=" bg-[#252525]">
-        <div className="max-w-[1200px] mx-auto px-1 flex justify-between">
-          {categories.map((category: CategoryResponse) => (
-            <CategoryDropDown
-              key={`category_${category.id}`}
-              category={category}
-            />
-          ))}
+  const user: UserResponse | undefined = !!userCookie?.value
+    ? JSON.parse(userCookie.value)
+    : undefined;
+  return (
+    <>
+      <div className="bg-[#d70018]  text-white">
+        <div className="max-w-[1200px] mx-auto px-1 h-14 flex items-center justify-between">
+          <Link href="/">
+            <h2 className="hidden md:block text-white font-bold text-2xl">
+              Smart Shop
+            </h2>
+            <h2 className="md:hidden block text-white font-bold text-2xl">
+              S-Shop
+            </h2>
+          </Link>
+          <SearchInput />
+          <Nav />
+          <Cart />
+          <Auth user={user} />
         </div>
       </div>
-    );
-  } catch {
-    return <> error</>;
-  }
+    </>
+  );
 }

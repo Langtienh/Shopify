@@ -3,14 +3,16 @@ import MyPagination from "@/components/pagination/pagination";
 import ProductList from "@/components/product/product.list";
 import ProductSort from "@/components/product/sort";
 import { get } from "@/services/axios.helper";
-// export async function generateStaticParams() {
-//   const res = await get<ResponseSuccess<BrandResponse[]>>(`/brands`);
-//   const brands = res.data;
-//   return brands.map((brand) => ({
-//     category: brand.category,
-//     brand: brand.name,
-//   }));
-// }
+export async function generateStaticParams() {
+  const res = await get<ResponseSuccess<CategoryBrandResponse[]>>(
+    `/category-brands`
+  );
+  const CategoryBrands = res.data;
+  return CategoryBrands.map((item) => ({
+    category: item.category,
+    brand: item.brand,
+  }));
+}
 
 export default async function Page({
   params,

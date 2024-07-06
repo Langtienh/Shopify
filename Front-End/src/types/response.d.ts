@@ -83,6 +83,10 @@ type CategoryResponse = {
 type BrandResponse = {
   id: Long;
   name: string;
+};
+type CategoryBrandResponse = {
+  id: Long;
+  brand: string;
   category: string;
 };
 type ProductResponse = {
@@ -108,4 +112,14 @@ type UserResponse = {
   address: string;
   active: boolean;
   isMenber: boolean;
+  avatar: string;
+};
+
+type LoginResponse = {
+  token: string;
+  refreshToken: string;
+  tokenType: string;
+  id: number;
+  username: string;
+  roles: string[];
 };

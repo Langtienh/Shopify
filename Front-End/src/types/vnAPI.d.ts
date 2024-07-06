@@ -1,3 +1,4 @@
+// Xã/Phường
 type wardType = {
   id: string;
   name: string;
@@ -10,6 +11,7 @@ type wardType = {
   parentCode: string;
   isDeleted: boolean;
 };
+// Quận/Huyện
 type districtType = {
   id: string;
   name: string;
@@ -23,6 +25,7 @@ type districtType = {
   isDeleted: boolean;
 };
 
+// Tỉnh/Thành phố
 type provinceType = {
   id: string;
   name: string;

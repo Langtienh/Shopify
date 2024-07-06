@@ -1,14 +1,16 @@
-import { Button } from "antd";
-import Link from "next/link";
+import LoginForm from "@/components/auth/loginForm";
+import AuthTitle from "@/components/auth/title";
 
-export default async function Page() {
+export default function Page() {
   return (
     <>
-      Login
-      <Link href="/">
-        {" "}
-        <Button danger>Back home</Button>
-      </Link>
+      <AuthTitle title="Đăng nhập với" />
+      <LoginForm />
+      <div className=" text-center">
+        <span className="text-red-500 font-bold border-b-2 border-red-500 cursor-pointer">
+          Xem chính sách ưu đãi SMenber
+        </span>
+      </div>
     </>
   );
 }

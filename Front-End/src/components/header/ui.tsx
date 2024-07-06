@@ -1,14 +1,16 @@
 "use client";
+import { logoutAction } from "@/actions/auth.action";
+import { DELAY } from "@/utils/delay";
 import { translateCategory } from "@/utils/translate";
 import type { MenuProps } from "antd";
-import { Dropdown, Input } from "antd";
+import { Button, Dropdown, Image, Tooltip } from "antd";
 import Link from "next/link";
+import { useState } from "react";
 import { CiDeliveryTruck, CiLaptop } from "react-icons/ci";
-import { FaSearch } from "react-icons/fa";
 import { HiOutlineUserCircle } from "react-icons/hi";
-import { IoIosTabletPortrait, IoMdClose } from "react-icons/io";
+import { IoIosTabletPortrait } from "react-icons/io";
 import { IoWatchOutline } from "react-icons/io5";
-import { LuSmartphone, LuTruck } from "react-icons/lu";
+import { LuSmartphone } from "react-icons/lu";
 import { MdOndemandVideo, MdOutlinePersonalVideo } from "react-icons/md";
 import {
   PiMapPinThin,
@@ -130,7 +132,42 @@ export const Cart = () => {
   );
 };
 
-export const Auth = () => {
+export const Auth = ({ user }: { user: UserResponse | undefined }) => {
+  const Logout = async () => {
+    await logoutAction();
+  };
+  const authDropdown: JSX.Element[] = [
+    <Link key={1} href="/info">
+      <Button type="text">Thông tin cá nhân</Button>
+    </Link>,
+    <Button type="text" onClick={Logout} key={2}>
+      Đăng suất
+    </Button>,
+  ];
+  if (user)
+    return (
+      <Button type="text">
+        <Tooltip
+          placement="bottom"
+          color="#fff"
+          title={
+            <div className="flex flex-col">
+              {authDropdown.map((item) => item)}
+            </div>
+          }
+        >
+          <Image
+            className="rounded-full"
+            width={34}
+            height={34}
+            alt="avatar"
+            src={user.avatar}
+            fallback="/nestjs-icon.ico"
+            preview={false}
+          />
+        </Tooltip>
+      </Button>
+    );
   return (
     <Link href="/login">
       <div className="flex gap-1">
@@ -140,13 +177,5 @@ export const Auth = () => {
         </p>
       </div>
     </Link>
-
-    // <Image
-    //   className="rounded-full"
-    //   width={34}
-    //   height={34}
-    //   alt="avatar"
-    //   src="/user.png"
-    // />
   );
 };

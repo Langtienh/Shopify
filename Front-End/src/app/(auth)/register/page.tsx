@@ -1,3 +1,13 @@
-export default async function Page() {
-  return <>Register</>;
+"use client";
+
+import RegesterForm from "@/components/auth/regesterForm";
+import AuthTitle from "@/components/auth/title";
+
+export default function Page() {
+  return (
+    <>
+      <AuthTitle title="Đăng kí với" />
+      <RegesterForm />
+    </>
+  );
 }
