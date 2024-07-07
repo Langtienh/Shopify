@@ -22,7 +22,7 @@ const providers = [
 
 export default function SignProvider() {
   const { data: session } = useSession();
-
+  if (session && session.user) console.log(session.user);
   return (
     <>
       {providers.map((item) => (
@@ -49,18 +49,3 @@ export default function SignProvider() {
     </>
   );
 }
-
-// export default function SignGoogle() {
-//   if (session && session.user) {
-//     console.log(session.user);
-//     return (
-
-//     );
-//   }
-
-//   return (
-//     <Link href="/api/auth/signin">
-//       <Button>Đăng nhập với google hoặc github</Button>
-//     </Link>
-//   );
-// }

@@ -2,6 +2,7 @@ import Image from "next/image";
 import BackBtn from "@/components/auth/btn.back";
 import { Divider } from "antd";
 import SignProvider from "@/components/auth/sigin.provider";
+import Userrr from "./user";
 
 export default function AuthTitle({ title }: { title: string }) {
   return (
@@ -16,6 +17,7 @@ export default function AuthTitle({ title }: { title: string }) {
       <div className="text-[18px] flex gap-7 justify-center  py-[18px]">
         <SignProvider />
       </div>
+      <Userrr />
       <div className="w-full">
         <Divider orientation="center">Hoặc</Divider>
       </div>
