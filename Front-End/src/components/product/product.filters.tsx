@@ -12,7 +12,6 @@ export default function ProductFilter({ category }: { category: string }) {
       try {
         const data = await getAttributesByCategory(category);
         setFilters(data);
-        console.log(data);
       } catch {
         setFilters([]);
       }

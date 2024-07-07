@@ -33,7 +33,7 @@ const RegesterForm: React.FC = () => {
       const data = await getDistrictByParentCode(provinceCode);
       setDistricts(data);
     };
-    fetchDistricts();
+    if (!!provinceCode) fetchDistricts();
   }, [provinceCode]);
 
   const [ward, setWard] = useState<wardType[]>([]);
@@ -44,7 +44,7 @@ const RegesterForm: React.FC = () => {
         setWard(data);
       }
     };
-    fetchWard();
+    if (!!districtCode) fetchWard();
   }, [districtCode]);
   const [form] = Form.useForm();
   // xử lý đăng kí

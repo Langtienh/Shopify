@@ -1,8 +1,10 @@
 "use client";
 import { logoutAction } from "@/actions/auth.action";
+import { splitFullName } from "@/utils/split.fullname";
 import { translateCategory } from "@/utils/translate";
 import type { MenuProps } from "antd";
 import { Button, Dropdown, Image, Tooltip } from "antd";
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { CiDeliveryTruck, CiLaptop } from "react-icons/ci";
 import { HiOutlineUserCircle } from "react-icons/hi";
@@ -133,6 +135,7 @@ export const Cart = () => {
 export const Auth = ({ user }: { user: UserResponse | undefined }) => {
   const Logout = async () => {
     await logoutAction();
+    signOut();
   };
   const authDropdown: JSX.Element[] = [
     <Link key={1} href="/info">
@@ -142,7 +145,8 @@ export const Auth = ({ user }: { user: UserResponse | undefined }) => {
       Đăng suất
     </Button>,
   ];
-  if (user)
+  if (user) {
+    console.log("check use >>>", user);
     return (
       <Button type="text">
         <Tooltip
@@ -154,18 +158,22 @@ export const Auth = ({ user }: { user: UserResponse | undefined }) => {
             </div>
           }
         >
-          <Image
-            className="rounded-full"
-            width={34}
-            height={34}
-            alt="avatar"
-            src={user.avatar}
-            fallback="/nestjs-icon.ico"
-            preview={false}
-          />
+          <div className="flex flex-col text-white items-center">
+            <Image
+              className="rounded-full"
+              width={28}
+              height={28}
+              alt="avatar"
+              src={user.avatar}
+              fallback="/nestjs-icon.ico"
+              preview={false}
+            />
+            <p>{splitFullName(user.fullName)}</p>
+          </div>
         </Tooltip>
       </Button>
     );
+  }
   return (
     <Link href="/login">
       <div className="flex gap-1">

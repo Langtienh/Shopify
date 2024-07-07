@@ -1,7 +1,8 @@
 "use client";
+import { openNotification } from "@/lib/nofication";
 import { Button, Image } from "antd";
-import { useSession, signOut, signIn } from "next-auth/react";
-import Link from "next/link";
+import { signIn, useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 const providers = [
   {
     title: "Google",
@@ -22,30 +23,46 @@ const providers = [
 
 export default function SignProvider() {
   const { data: session } = useSession();
-  if (session && session.user) console.log(session.user);
+  const signInWith = async (provider: string) => {
+    await signIn(provider);
+    if (session && session.user) {
+      openNotification({
+        message: "Đăng nhập thành công",
+        description: "Vui lòng đợi trong giây lát",
+        notificationType: "success",
+      });
+      redirect("/");
+    } else {
+      openNotification({
+        message: "Đăng nhập thất bại",
+        description: "Tài khoản hoặc mật khẩu không chính xác",
+        notificationType: "error",
+      });
+    }
+  };
   return (
     <>
       {providers.map((item) => (
         <Button
           onClick={() => {
-            if (item.name !== "zalo") signIn(item.name);
+            if (item.name !== "zalo") signInWith(item.name);
           }}
           type="text"
           key={item.title}
           className="flex gap-3"
         >
           <div>
-            <Image width={24} height={24} src={item.image} alt={item.title} />
+            <Image
+              preview={false}
+              width={24}
+              height={24}
+              src={item.image}
+              alt={item.title}
+            />
           </div>
           <span>{item.title}</span>
         </Button>
       ))}
-      {session && session.user && (
-        <>
-          <Button>Xin chào {session.user.name}</Button>
-          <Button onClick={() => signOut()}>Đăng suất</Button>
-        </>
-      )}
     </>
   );
 }

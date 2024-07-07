@@ -15,6 +15,5 @@ export const prodcutSlug = (product: ProductResponse) =>
 
 export const prodcutSlugToId = (slug: string) => {
   const id = slug.substring(slug.lastIndexOf("-") + 1, slug.lastIndexOf("."));
-  console.log(id);
-  return;
+  return id;
 };

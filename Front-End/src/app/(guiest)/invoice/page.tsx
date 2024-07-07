@@ -1,7 +1,10 @@
 import { Button } from "antd";
 import Link from "next/link";
-
-export default async function Page() {
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+export default function Page() {
+  const userCookie = cookies().get("user");
+  if (!userCookie) redirect("/login");
   return (
     <>
       No data
