@@ -30,10 +30,10 @@ const LoginForm: React.FC = () => {
         notificationType: "success",
       });
       await DELAY(2000);
-      setSpinning(false);
 
       router.push("/");
     }
+    setSpinning(false);
   };
 
   return (
