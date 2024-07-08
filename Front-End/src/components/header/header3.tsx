@@ -1,4 +1,3 @@
-import { get } from "@/actions/axios.helper";
 import { MenuDropdown } from "@/components/header/ui";
 import {
   getAllCategory,

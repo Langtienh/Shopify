@@ -1,8 +1,7 @@
 "use client";
 import { openNotification } from "@/lib/nofication";
 import { Button, Image } from "antd";
-import { signIn, useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
+import { signIn } from "next-auth/react";
 const providers = [
   {
     title: "Google",
@@ -22,17 +21,15 @@ const providers = [
 ];
 
 export default function SignProvider() {
-  const { data: session } = useSession();
   const signInWith = async (provider: string) => {
-    await signIn(provider);
-    if (session && session.user) {
+    try {
+      await signIn(provider);
       openNotification({
         message: "Đăng nhập thành công",
         description: "Vui lòng đợi trong giây lát",
         notificationType: "success",
       });
-      redirect("/");
-    } else {
+    } catch {
       openNotification({
         message: "Đăng nhập thất bại",
         description: "Tài khoản hoặc mật khẩu không chính xác",

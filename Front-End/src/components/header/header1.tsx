@@ -4,7 +4,7 @@ const banner_url = [
   "/topBanner/top banner (2).svg",
   "/topBanner/top banner (3).svg",
 ];
-export default function Header1() {
+export default async function Header1() {
   return (
     <>
       <div className="bg-[#e9efff] ">

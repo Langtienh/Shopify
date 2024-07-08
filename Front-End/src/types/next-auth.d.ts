@@ -1,14 +1,45 @@
 import NextAuth, { DefaultSession } from "next-auth";
+import { JWT } from "next-auth/jwt";
 
+interface IUser {
+  fullName?: string | null;
+  email?: string | null;
+  avatar?: string | null;
+  phone?: string;
+  id?: number;
+  providerId?: string;
+  address?: string;
+  active?: boolean;
+  roles?: string[];
+}
+declare module "next-auth/jwt" {
+  /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
+  interface JWT {
+    /** OpenID ID Token */
+    token?: string;
+    refreshToken?: string;
+    user?: IUser;
+  }
+}
 declare module "next-auth" {
   /**
    * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */
   interface Session {
-    user: {
-      googleId?: string;
-      avatar?: string | null;
-      fullName?: string | null;
-    } & DefaultSession["user"];
+    user?: IUser;
+    token?: string;
+    refreshToken?: string;
   }
+}
+
+interface User {
+  user?: IUser;
+  token?: string;
+  refreshToken?: string;
+}
+
+interface AdapterUser {
+  user?: IUser;
+  token?: string;
+  refreshToken?: string;
 }

@@ -1,10 +1,10 @@
 "use client";
-import { logoutAction } from "@/actions/auth.action";
+import { IUser } from "@/types/next-auth";
 import { splitFullName } from "@/utils/split.fullname";
 import { translateCategory } from "@/utils/translate";
 import type { MenuProps } from "antd";
 import { Button, Dropdown, Image, Tooltip } from "antd";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { CiDeliveryTruck, CiLaptop } from "react-icons/ci";
 import { HiOutlineUserCircle } from "react-icons/hi";
@@ -132,10 +132,11 @@ export const Cart = () => {
   );
 };
 
-export const Auth = ({ user }: { user: UserResponse | undefined }) => {
+export const Auth = () => {
+  const { data: session } = useSession();
+  const user = session?.user;
   const Logout = async () => {
-    await logoutAction();
-    signOut();
+    await signOut();
   };
   const authDropdown: JSX.Element[] = [
     <Link key={1} href="/info">
@@ -145,8 +146,7 @@ export const Auth = ({ user }: { user: UserResponse | undefined }) => {
       Đăng suất
     </Button>,
   ];
-  if (user) {
-    console.log("check use >>>", user);
+  if (user && user.avatar && user.fullName) {
     return (
       <Button type="text">
         <Tooltip

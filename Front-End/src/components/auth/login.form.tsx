@@ -5,19 +5,23 @@ import { Button, Checkbox, Form, Input } from "antd";
 import Link from "next/link";
 import { openNotification } from "@/lib/nofication";
 import { useRouter } from "next/navigation";
-import { loginAction } from "@/actions/auth.action";
 import { DELAY } from "@/utils/delay";
+import { signIn } from "next-auth/react";
 
 const LoginForm: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
   const onFinish = async (values: LoginDTO) => {
     setLoading(true);
-    const data = await loginAction(values);
+    const res = await signIn("credentials", { ...values, redirect: false });
     setLoading(false);
-    if (data) {
-      console.log(data);
-
+    if (res?.error) {
+      openNotification({
+        message: "Đăng nhập thất bại",
+        description: res?.error ?? "Vui lòng đăng nhập lại",
+        notificationType: "error",
+      });
+    } else {
       openNotification({
         message: "Đăng nhập thành công",
         description: "Vui lòng đợi trong giây lát",
@@ -25,12 +29,6 @@ const LoginForm: React.FC = () => {
       });
       await DELAY(2000);
       router.push("/");
-    } else {
-      openNotification({
-        message: "Đăng nhập thất bại",
-        description: "Tài khoản hoặc mật khẩu không chính xác",
-        notificationType: "error",
-      });
     }
   };
 

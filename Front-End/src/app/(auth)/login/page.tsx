@@ -1,10 +1,10 @@
 import LoginForm from "@/components/auth/login.form";
 import AuthTitle from "@/components/auth/title";
-import { cookies } from "next/headers";
+
 import { redirect } from "next/navigation";
-export default function Page() {
-  const userCookie = cookies().get("user");
-  if (userCookie) redirect("/");
+export default async function Page() {
+  // const session = await getServerSession(authOptions);
+  // if (session?.user) redirect("/");
   return (
     <>
       <AuthTitle title="Đăng nhập với" />

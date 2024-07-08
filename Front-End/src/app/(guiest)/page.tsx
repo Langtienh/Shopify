@@ -2,6 +2,8 @@ import Section from "@/components/home/section";
 import { getAllCategory } from "@/actions/product.services";
 
 export default async function Page() {
+  // todo
+
   const categories = await getAllCategory();
   return (
     <div className="flex flex-col gap-3">

@@ -8,10 +8,9 @@ import axios, {
 const BASEURL = process.env.API_URL;
 
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: BASEURL, // Thay đổi URL này với API của bạn
+  baseURL: BASEURL,
   headers: {
     "Content-Type": "application/json",
-    // Thêm các headers
   },
 });
 
@@ -32,14 +31,19 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   (error) => {
-    // Xử lý lỗi chung
-    return Promise.reject(error);
+    return error.response;
   }
 );
 
 // Các phương thức helper để thực hiện các request HTTP
-const get = async <T>(url: string, config?: AxiosRequestConfig): Promise<T> => {
-  const response = await axiosInstance.get<T>(url, config);
+const get = async <T>(
+  url: string,
+  config?: AxiosRequestConfig
+): Promise<TResponse & { data: T }> => {
+  const response = await axiosInstance.get<TResponse & { data: T }>(
+    url,
+    config
+  );
   return response.data;
 };
 
@@ -47,8 +51,12 @@ const post = async <T>(
   url: string,
   data?: any,
   config?: AxiosRequestConfig
-): Promise<T> => {
-  const response = await axiosInstance.post<T>(url, data, config);
+): Promise<TResponse & { data: T }> => {
+  const response = await axiosInstance.post<TResponse & { data: T }>(
+    url,
+    data,
+    config
+  );
   return response.data;
 };
 
@@ -56,8 +64,12 @@ const put = async <T>(
   url: string,
   data?: any,
   config?: AxiosRequestConfig
-): Promise<T> => {
-  const response = await axiosInstance.put<T>(url, data, config);
+): Promise<TResponse & { data: T }> => {
+  const response = await axiosInstance.put<TResponse & { data: T }>(
+    url,
+    data,
+    config
+  );
   return response.data;
 };
 
@@ -65,13 +77,23 @@ const patch = async <T>(
   url: string,
   data?: any,
   config?: AxiosRequestConfig
-): Promise<T> => {
-  const response = await axiosInstance.patch<T>(url, data, config);
+): Promise<TResponse & { data: T }> => {
+  const response = await axiosInstance.patch<TResponse & { data: T }>(
+    url,
+    data,
+    config
+  );
   return response.data;
 };
 
-const del = async <T>(url: string, config?: AxiosRequestConfig): Promise<T> => {
-  const response = await axiosInstance.delete<T>(url, config);
+const del = async <T>(
+  url: string,
+  config?: AxiosRequestConfig
+): Promise<TResponse & { data: T }> => {
+  const response = await axiosInstance.delete<TResponse & { data: T }>(
+    url,
+    config
+  );
   return response.data;
 };
 

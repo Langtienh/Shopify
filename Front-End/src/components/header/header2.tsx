@@ -1,13 +1,7 @@
 import { Auth, Cart, Nav } from "@/components/header/ui";
 import Link from "next/link";
 import SearchInput from "@/components/header/search";
-import { cookies } from "next/headers";
-export default function Header2() {
-  const userCookie = cookies().get("user");
-
-  const user: UserResponse | undefined = !!userCookie?.value
-    ? JSON.parse(userCookie.value)
-    : undefined;
+export default async function Header2() {
   return (
     <>
       <div className="bg-[#d70018]  text-white">
@@ -23,7 +17,7 @@ export default function Header2() {
           <SearchInput />
           <Nav />
           <Cart />
-          <Auth user={user} />
+          <Auth />
         </div>
       </div>
     </>

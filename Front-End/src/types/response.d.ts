@@ -2,7 +2,10 @@
 type Long = number;
 type Double = number;
 type int = number;
-
+type TResponse = {
+  status: int;
+  message: string;
+};
 type PageResponse<T> = {
   page: int;
   limit: int;
