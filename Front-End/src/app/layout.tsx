@@ -19,11 +19,11 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/nestjs-icon.ico" />
       </head>
-      <AntdRegistry>
-        <AuthProviders>
-          <body>{children}</body>
-        </AuthProviders>
-      </AntdRegistry>
+      <body>
+        <AntdRegistry>
+          <AuthProviders>{children}</AuthProviders>
+        </AntdRegistry>
+      </body>
     </html>
   );
 }

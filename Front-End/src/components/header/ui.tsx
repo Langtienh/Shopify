@@ -1,11 +1,13 @@
 "use client";
-import { IUser } from "@/types/next-auth";
+
+import { DELAY } from "@/utils/delay";
 import { splitFullName } from "@/utils/split.fullname";
 import { translateCategory } from "@/utils/translate";
 import type { MenuProps } from "antd";
-import { Button, Dropdown, Image, Tooltip } from "antd";
+import { Button, Dropdown, Image, Spin, Tooltip } from "antd";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import { useState } from "react";
 import { CiDeliveryTruck, CiLaptop } from "react-icons/ci";
 import { HiOutlineUserCircle } from "react-icons/hi";
 import { IoIosTabletPortrait } from "react-icons/io";
@@ -134,9 +136,14 @@ export const Cart = () => {
 
 export const Auth = () => {
   const { data: session } = useSession();
+  const [spinning, setSpinning] = useState<boolean>(false);
+
   const user = session?.user;
   const Logout = async () => {
+    setSpinning(true);
+    await DELAY(2000);
     await signOut();
+    setSpinning(false);
   };
   const authDropdown: JSX.Element[] = [
     <Link key={1} href="/info">
@@ -148,30 +155,33 @@ export const Auth = () => {
   ];
   if (user && user.avatar && user.fullName) {
     return (
-      <Button type="text">
-        <Tooltip
-          placement="bottom"
-          color="#fff"
-          title={
-            <div className="flex flex-col">
-              {authDropdown.map((item) => item)}
+      <>
+        <Spin fullscreen spinning={spinning} />
+        <Button type="text">
+          <Tooltip
+            placement="bottom"
+            color="#fff"
+            title={
+              <div className="flex flex-col">
+                {authDropdown.map((item) => item)}
+              </div>
+            }
+          >
+            <div className="flex flex-col text-white items-center">
+              <Image
+                className="rounded-full"
+                width={28}
+                height={28}
+                alt="avatar"
+                src={user.avatar}
+                fallback="/nestjs-icon.ico"
+                preview={false}
+              />
+              <p>{splitFullName(user.fullName)}</p>
             </div>
-          }
-        >
-          <div className="flex flex-col text-white items-center">
-            <Image
-              className="rounded-full"
-              width={28}
-              height={28}
-              alt="avatar"
-              src={user.avatar}
-              fallback="/nestjs-icon.ico"
-              preview={false}
-            />
-            <p>{splitFullName(user.fullName)}</p>
-          </div>
-        </Tooltip>
-      </Button>
+          </Tooltip>
+        </Button>
+      </>
     );
   }
   return (
