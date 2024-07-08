@@ -39,6 +39,28 @@ public class UserController{
                 .build());
     }
 
+    @PostMapping("/login-with-google")
+    public ResponseEntity<ResponseSuccess> loginWithGoogle(
+            @Valid @RequestBody LoginWithGoogle loginWithGoogle,
+            HttpServletRequest request){
+        return ResponseEntity.ok().body(ResponseSuccess.builder()
+                .message("Login successfully")
+                .status(HttpStatus.OK.value())
+                .data(userService.loginWithGoogle(loginWithGoogle, request))
+                .build());
+    }
+
+    @GetMapping("/login-with-google/{id}")
+    public ResponseEntity<ResponseSuccess> checkLoginWithGoogle(
+            @PathVariable String id,
+            HttpServletRequest request){
+        return ResponseEntity.ok().body(ResponseSuccess.builder()
+                .message("Login successfully")
+                .status(HttpStatus.OK.value())
+                .data(userService.checkLoginWithGoogle(id, request))
+                .build());
+    }
+
     @PostMapping("/refreshToken")
     public ResponseEntity<ResponseSuccess> refreshToken(@Valid @RequestBody RefreshTokenDTO refreshTokenDTO){
         return ResponseEntity.ok().body(ResponseSuccess.builder()

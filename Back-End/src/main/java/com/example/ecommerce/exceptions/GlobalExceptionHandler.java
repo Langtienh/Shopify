@@ -99,4 +99,15 @@ public class GlobalExceptionHandler {
                         .build()
         );
     }
+
+    @ExceptionHandler(LoginWithGoogleException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ResponseError> handleLoginWithGoogleException(LoginWithGoogleException e){
+        return ResponseEntity.badRequest().body(
+                ResponseError.builder()
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .message(e.getMessage())
+                        .build()
+        );
+    }
 }

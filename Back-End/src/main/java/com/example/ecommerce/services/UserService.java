@@ -16,4 +16,7 @@ public interface UserService {
     LoginResponse login(LoginDTO loginDTO, HttpServletRequest request);
     void logout(LogoutDTO logoutDTO);
     LoginResponse refreshToken(RefreshTokenDTO refreshTokenDTO);
+
+    LoginResponse loginWithGoogle(LoginWithGoogle loginWithGoogle, HttpServletRequest request);
+    LoginResponse checkLoginWithGoogle(String providerId, HttpServletRequest request);
 }

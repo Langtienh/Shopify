@@ -45,6 +45,9 @@ public class User implements UserDetails {
     @Column(name = "active")
     private boolean active;
 
+    @Column(name = "provider_id")
+    private String providerId;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<UserRole> userRoles;
     @Override

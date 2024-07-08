@@ -32,6 +32,8 @@ public class SecurityConfig {
                     requests
                             .requestMatchers(HttpMethod.POST, "/api/v1/users/register").permitAll()
                             .requestMatchers(HttpMethod.POST, "/api/v1/users/login").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/api/v1/users/login-with-google/**").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/api/v1/users/login-with-google/**").permitAll()
                             .requestMatchers(HttpMethod.POST, "/api/v1/users/logout").permitAll()
                             .requestMatchers(HttpMethod.POST, "/api/v1/users/refreshToken").permitAll()
                             .requestMatchers(HttpMethod.GET, "/api/v1/categories/**").permitAll()

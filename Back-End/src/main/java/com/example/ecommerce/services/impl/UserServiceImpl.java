@@ -1,6 +1,7 @@
 package com.example.ecommerce.services.impl;
 
 import com.example.ecommerce.dtos.*;
+import com.example.ecommerce.exceptions.LoginWithGoogleException;
 import com.example.ecommerce.exceptions.ResourceNotFoundException;
 import com.example.ecommerce.models.*;
 import com.example.ecommerce.repositories.RoleRepository;
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -139,6 +141,51 @@ public class UserServiceImpl implements UserService {
                 .token(newToken.getToken())
                 .refreshToken(newToken.getRefreshToken())
                 .user(UserResponse.fromUser(user))
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public LoginResponse loginWithGoogle(LoginWithGoogle loginWithGoogle, HttpServletRequest request) {
+        Role role = roleRepository.findByName("user");
+        User user = User.builder()
+                .fullName(loginWithGoogle.getFullName())
+                .phone(loginWithGoogle.getPhone())
+                .email(loginWithGoogle.getEmail())
+                .avatar(loginWithGoogle.getAvatar())
+                .active(true)
+                .providerId(loginWithGoogle.getProviderId())
+                .build();
+        userRepository.save(user);
+        UserRole userRole = UserRole.builder()
+                .user(user)
+                .role(role)
+                .build();
+        userRoleRepository.save(userRole);
+        user.setUserRoles(List.of(userRole));
+        String token = jwtService.generateToken(user);
+        boolean isMobile = request.getHeader("User-Agent").equals("mobile");
+        Token newToken =tokenService.addToken(user, token, isMobile);
+        return LoginResponse.builder()
+                .token(newToken.getToken())
+                .refreshToken(newToken.getRefreshToken())
+                .user(UserResponse.fromUser(user))
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public LoginResponse checkLoginWithGoogle(String providerId, HttpServletRequest request) {
+        Optional<User> user = userRepository.findByProviderId(providerId);
+        if(user.isEmpty())
+            throw new LoginWithGoogleException("Login failed");
+        String token = jwtService.generateToken(user.get());
+        boolean isMobile = request.getHeader("User-Agent").equals("mobile");
+        Token newToken =tokenService.addToken(user.get(), token, isMobile);
+        return LoginResponse.builder()
+                .token(newToken.getToken())
+                .refreshToken(newToken.getRefreshToken())
+                .user(UserResponse.fromUser(user.get()))
                 .build();
     }
 }
