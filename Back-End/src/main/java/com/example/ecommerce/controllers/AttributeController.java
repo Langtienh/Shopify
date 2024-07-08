@@ -43,8 +43,10 @@ public class AttributeController {
     }
 
     @GetMapping("")
-    public ResponseEntity<ResponseSuccess> getAllAttributes(){
-        List<Attribute> attributes = attributeService.getAllAttributes();
+    public ResponseEntity<ResponseSuccess> getAllAttributes(
+            @RequestParam(value = "category", required = false) String cname,
+            @RequestParam(value = "brand", required = false) String bname){
+        List<?> attributes = attributeService.getAllAttributes(cname, bname);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
                 .message("Get all attributes information successfully")
                 .status(HttpStatus.OK.value())
@@ -52,15 +54,6 @@ public class AttributeController {
                 .build());
     }
 
-    @GetMapping("/category/{cname}")
-    public ResponseEntity<ResponseSuccess> getAttributeByCategory(@PathVariable String cname){
-        List<AttributeResponse> attributeResponses = attributeService.getAttributeByCategory(cname);
-        return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Get all attributes by category information successfully")
-                .status(HttpStatus.OK.value())
-                .data(attributeResponses)
-                .build());
-    }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")

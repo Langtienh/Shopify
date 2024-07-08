@@ -1,9 +1,6 @@
 package com.example.ecommerce.services.impl;
 
-import com.example.ecommerce.dtos.LoginDTO;
-import com.example.ecommerce.dtos.LogoutDTO;
-import com.example.ecommerce.dtos.RefreshTokenDTO;
-import com.example.ecommerce.dtos.RegisterDTO;
+import com.example.ecommerce.dtos.*;
 import com.example.ecommerce.exceptions.ResourceNotFoundException;
 import com.example.ecommerce.models.*;
 import com.example.ecommerce.repositories.RoleRepository;
@@ -45,7 +42,7 @@ public class UserServiceImpl implements UserService {
     private int refreshExpiration;
     @Override
     @Transactional
-    public UserResponse createUser(RegisterDTO registerDTO) {
+    public void createUser(RegisterDTO registerDTO) {
         Role role = roleRepository.findByName("user");
         User user = User.builder()
                 .fullName(registerDTO.getFullName())
@@ -62,8 +59,6 @@ public class UserServiceImpl implements UserService {
                 .role(role)
                 .build();
         userRoleRepository.save(userRole);
-        user.setUserRoles(List.of(userRole));
-        return UserResponse.fromUser(user);
     }
 
     @Override
@@ -89,14 +84,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserResponse updateUser(long id, RegisterDTO registerDTO) {
-        return null;
+    public UserResponse updateUser(long id, UserDTO userDTO) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        user.setFullName(userDTO.getFullName());
+        user.setPhone(userDTO.getPhone());
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        user.setEmail(userDTO.getEmail());
+        user.setAddress(userDTO.getAddress());
+        user.setAvatar(userDTO.getAvatar());
+        userRepository.save(user);
+        return UserResponse.fromUser(user);
     }
 
     @Override
     @Transactional
     public LoginResponse login(LoginDTO loginDTO, HttpServletRequest request) {
-        User user = userRepository.findByPhone(loginDTO.getUsername())
+        User user = userRepository.findByPhone(loginDTO.getPhone())
                 .orElseThrow(() -> new BadCredentialsException("Invalid Username or Password"));
         if(!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword()))
             throw new BadCredentialsException("Invalid Username or Password");
@@ -106,11 +110,7 @@ public class UserServiceImpl implements UserService {
         return LoginResponse.builder()
                 .token(newToken.getToken())
                 .refreshToken(newToken.getRefreshToken())
-                .id(user.getId())
-                .username(user.getUsername())
-                .roles(user.getUserRoles().stream()
-                        .map(userRole -> userRole.getRole().getName())
-                        .toList())
+                .user(UserResponse.fromUser(user))
                 .build();
     }
 
@@ -138,11 +138,7 @@ public class UserServiceImpl implements UserService {
         return LoginResponse.builder()
                 .token(newToken.getToken())
                 .refreshToken(newToken.getRefreshToken())
-                .id(user.getId())
-                .username(user.getUsername())
-                .roles(user.getUserRoles().stream()
-                        .map(userRole -> userRole.getRole().getName())
-                        .toList())
+                .user(UserResponse.fromUser(user))
                 .build();
     }
 }

@@ -1,9 +1,6 @@
 package com.example.ecommerce.controllers;
 
-import com.example.ecommerce.dtos.LoginDTO;
-import com.example.ecommerce.dtos.LogoutDTO;
-import com.example.ecommerce.dtos.RefreshTokenDTO;
-import com.example.ecommerce.dtos.RegisterDTO;
+import com.example.ecommerce.dtos.*;
 import com.example.ecommerce.models.User;
 import com.example.ecommerce.responses.ResponseSuccess;
 import com.example.ecommerce.responses.UserResponse;
@@ -25,10 +22,10 @@ public class UserController{
 
     @PostMapping("/register")
     public ResponseEntity<ResponseSuccess> createUser(@Valid @RequestBody RegisterDTO registerDTO){
+        userService.createUser(registerDTO);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
                 .message("Create user successfully")
                 .status(HttpStatus.CREATED.value())
-                .data(userService.createUser(registerDTO))
                 .build());
     }
 
@@ -96,11 +93,11 @@ public class UserController{
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseSuccess> updateUser(@PathVariable("id") long id,
-                                                      @Valid @RequestBody RegisterDTO registerDTO){
+                                                      @Valid @RequestBody UserDTO userDTO){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
                 .message("Update user successfully")
                 .status(HttpStatus.ACCEPTED.value())
-                .data(userService.updateUser(id, registerDTO))
+                .data(userService.updateUser(id, userDTO))
                 .build());
     }
 }

@@ -14,6 +14,7 @@ import com.example.ecommerce.responses.AttributeResponse;
 import com.example.ecommerce.services.AttributeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +41,28 @@ public class AttributeServiceImpl implements AttributeService {
     }
 
     @Override
-    public List<Attribute> getAllAttributes() {
-        return attributeRepository.findAll();
+    public List<?> getAllAttributes(String cname, String bname) {
+        if(cname == null && bname == null)
+            return attributeRepository.findAll();
+        Category category = categoryRepository.findByName(cname)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+        List<CategoryAttribute> categoryAttributes = categoryAttributeRepository.findAllByCategory(category);
+        List<AttributeResponse> attributeResponses = new ArrayList<>();
+        for(CategoryAttribute ca : categoryAttributes){
+            List<ProductAttribute> productAttributes =
+                    productAttributeRepository.findAllByAttribute(ca.getAttribute())
+                            .stream()
+                            .filter(pa -> {
+                                boolean checkCategory =
+                                        pa.getProduct().getCategory().getName().equalsIgnoreCase(cname);
+                                boolean checkBrand = bname == null ? true :
+                                        pa.getProduct().getBrand().getName().equalsIgnoreCase(bname);
+                                return checkCategory && checkBrand;
+                                    })
+                            .toList();
+            attributeResponses.add(AttributeResponse.fromAttribute(ca.getAttribute(), productAttributes));
+        }
+        return attributeResponses;
     }
 
     @Override
@@ -51,17 +72,4 @@ public class AttributeServiceImpl implements AttributeService {
         return attributeRepository.save(attribute);
     }
 
-    @Override
-    public List<AttributeResponse> getAttributeByCategory(String cname) {
-        Category category = categoryRepository.findByName(cname)
-                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
-        List<CategoryAttribute> categoryAttributes = categoryAttributeRepository.findAllByCategory(category);
-        List<AttributeResponse> attributeResponses = new ArrayList<>();
-        for(CategoryAttribute ca : categoryAttributes){
-            List<ProductAttribute> productAttributes =
-                    productAttributeRepository.findAllByAttribute(ca.getAttribute());
-            attributeResponses.add(AttributeResponse.fromAttribute(ca.getAttribute(), productAttributes));
-        }
-        return attributeResponses;
-    }
 }

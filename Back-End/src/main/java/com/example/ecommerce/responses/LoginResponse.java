@@ -2,7 +2,6 @@ package com.example.ecommerce.responses;
 
 import lombok.*;
 
-import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
@@ -16,10 +15,6 @@ public class LoginResponse {
 
     private final String tokenType = "Bearer";
 
-    private Long id;
-
-    private String username;
-
-    private List<String> roles;
+    private UserResponse user;
 
 }

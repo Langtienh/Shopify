@@ -9,8 +9,7 @@ import java.util.List;
 public interface AttributeService {
     Attribute createAttribute(AttributeDTO attributeDTO);
     Attribute getAttributeById(long id);
-    List<Attribute> getAllAttributes();
+    List<?> getAllAttributes(String cname, String bname);
     Attribute updateAttribute(long id, AttributeDTO attributeDTO);
 
-    List<AttributeResponse> getAttributeByCategory(String category);
 }
