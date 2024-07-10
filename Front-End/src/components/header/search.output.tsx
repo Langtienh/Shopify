@@ -1,8 +1,8 @@
 "use client";
-import { prodcutSlug } from "@/utils/slugtify";
+import { productToSlug } from "@/lib/ultils";
 import Link from "next/link";
 import ImageWithFallback from "@/components/global/image";
-import { priceShow, priceThrough } from "@/utils/price";
+import { priceShow, priceThrough } from "@/lib/ultils";
 import { Empty } from "antd";
 
 export const SearchOutput = ({
@@ -21,7 +21,7 @@ export const SearchOutput = ({
             key={product.id}
             className="px-[10px] py-[5px] hover:bg-[#f5f5f5] text-sm text-[#7D7D7D] line-clamp-1"
           >
-            <Link onClick={handleCancel} href={prodcutSlug(product)}>
+            <Link onClick={handleCancel} href={productToSlug(product)}>
               {product.name}
             </Link>
           </li>
@@ -34,7 +34,7 @@ export const SearchOutput = ({
             key={product.id}
             className="px-[10px] py-[5px] text-[12px] hover:bg-[#f5f5f5]"
           >
-            <Link onClick={handleCancel} href={prodcutSlug(product)}>
+            <Link onClick={handleCancel} href={productToSlug(product)}>
               <div className="flex items-center gap-3">
                 <ImageWithFallback
                   width={50}

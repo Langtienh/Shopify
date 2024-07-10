@@ -5,7 +5,7 @@ import { Button, Checkbox, Form, Input, Spin } from "antd";
 import Link from "next/link";
 import { openNotification } from "@/lib/nofication";
 import { useRouter } from "next/navigation";
-import { DELAY } from "@/utils/delay";
+import { DELAY } from "@/lib/ultils";
 import { signIn } from "next-auth/react";
 
 const LoginForm: React.FC = () => {
@@ -13,7 +13,6 @@ const LoginForm: React.FC = () => {
   const [spinning, setSpinning] = useState<boolean>(false);
   const router = useRouter();
   const onFinish = async (values: LoginDTO) => {
-    setSpinning(true);
     setLoading(true);
     const res = await signIn("credentials", { ...values, redirect: false });
     setLoading(false);
@@ -29,11 +28,11 @@ const LoginForm: React.FC = () => {
         description: "Vui lòng đợi trong giây lát",
         notificationType: "success",
       });
+      setSpinning(true);
       await DELAY(2000);
-
+      setSpinning(false);
       router.push("/");
     }
-    setSpinning(false);
   };
 
   return (
@@ -47,7 +46,7 @@ const LoginForm: React.FC = () => {
         size="large"
       >
         <Form.Item
-          name="username"
+          name="phone"
           rules={[{ required: true, message: "Vui lòng nhập số điện thoại!" }]}
         >
           <Input

@@ -1,5 +1,5 @@
-import ProductList from "@/components/product/product.list";
-import { limitProductByCategory } from "@/utils/limitByCategory";
+import ProductList from "@/components/product/list/product.list";
+import { limitProductByCategory } from "@/lib/ultils";
 import { getTopProduct } from "@/actions/product.services";
 export default async function ProductTop({
   category,

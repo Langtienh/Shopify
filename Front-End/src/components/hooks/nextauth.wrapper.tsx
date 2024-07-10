@@ -2,7 +2,7 @@
 import { SessionProvider } from "next-auth/react";
 import React from "react";
 
-export default function AuthProviders({
+export default function NextAuthWrapper({
   children,
 }: Readonly<{
   children: React.ReactNode;

@@ -19,12 +19,8 @@ export default function SearchInput() {
   );
   useEffect(() => {
     const fetchProduct = async () => {
-      try {
-        const data = await SearchProductAction(searchQuery);
-        setProducts(data);
-      } catch (e) {
-        console.log(e);
-      }
+      const data = await SearchProductAction(searchQuery);
+      setProducts(data);
     };
     if (searchQuery) fetchProduct();
   }, [searchQuery]);

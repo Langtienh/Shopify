@@ -1,4 +1,5 @@
-import { translateCategory } from "@/utils/translate";
+import ProductFilterProps from "@/components/product/filter/product.filters.props";
+import { slugToCategoryEn, slugToCategoryVi } from "@/lib/ultils";
 import { Metadata } from "next";
 
 type Props = {
@@ -8,15 +9,25 @@ export async function generateMetadata({
   params,
 }: Props): // parent: ResolvingMetadata
 Promise<Metadata> {
-  const t = translateCategory(params.category);
+  const t = slugToCategoryVi(params.category);
   return {
     title: `${t} ${params.brand} Chính hãng 🔥🔥🔥`,
   };
 }
 export default function RootLayout({
   children,
-}: Readonly<{
+  params,
+}: {
   children: React.ReactNode;
-}>) {
-  return children;
+  params: { category: string; brand: string };
+}) {
+  return (
+    <>
+      <ProductFilterProps
+        category={slugToCategoryEn(params.category)}
+        brands={params.brand}
+      />
+      {children}
+    </>
+  );
 }

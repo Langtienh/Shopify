@@ -31,15 +31,3 @@ declare module "next-auth" {
     refreshToken?: string;
   }
 }
-
-interface User {
-  user?: IUser;
-  token?: string;
-  refreshToken?: string;
-}
-
-interface AdapterUser {
-  user?: IUser;
-  token?: string;
-  refreshToken?: string;
-}

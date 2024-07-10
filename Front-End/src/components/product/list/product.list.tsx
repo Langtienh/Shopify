@@ -1,4 +1,4 @@
-import ProductItem from "@/components/product/product.item";
+import ProductItem from "@/components/product/item/product.item";
 
 export default async function ProductList({
   products,

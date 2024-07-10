@@ -1,8 +1,8 @@
 "use client";
 
-import { DELAY } from "@/utils/delay";
-import { splitFullName } from "@/utils/split.fullname";
-import { translateCategory } from "@/utils/translate";
+import { categoryToSlug, DELAY } from "@/lib/ultils";
+import { splitFullName } from "@/lib/ultils";
+import { translateCategory } from "@/lib/ultils";
 import type { MenuProps } from "antd";
 import { Button, Dropdown, Image, Spin, Tooltip } from "antd";
 import { signOut, useSession } from "next-auth/react";
@@ -40,11 +40,18 @@ export const MenuDropdown = ({
 }) => {
   let items: MenuProps["items"] = brands.map((item: BrandResponse) => ({
     key: item.id,
-    label: <Link href={`/${category}/${item.name}`}>{item.name}</Link>,
+    label: (
+      <Link href={`/${categoryToSlug(category)}/${item.name}`}>
+        {item.name}
+      </Link>
+    ),
   }));
   items = [
-    { key: 0, label: <Link href={`/${category}`}>Xem tất cả</Link> },
     ...items,
+    {
+      key: 0,
+      label: <Link href={`/${categoryToSlug(category)}`}>Xem tất cả</Link>,
+    },
   ];
   type IconKey = keyof typeof icons; // Định nghĩa kiểu cho các key của đối tượng icons
 

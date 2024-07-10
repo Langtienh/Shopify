@@ -1,12 +1,7 @@
-import NavBrand from "@/components/global/nav.brand";
-import MyPagination from "@/components/pagination/pagination";
-import ProductFilter from "@/components/product/product.filters";
-import ProductList from "@/components/product/product.list";
-import ProductSort from "@/components/product/product.sort";
-import {
-  getAllCategoryBrand,
-  getProductByCategoryAndBand,
-} from "@/actions/product.services";
+import { getAllCategoryBrand } from "@/actions/product.services";
+import { slugToCategoryEn } from "@/lib/ultils";
+import ProductsListProps from "@/components/product/list/product.list.props";
+// todo
 export async function generateStaticParams() {
   const CategoryBrands = await getAllCategoryBrand();
   return CategoryBrands.map((item) => ({
@@ -20,29 +15,24 @@ export default async function Page({
   searchParams,
 }: {
   params: { category: string; brand: string };
-  searchParams: { page?: number; limit?: number; sort?: string };
+  searchParams: {
+    page?: number;
+    limit?: number;
+    sort?: string;
+    filters?: string;
+  };
 }) {
-  const PAGE = searchParams?.page ?? 1;
-  const LIMIT = searchParams?.limit ?? 10;
-  const SORT = searchParams?.sort ?? "id:asc";
-  const [products, totalItem] = await getProductByCategoryAndBand(
-    params.category,
-    params.brand,
-    LIMIT,
-    PAGE,
-    SORT
-  );
   return (
-    <div className="flex flex-col gap-4">
-      <NavBrand category={params.category} />
-      <h2 className="text-lg font-bold ">Chọn theo tiêu chí</h2>
-      <ProductFilter category={params.category} />
-      <h2 className="text-lg font-bold ">Sắp xếp theo</h2>
-      <ProductSort />
-      <ProductList products={products} />
-      <MyPagination current={PAGE} pageSize={LIMIT} total={totalItem} />
-      <div></div>
-      <div></div>
-    </div>
+    <>
+      <ProductsListProps
+        page={searchParams.page}
+        limit={searchParams.limit}
+        sort={searchParams.sort}
+        filters={searchParams.filters}
+        category={slugToCategoryEn(params.category)}
+        brand={params.brand}
+        pagination
+      />
+    </>
   );
 }
