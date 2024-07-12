@@ -1,20 +1,19 @@
-import { getAllCategoryBrand } from "@/actions/product.services";
-import { slugToCategoryEn } from "@/lib/ultils";
+import { getAllCategory } from "@/actions/product.services";
 import ProductsListProps from "@/components/product/list/product.list.props";
+
 // todo
-export async function generateStaticParams() {
-  const CategoryBrands = await getAllCategoryBrand();
-  return CategoryBrands.map((item) => ({
-    category: item.category,
-    brand: item.brand,
-  }));
-}
+// export async function generateStaticParams() {
+//   const categories = await getAllCategory();
+//   return categories.map((category) => ({
+//     category: category.name,
+//   }));
+// }
 
 export default async function Page({
   params,
   searchParams,
 }: {
-  params: { category: string; brand: string };
+  params: { category: string };
   searchParams: {
     page?: number;
     limit?: number;
@@ -22,6 +21,7 @@ export default async function Page({
     filters?: string;
   };
 }) {
+  const categoryCP = params.category.replace(".html", "");
   return (
     <>
       <ProductsListProps
@@ -29,8 +29,7 @@ export default async function Page({
         limit={searchParams.limit}
         sort={searchParams.sort}
         filters={searchParams.filters}
-        category={slugToCategoryEn(params.category)}
-        brand={params.brand}
+        category={categoryCP}
         pagination
       />
     </>

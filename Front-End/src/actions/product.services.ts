@@ -80,6 +80,16 @@ export const getProductByCategory = async (
   return [products, totalItem];
 };
 
+export const getAllProduct = async (
+  LIMIT: number
+): Promise<ProductResponse[]> => {
+  const res = await get<PageResponse<ProductResponse>>(
+    `/products?limit=${LIMIT}`
+  );
+  const products = res.data.result;
+  return products;
+};
+
 export const getAttributesByCategory = async (
   category: string,
   brand?: string
@@ -98,4 +108,10 @@ export const SearchProductAction = async (searchQuery: string) => {
   );
   const products = res.data.result;
   return products;
+};
+
+export const getProductById = async (id: string) => {
+  const res = await get<ProductResponse>(`/products/${id}`);
+  const data = res.data;
+  return data;
 };

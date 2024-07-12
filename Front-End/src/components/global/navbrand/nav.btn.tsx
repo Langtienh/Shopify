@@ -11,9 +11,11 @@ export const NavBrandButton = ({
 }) => {
   const patchName = usePathname();
   let parts = patchName.split("/");
-  const brand = parts[parts.length - 1];
+
+  const brand = parts[parts.length - 1].replace(".html", "");
   return (
     <Button
+      className="capitalize"
       ghost={brand === label}
       type={brand === label ? "primary" : "default"}
       danger={danger}

@@ -1,5 +1,5 @@
 import ProductFilterProps from "@/components/product/filter/product.filters.props";
-import { slugToCategoryEn, slugToCategoryVi } from "@/lib/ultils";
+import { translateCategory } from "@/lib/ultils";
 import { Metadata } from "next";
 
 type Props = {
@@ -9,7 +9,8 @@ export async function generateMetadata({
   params,
 }: Props): // parent: ResolvingMetadata
 Promise<Metadata> {
-  const t = slugToCategoryVi(params.category);
+  const categoryCP = params.category.replace(".html", "");
+  const t = translateCategory(categoryCP);
   return {
     title: `${t} ${params.brand} Chính hãng 🔥🔥🔥`,
   };
@@ -23,10 +24,11 @@ export default function RootLayout({
 }) {
   return (
     <>
-      <ProductFilterProps
-        category={slugToCategoryEn(params.category)}
+      {/* // todo */}
+      {/* <ProductFilterProps
+        category={params.category}
         brands={params.brand}
-      />
+      /> */}
       {children}
     </>
   );

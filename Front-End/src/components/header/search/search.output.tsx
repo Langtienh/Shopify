@@ -41,7 +41,7 @@ export const SearchOutput = ({
                   height={50}
                   alt={product.name}
                   src={product.image}
-                  fallbackSrc="/errorImage.png"
+                  fallbackSrc="/productError.png"
                 />
                 <div>
                   <h2 className="font-bold line-clamp-1">{product.name}</h2>

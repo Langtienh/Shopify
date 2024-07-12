@@ -3,8 +3,10 @@ import debounce from "lodash.debounce";
 import { Input } from "antd";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import { IoMdClose } from "react-icons/io";
-import { EmpytyProduct, SearchOutput } from "@/components/header/search.output";
+import {
+  EmpytyProduct,
+  SearchOutput,
+} from "@/components/header/search/search.output";
 import { SearchProductAction } from "@/actions/product.services";
 
 export default function SearchInput() {
@@ -34,22 +36,20 @@ export default function SearchInput() {
   };
   return (
     <>
-      <div className=" relative h-full flex items-center">
-        <div className="min-w-[300px] text-gray-500">
+      <div className="flex-1 relative h-full flex items-center justify-center">
+        <div className="max-w-[500px] w-full text-gray-500">
           <Input
+            allowClear
             value={input}
             onChange={onchange}
             className="w-full px-4"
             prefix={<FaSearch />}
-            suffix={
-              <IoMdClose className="cursor-pointer" onClick={handleCancel} />
-            }
             placeholder="Bạn cần tìm gì"
           />
         </div>
         <div
           hidden={!input}
-          className="overflow-hidden absolute top-[100%] max-w-[400px] w-screen bg-white text-black rounded-md z-20"
+          className="overflow-hidden absolute top-[100%] max-w-[500px] w-screen bg-white text-black rounded-md z-20"
         >
           {!!products.length ? (
             <SearchOutput handleCancel={handleCancel} products={products} />

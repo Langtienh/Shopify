@@ -1,4 +1,4 @@
-import Header from "@/components/header/header";
+import Header from "@/components/header/guiest.header";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -12,9 +12,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="max-w-[1280px] mx-auto relative">
+    <div className="max-w-[1400px] mx-auto relative">
       <Header />
-      <main className="text-[#444444] max-w-[1200px] mx-auto w-full px-2 mt-[132px] pt-5">
+      <main className="text-[#444444] max-w-[1200px] mx-auto w-full px-2 pt-[152px]">
         {children}
       </main>
     </div>

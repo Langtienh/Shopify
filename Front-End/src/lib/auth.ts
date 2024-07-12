@@ -4,7 +4,7 @@ import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { AuthOptions } from "next-auth";
 import { loginAction } from "@/actions/auth.action";
-const config: AuthOptions = {
+const authOptions: AuthOptions = {
   secret: process.env.NO_SECRET!,
   providers: [
     CredentialsProvider({
@@ -63,6 +63,6 @@ const config: AuthOptions = {
     },
   },
 };
-// export const { handlers, auth, signIn, signOut } = NextAuth(config);
-const handler = NextAuth(config);
-export { handler, config };
+// export const { handlers, auth, signIn, signOut } = NextAuth(authOptions);
+const handler = NextAuth(authOptions);
+export { handler, authOptions };

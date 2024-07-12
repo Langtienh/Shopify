@@ -7,8 +7,30 @@ const config: Config = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      screens: {
+        xl: "1250px",
+      },
+      scrollbar: ["rounded"],
+    },
   },
-  plugins: [],
+  plugins: [
+    // @ts-ignore
+    function ({ addUtilities }) {
+      addUtilities(
+        {
+          ".no-scrollbar": {
+            /* Hide scrollbar for IE, Edge and Firefox */
+            "-ms-overflow-style": "none" /* IE and Edge */,
+            "scrollbar-width": "none" /* Firefox */,
+          },
+          ".no-scrollbar::-webkit-scrollbar": {
+            display: "none" /* Safari and Chrome */,
+          },
+        },
+        ["responsive"]
+      );
+    },
+  ],
 };
 export default config;

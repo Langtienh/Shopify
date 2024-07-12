@@ -62,52 +62,59 @@ export default function ProductFilter({
   return (
     <>
       <h2 className="text-lg font-bold ">Chọn theo tiêu chí</h2>
-      <div className="flex gap-3">
-        {!!filters.length &&
-          filters.map((item) => (
-            <Tooltip
-              key={item.name}
-              title={
-                <div className="flex flex-wrap gap-2 w-[250px]">
-                  {!!item.values.length &&
-                    item.values.map((value) => (
-                      <Button
-                        onClick={() => onClick(item.name, value)}
-                        key={value}
-                      >
-                        {value}
-                      </Button>
-                    ))}
-                </div>
-              }
-              placement="bottom"
-              color="#fff"
-            >
-              <Button
-                danger={checkActive(item.name)}
-                onClick={() => onDelete(item.name)}
+      <div className="w-full overflow-auto no-scrollbar">
+        <div className="flex gap-3">
+          {!!filters.length &&
+            filters.map((item) => (
+              <Tooltip
+                key={item.name}
+                title={
+                  <div className="flex flex-wrap gap-2 w-[250px]">
+                    {!!item.values.length &&
+                      item.values.map((value) => (
+                        <Button
+                          className="capitalize"
+                          onClick={() => onClick(item.name, value)}
+                          key={value}
+                        >
+                          {value}
+                        </Button>
+                      ))}
+                  </div>
+                }
+                placement="bottom"
+                color="#fff"
               >
-                {item.name}
-              </Button>
-            </Tooltip>
-          ))}
+                <Button
+                  className="capitalize"
+                  danger={checkActive(item.name)}
+                  onClick={() => onDelete(item.name)}
+                >
+                  {item.name}
+                </Button>
+              </Tooltip>
+            ))}
+        </div>
       </div>
 
       {!!filterValues.length && (
         <>
           <h2 className="text-lg font-bold ">Đang lọc theo</h2>
-          <div className="flex gap-3">
-            {filterValues.map((item) => (
-              <Button
-                danger
-                icon={<IoIosCloseCircle />}
-                onClick={() => onDelete(item.name)}
-                key={`${item.name}:${item.value}`}
-              >{`${item.name}: ${item.value}`}</Button>
-            ))}
-            <Button danger onClick={onDeleteAll}>
-              Bỏ chọn tất cả
-            </Button>
+          <div className="w-full overflow-auto no-scrollbar">
+            <div className="flex gap-3">
+              {filterValues.map((item) => (
+                <Button
+                  className="capitalize"
+                  danger
+                  icon={<IoIosCloseCircle />}
+                  onClick={() => onDelete(item.name)}
+                  key={`${item.name}:${item.value}`}
+                >{`${item.name}: ${item.value}`}</Button>
+              ))}
+              <Button danger onClick={onDeleteAll}>
+                Bỏ chọn tất cả
+              </Button>
+            </div>
           </div>
         </>
       )}

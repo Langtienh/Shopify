@@ -18,7 +18,7 @@ export const toSlugify = (slug: string) =>
 export const productToSlug = (product: ProductResponse) =>
   `/product/${toSlugify(product.name)}-${product.id}.html`;
 
-export const productToSlugToId = (slug: string) => {
+export const productSlugToId = (slug: string) => {
   const id = slug.substring(slug.lastIndexOf("-") + 1, slug.lastIndexOf("."));
   return id;
 };
@@ -54,31 +54,4 @@ export const limitProductByCategory = (id: number) => {
   const index = categories.findIndex((item) => id === item.id);
   if (index !== -1) return categories[index].limit;
   return 10;
-};
-
-// hard coding
-export const categoryToSlug = (category: string) => {
-  const index = categories.findIndex(
-    (item: { en: string }) => category.toUpperCase() === item.en.toUpperCase()
-  );
-  if (index !== -1) return categories[index].slug;
-  return category;
-};
-
-// hard coding
-export const slugToCategoryEn = (slug: string) => {
-  const index = categories.findIndex(
-    (item: { slug: string }) => slug.toUpperCase() === item.slug.toUpperCase()
-  );
-  if (index !== -1) return categories[index].en;
-  return slug;
-};
-
-// hard coding
-export const slugToCategoryVi = (slug: string) => {
-  const index = categories.findIndex(
-    (item: { slug: string }) => slug.toUpperCase() === item.slug.toUpperCase()
-  );
-  if (index !== -1) return categories[index].vi;
-  return slug;
 };

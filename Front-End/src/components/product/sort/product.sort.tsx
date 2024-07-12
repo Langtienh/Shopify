@@ -58,17 +58,19 @@ export default function ProductSort() {
   return (
     <>
       <h2 className="text-lg font-bold ">Sắp xếp theo</h2>
-      <div className="flex gap-3">
-        {sorter.map((item, index) => (
-          <Button
-            onClick={() => onChange(`${item.name}${item.order}`, index)}
-            danger={index === sortActive}
-            icon={item.icon}
-            key={index}
-          >
-            {item.label}
-          </Button>
-        ))}
+      <div className="w-full overflow-auto no-scrollbar">
+        <div className="flex gap-3">
+          {sorter.map((item, index) => (
+            <Button
+              onClick={() => onChange(`${item.name}${item.order}`, index)}
+              danger={index === sortActive}
+              icon={item.icon}
+              key={index}
+            >
+              {item.label}
+            </Button>
+          ))}
+        </div>
       </div>
     </>
   );
