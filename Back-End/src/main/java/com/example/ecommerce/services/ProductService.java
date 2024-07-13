@@ -11,6 +11,7 @@ public interface ProductService {
     ProductResponse createProduct(ProductDTO productDTO);
     ProductResponse updateProduct(long id, ProductDTO productDTO);
 
-    PageResponse getAllProducts(
+    PageResponse searchProduct(
             int page, int limit, String brand,String category, String[] search, String... sort);
+    List<ProductResponse> getAllProducts();
 }

@@ -25,9 +25,17 @@ public class ProductServiceImpl implements ProductService {
     private final SearchRepository searchRepository;
     private final CategoryRepository categoryRepository;
     @Override
-    public PageResponse getAllProducts(
+    public PageResponse searchProduct(
             int page, int limit, String brand,String category, String[] search, String... sort) {
-        return searchRepository.getAllProducts(page, limit, brand,category, search, sort);
+        return searchRepository.searchProduct(page, limit, brand,category, search, sort);
+    }
+
+    @Override
+    public List<ProductResponse> getAllProducts() {
+        return productRepository.findAll()
+                .stream()
+                .map(p -> ProductResponse.fromProduct(p, null))
+                .toList();
     }
 
     @Override

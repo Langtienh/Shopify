@@ -27,13 +27,13 @@ public class User implements UserDetails {
     @Column(name = "full_name")
     private String fullName;
 
-    @Column(name = "phone")
+    @Column(name = "phone", unique = true)
     private String phone;
 
     @Column(name = "password")
     private String password;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "address")
@@ -45,7 +45,7 @@ public class User implements UserDetails {
     @Column(name = "active")
     private boolean active;
 
-    @Column(name = "provider_id")
+    @Column(name = "provider_id", unique = true)
     private String providerId;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)

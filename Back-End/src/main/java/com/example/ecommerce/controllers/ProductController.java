@@ -20,8 +20,8 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
 
-    @GetMapping("")
-    public ResponseEntity<ResponseSuccess> getAllProducts(
+    @GetMapping("/search-product")
+    public ResponseEntity<ResponseSuccess> searchProduct(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int limit,
             @RequestParam(required = false) String brand,
@@ -30,11 +30,20 @@ public class ProductController {
             @RequestParam(required = false) String... sort
     ){
         PageResponse pageResponse
-                = productService.getAllProducts(page, limit, brand,category, search, sort);
+                = productService.searchProduct(page, limit, brand,category, search, sort);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
                 .message("Get all product information successfully")
                 .status(HttpStatus.OK.value())
                 .data(pageResponse)
+                .build());
+    }
+
+    @GetMapping("")
+    public ResponseEntity<ResponseSuccess> getAllProducts(){
+        return ResponseEntity.ok().body(ResponseSuccess.builder()
+                .message("Get all product information successfully")
+                .status(HttpStatus.OK.value())
+                .data(productService.getAllProducts())
                 .build());
     }
 

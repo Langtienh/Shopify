@@ -40,7 +40,7 @@ public class SearchRepository {
     /**
      * api/v1/products?brand=iphone&category=smartphone&search=name:iphone,price>25000000&page=1&limit=10&sort=price:desc
      * */
-    public PageResponse getAllProducts(
+    public PageResponse searchProduct(
             int page, int limit, String brand,String category, String[] search, String... sort) {
         if(StringUtils.hasLength(brand) && brandRepository.findByName(brand) == null)
             throw new ResourceNotFoundException("Brand not found");

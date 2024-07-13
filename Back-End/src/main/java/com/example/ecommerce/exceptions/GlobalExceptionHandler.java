@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -46,10 +48,17 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ResponseError> handleSQLIntegrityConstraintViolationException(
             SQLIntegrityConstraintViolationException e){
+        String regex = "Duplicate entry '(.*)' for key";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(e.getMessage());
+        String error = "";
+        if(matcher.find()){
+            error = "Duplicate entry: " + matcher.group(1);
+        }
         return ResponseEntity.badRequest().body(
                 ResponseError.builder()
                         .status(HttpStatus.BAD_REQUEST.value())
-                        .message(e.getMessage())
+                        .message(error)
                         .build()
         );
     }
