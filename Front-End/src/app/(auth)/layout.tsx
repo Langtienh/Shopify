@@ -6,7 +6,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="max-w-[1280px] mx-auto relative pb-20">
+    <div className="max-w-[1400px] mx-auto relative pb-20">
       <div>
         <HeaderAuth />
       </div>

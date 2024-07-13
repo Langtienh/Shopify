@@ -1,7 +1,7 @@
 import "./globals.css";
 import { Roboto } from "next/font/google";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
-import AuthProviders from "@/components/providers/nextauth.provider";
+import NextAuthWrapper from "@/hooks/nextauth.wrapper";
 
 const roboto = Roboto({
   weight: "400",
@@ -19,11 +19,12 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/nestjs-icon.ico" />
       </head>
-      <body>
-        <AntdRegistry>
-          <AuthProviders>{children}</AuthProviders>
-        </AntdRegistry>
-      </body>
+
+      <AntdRegistry>
+        <NextAuthWrapper>
+          <body>{children}</body>
+        </NextAuthWrapper>
+      </AntdRegistry>
     </html>
   );
 }

@@ -123,7 +123,7 @@ type LoginResponse = {
   refreshToken: string;
   tokenType: string;
   id: number;
-  username: string;
+  phone: string;
   roles: string[];
 };
 

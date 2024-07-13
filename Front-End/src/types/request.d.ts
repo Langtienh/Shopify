@@ -8,7 +8,7 @@ type RegisterDTO = {
 };
 
 type LoginDTO = {
-  username: string;
+  phone: string;
   password: string;
 };
 

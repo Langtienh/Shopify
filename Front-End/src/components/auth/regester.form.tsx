@@ -10,7 +10,7 @@ import {
 import { registerAction } from "@/actions/auth.action";
 import { openNotification } from "@/lib/nofication";
 import { useRouter } from "next/navigation";
-import { DELAY } from "@/utils/delay";
+import { DELAY } from "@/lib/ultils";
 
 const { Option } = Select;
 
@@ -95,7 +95,7 @@ const RegesterForm: React.FC = () => {
             },
           ]}
         >
-          <Input placeholder="Nhập họ và tên" />
+          <Input placeholder="Nhập tên" />
         </Form.Item>
 
         <Form.Item
@@ -110,7 +110,7 @@ const RegesterForm: React.FC = () => {
           rules={[
             {
               type: "email",
-              message: "Sai định dạnh ví dụ username@gmail.com",
+              message: "Sai định dạnh ví dụ phone@gmail.com",
             },
             {
               required: true,

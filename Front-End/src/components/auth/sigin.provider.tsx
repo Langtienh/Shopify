@@ -1,7 +1,11 @@
 "use client";
 import { openNotification } from "@/lib/nofication";
-import { Button, Image } from "antd";
+import { DELAY } from "@/lib/ultils";
+import { Button, Image, Spin } from "antd";
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+// hardcode
 const providers = [
   {
     title: "Google",
@@ -21,14 +25,20 @@ const providers = [
 ];
 
 export default function SignProvider() {
+  const router = useRouter();
+  const [spinning, setSpinning] = useState<boolean>(false);
   const signInWith = async (provider: string) => {
     try {
-      await signIn(provider);
+      const res = await signIn(provider);
       openNotification({
         message: "Đăng nhập thành công",
         description: "Vui lòng đợi trong giây lát",
         notificationType: "success",
       });
+      setSpinning(true);
+      await DELAY(2000);
+      setSpinning(false);
+      router.push("/");
     } catch {
       openNotification({
         message: "Đăng nhập thất bại",
@@ -39,6 +49,7 @@ export default function SignProvider() {
   };
   return (
     <>
+      <Spin fullscreen spinning={spinning} />
       {providers.map((item) => (
         <Button
           onClick={() => {
