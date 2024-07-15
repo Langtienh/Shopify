@@ -1,12 +1,17 @@
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-export async function middleware(request: NextRequest) {
-  const url = request.url;
-  let isLogin = request.cookies.has("next-auth.session-token");
-  if ((isLogin && url.includes("login")) || url.includes("register"))
-    return NextResponse.redirect(new URL("/", url));
-  else if (!isLogin && !url.includes("login") && !url.includes("register"))
-    return NextResponse.redirect(new URL("/login", url));
+import type { NextFetchEvent, NextRequest } from "next/server";
+
+const key = process.env.NO_SECRET!;
+
+export function middleware(request: NextRequest, event: NextFetchEvent) {
+  // event.waitUntil(
+  //   fetch("http://localhost:3000/api/restricted", {
+  //     method: "POST",
+  //     body: JSON.stringify({
+  //       key,
+  //     }),
+  //   })
+  // );
 }
 
 // See "Matching Paths" below to learn more

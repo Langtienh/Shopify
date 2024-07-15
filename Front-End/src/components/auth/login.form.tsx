@@ -3,21 +3,23 @@ import React, { useState } from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, Spin } from "antd";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { loginWithCredentials } from "@/actions/next-auth.custom";
+import { useRouter, useSearchParams } from "next/navigation";
+import { loginWithCredentials } from "@/actions/next-auth.action";
 import { DELAY } from "@/lib/ultils";
 
 const LoginForm: React.FC = () => {
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
   const [spinning, setSpinning] = useState<boolean>(false);
   const router = useRouter();
   const onFinish = async (values: LoginDTO) => {
     setSpinning(true);
-    const res = await loginWithCredentials(values);
+    const res = await loginWithCredentials(values, callbackUrl);
     setSpinning(false);
-    if (res) {
-      await DELAY(2000);
-      router.push("/");
-    }
+    // if (res) {
+    //   await DELAY(2000);
+    //   router.push("/");
+    // }
   };
 
   return (

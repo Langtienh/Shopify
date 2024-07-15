@@ -10,8 +10,8 @@ import { FaUser } from "react-icons/fa";
 
 export const Auth = () => {
   const { data: session } = useSession();
+  if (session) console.log(session);
   const [spinning, setSpinning] = useState<boolean>(false);
-
   const user = session?.user;
   const Logout = async () => {
     setSpinning(true);

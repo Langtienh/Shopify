@@ -8,14 +8,13 @@ import {
 } from "@/lib/ultils";
 import { Carousel, Image, Rate } from "antd";
 import { productImage, smartphoneSlider } from "@/hard-coding/data";
-import AddProductToCart from "@/components/product/button/btn.addToCart";
+import AddProductToCart from "@/app/(guiest)/(product-detail)/_components/page/button/btn.addToCart";
 import { MdCurrencyExchange } from "react-icons/md";
 
 export async function generateStaticParams() {
-  let products = await getAllProduct(500);
-  products = products.filter(
-    (item) => item.category.toLowerCase() === "smartphone"
-  );
+  const count = process?.env?.PRODUCT_ITEM ?? "0";
+  const countItem = +count;
+  const products = await getAllProduct(countItem);
   return products.map((product) => ({
     slug: productToSlug(product),
   }));
@@ -40,7 +39,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
         </h1>
         <div className="flex flex-wrap gap-y-5 md:flex-nowrap">
           <div className="xl:w-2/3 md:w-1/2 w-full flex-1 md:pr-5">
-            <Carousel dots={false} arrows infinite={false}>
+            <Carousel dots={false} arrows infinite={true}>
               <div className="relative overflow-hidden h-fulloverflow-hidden rounded-xl border border-gray-200 shadow-lg">
                 <div
                   style={{

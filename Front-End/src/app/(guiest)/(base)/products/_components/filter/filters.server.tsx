@@ -1,13 +1,13 @@
 import { getAttributesByCategory } from "@/actions/product.services";
-import ProductFilter from "@/components/product/filter/product.filters";
+import ProductFilter from "@/app/(guiest)/(base)/products/_components/filter/filters.client";
 
 export default async function ProductFilterProps({
   category,
-  brands,
+  brand,
 }: {
   category: string;
-  brands?: string;
+  brand?: string;
 }) {
-  const filters = await getAttributesByCategory(category, brands);
+  const filters = await getAttributesByCategory(category, brand);
   return <ProductFilter filters={filters} />;
 }

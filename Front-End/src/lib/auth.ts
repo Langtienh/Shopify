@@ -3,7 +3,8 @@ import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { AuthOptions } from "next-auth";
-import { loginAction } from "@/actions/auth.action";
+import { checkAccount, loginAction } from "@/actions/auth.action";
+const BASE_URL = process.env.FRONT_END_URL!;
 const authOptions: AuthOptions = {
   secret: process.env.NO_SECRET!,
   providers: [
@@ -18,9 +19,11 @@ const authOptions: AuthOptions = {
           phone: credentials?.phone!,
           password: credentials?.password!,
         });
-        if (res.data) {
-          return res.data as any;
+        const user = res.data as any;
+        if (user) {
+          return user;
         } else {
+          // return null;
           throw new Error(res.message);
         }
       },
@@ -34,18 +37,43 @@ const authOptions: AuthOptions = {
       clientSecret: process.env.GITHUB_SECRET!,
     }),
   ],
+  session: {
+    strategy: "jwt",
+    // Đặt thời gian sống cho phiên bằng thời hạn của reresh_token, hết hạn => logout
+    maxAge: +process.env.REFRESH_TOKEN! || 30 * 24 * 60 * 60, // 30 ngày
+    // Tần suất cập nhật lại phiên = thời hạn của token, hết hạn => refresh
+    updateAge: +process.env.TOKEN! || 24 * 60 * 60, // 1 ngày
+  },
   callbacks: {
-    // async redirect({ url, baseUrl }) {
-    //   return baseUrl;
-    // },
-    async session({ session, token }) {
+    async signIn({ user, account, profile, email, credentials }) {
+      if (user?.id && account?.provider !== "credentials") {
+        const res = await checkAccount(user.id);
+        if (!res) return `${BASE_URL}/register?phone=false`;
+      }
+      return true;
+    },
+    async redirect({ url, baseUrl }) {
+      if (url && url[url.length - 1] === "/") url.replace(/\/$/, "");
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
+    },
+    async session({ session, token, trigger, newSession, user }) {
       session.user = token.user;
+      session.refreshToken = token.refreshToken;
+      if (token.sub && !session.refreshToken) {
+        const res = await checkAccount(token.sub);
+        if (res) {
+          session.refreshToken = res.refreshToken;
+        }
+      }
+
       // session.expires = // todo
       return session;
     },
-    async jwt({ token, account, trigger, user }) {
+    async jwt({ token, account, trigger, user, profile, session }) {
       if (
-        (trigger === "signUp" && account?.provider === "github") ||
+        (trigger === "signIn" && account?.provider === "github") ||
         account?.provider === "google"
       ) {
         const customUser = {
@@ -63,6 +91,5 @@ const authOptions: AuthOptions = {
     },
   },
 };
-// export const { handlers, auth, signIn, signOut } = NextAuth(authOptions);
 const handler = NextAuth(authOptions);
 export { handler, authOptions };

@@ -1,7 +1,5 @@
 "use server";
-
 import { get } from "@/actions/axios.helper";
-
 export const getAllCategory = async (): Promise<CategoryResponse[]> => {
   const res = await get<CategoryResponse[]>("/categories");
   const categories = res.data.sort((a, b) => a.id - b.id);
@@ -30,7 +28,7 @@ export const getTopProduct = async (
 ): Promise<ProductResponse[]> => {
   try {
     const res = await get<PageResponse<ProductResponse>>(
-      `/products?category=${category}&limit=${limit}&sort=viewCount:desc`
+      `/products/search-product?category=${category}&limit=${limit}&sort=viewCount:desc`
     );
     const products = res.data.result;
     return products;
@@ -39,21 +37,26 @@ export const getTopProduct = async (
   }
 };
 // sort,  filter
-export const getProductByCategoryAndBand = async (
-  category: string,
-  limit: number,
-  page: number,
-  sort: string,
+export const getProductOption = async (
+  limit: number = 10,
+  page: number = 1,
+  sort: string = "id:asc",
+  category?: string,
   filter?: string,
   brand?: string
 ): Promise<[ProductResponse[], number]> => {
   try {
     const res = await get<PageResponse<ProductResponse>>(
-      `/products?category=${category}${
+      `/products/search-product?category=${category}${
         brand ? `&brand=${brand}` : ""
       }&page=${page}&limit=${limit}&sort=${sort}${
         filter ? `&search=${filter}` : ""
-      }`
+      }`,
+      {
+        headers: {
+          "Cache-Control": "no-store",
+        },
+      }
     );
     const products = res.data.result;
     const totalItem = res.data.totalItem;
@@ -71,7 +74,7 @@ export const getProductByCategory = async (
   filter?: string
 ): Promise<[ProductResponse[], number]> => {
   const res = await get<PageResponse<ProductResponse>>(
-    `/products?category=${category}&page=${PAGE}&limit=${LIMIT}&sort=${SORT}${
+    `/products/search-product?category=${category}&page=${PAGE}&limit=${LIMIT}&sort=${SORT}${
       filter ? `&search=${filter}` : ""
     }`
   );
@@ -84,7 +87,7 @@ export const getAllProduct = async (
   LIMIT: number
 ): Promise<ProductResponse[]> => {
   const res = await get<PageResponse<ProductResponse>>(
-    `/products?limit=${LIMIT}`
+    `/products/search-product?limit=${LIMIT}`
   );
   const products = res.data.result;
   return products;
@@ -104,7 +107,7 @@ export const getAttributesByCategory = async (
 export const SearchProductAction = async (searchQuery: string) => {
   // todo
   const res = await get<PageResponse<ProductResponse>>(
-    `/products?search=name:${searchQuery}&limit=5`
+    `/products/search-product?search=name:${searchQuery}&limit=5`
   );
   const products = res.data.result;
   return products;

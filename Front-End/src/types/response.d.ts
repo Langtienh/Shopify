@@ -122,9 +122,7 @@ type LoginResponse = {
   token: string;
   refreshToken: string;
   tokenType: string;
-  id: number;
-  phone: string;
-  roles: string[];
+  user: UserResponse;
 };
 
 type AttibulteResponse = {

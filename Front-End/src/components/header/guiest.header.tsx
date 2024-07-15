@@ -5,7 +5,7 @@ import Breadcrumb from "@/components/ui/breadcrumb";
 
 export default async function Header() {
   return (
-    <div className="fixed top-0 w-full max-w-[1400px] mx-auto z-10">
+    <div className="fixed top-0 w-full max-w-[1400px] mx-auto z-30">
       {/* <Header1 /> */}
       <Header2 />
       <Header3 />

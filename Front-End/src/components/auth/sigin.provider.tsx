@@ -3,7 +3,7 @@ import { openNotification } from "@/lib/nofication";
 import { DELAY } from "@/lib/ultils";
 import { Button, Image, Spin } from "antd";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 // hardcode
 const providers = [
@@ -26,10 +26,12 @@ const providers = [
 
 export default function SignProvider() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
   const [spinning, setSpinning] = useState<boolean>(false);
   const signInWith = async (provider: string) => {
     try {
-      const res = await signIn(provider);
+      const res = await signIn(provider, { callbackUrl });
       openNotification({
         message: "Đăng nhập thành công",
         description: "Vui lòng đợi trong giây lát",

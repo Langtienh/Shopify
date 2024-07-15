@@ -1,9 +1,17 @@
+import { authOptions } from "@/lib/auth";
 import { openNotification } from "@/lib/nofication";
+import { getServerSession } from "next-auth";
 import { signIn } from "next-auth/react";
 
-export const loginWithCredentials = async (values: LoginDTO) => {
-  console.log("check");
-  const res = await signIn("credentials", { ...values, redirect: false });
+export const loginWithCredentials = async (
+  values: LoginDTO,
+  callbackUrl: string
+) => {
+  const res = await signIn("credentials", {
+    ...values,
+    // redirect: false,
+    callbackUrl,
+  });
   if (res?.error) {
     openNotification({
       description: res?.error ?? "Vui lòng đăng nhập lại",

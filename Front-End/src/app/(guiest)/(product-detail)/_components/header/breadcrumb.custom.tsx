@@ -9,7 +9,7 @@ export default function BreadcrumbCustom({
   product: ProductResponse;
 }) {
   const breadcrumb: { name: string; link: string }[] = [];
-  breadcrumb.push({ name: "products", link: `/products` });
+  // breadcrumb.push({ name: "products", link: `/products` });
   breadcrumb.push({
     name: product.category,
     link: `/products/${product.category}.html`,

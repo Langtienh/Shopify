@@ -3,11 +3,15 @@
 import { Pagination } from "antd";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 type TProps = {
-  current: number;
-  pageSize: number;
+  current?: number;
+  pageSize?: number;
   total: number;
 };
-export default function MyPagination({ current, pageSize, total }: TProps) {
+export default function MyPagination({
+  current = 1,
+  pageSize = 10,
+  total,
+}: TProps) {
   const { replace } = useRouter();
   const patchName = usePathname();
   const searchParams = useSearchParams();

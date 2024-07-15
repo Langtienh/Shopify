@@ -1,6 +1,6 @@
 import ProductItem from "@/components/product/item/product.item";
 
-export default async function ProductList({
+export default function ProductList({
   products,
 }: {
   products: ProductResponse[];
