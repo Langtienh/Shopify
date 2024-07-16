@@ -116,12 +116,19 @@ type UserResponse = {
   active: boolean;
   isMenber: boolean;
   avatar: string;
+  roles: string;
 };
 
 type LoginResponse = {
   token: string;
   refreshToken: string;
   tokenType: string;
+  user: UserResponse;
+};
+
+type UpdateSession = {
+  token: string;
+  refreshToken: string;
   user: UserResponse;
 };
 

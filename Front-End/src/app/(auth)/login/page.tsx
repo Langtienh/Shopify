@@ -1,5 +1,5 @@
-import LoginForm from "@/components/auth/login.form";
-import AuthTitle from "@/components/auth/title";
+import LoginForm from "@/app/(auth)/_components/login/login.form";
+import AuthTitle from "@/app/(auth)/_components/title";
 export default async function Page() {
   return (
     <>

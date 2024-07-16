@@ -1,13 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Button, Checkbox, Form, Input, Select } from "antd";
+import { Button, Checkbox, Form, Input, Select, Spin } from "antd";
 import Link from "next/link";
 import {
   getDistrictByParentCode,
   getWardByParentCode,
   getProvinceAll,
 } from "@/actions/vnAPI.services";
-import { registerAction } from "@/actions/auth.action";
+import { registerAction } from "@/app/(auth)/_lib/actions";
 import { openNotification } from "@/lib/nofication";
 import { useRouter } from "next/navigation";
 import { DELAY } from "@/lib/ultils";
@@ -52,7 +52,6 @@ const RegesterForm: React.FC = () => {
   const onFinish = async (values: RegisterForm) => {
     setLoading(true);
     const data = await registerAction(values);
-    setLoading(false);
     if (data) {
       openNotification({
         message: "Đăng kí thành công",
@@ -60,6 +59,7 @@ const RegesterForm: React.FC = () => {
         notificationType: "success",
       });
       await DELAY(1000);
+
       router.push("/login");
     } else {
       openNotification({
@@ -68,11 +68,11 @@ const RegesterForm: React.FC = () => {
         notificationType: "error",
       });
     }
+    setLoading(false);
   };
   const [loading, setLoading] = useState<boolean>(false);
-
   return (
-    <>
+    <Spin spinning={loading}>
       <Form
         form={form}
         name="register"
@@ -245,13 +245,7 @@ const RegesterForm: React.FC = () => {
           </Checkbox>
         </Form.Item>
         <Form.Item>
-          <Button
-            loading={loading}
-            type="primary"
-            danger
-            htmlType="submit"
-            className="w-full"
-          >
+          <Button type="primary" danger htmlType="submit" className="w-full">
             Đăng kí
           </Button>
         </Form.Item>
@@ -264,7 +258,7 @@ const RegesterForm: React.FC = () => {
           </Link>
         </p>
       </Form>
-    </>
+    </Spin>
   );
 };
 

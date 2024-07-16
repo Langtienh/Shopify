@@ -1,9 +1,10 @@
 "use client";
 
+import { logoutAction } from "@/app/(auth)/_lib/actions";
 import { DELAY } from "@/lib/ultils";
 import { splitFullName } from "@/lib/ultils";
 import { Button, Image, Spin, Tooltip } from "antd";
-import { signOut, useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 import { FaUser } from "react-icons/fa";
@@ -15,19 +16,24 @@ export const Auth = () => {
   const user = session?.user;
   const Logout = async () => {
     setSpinning(true);
-    await DELAY(2000);
-    await signOut();
+    await DELAY(1000);
+    await logoutAction(session?.token);
+    await signOut({ callbackUrl: "/login" });
     setSpinning(false);
   };
   const authDropdown: JSX.Element[] = [
     <Link key={1} href="/info">
       <Button type="text">Thông tin cá nhân</Button>
     </Link>,
-    <Button type="text" onClick={Logout} key={2}>
+
+    <Button htmlType="submit" type="text" onClick={Logout} key={2}>
       Đăng suất
     </Button>,
   ];
-  if (user && user.avatar && user.fullName) {
+
+  // console.log(user);
+  // if (user && user.avatar && user.fullName) {
+  if (user) {
     return (
       <>
         <Spin fullscreen spinning={spinning} />
@@ -46,7 +52,7 @@ export const Auth = () => {
               width={34}
               height={34}
               alt="avatar"
-              src={user.avatar}
+              src={user.avatar || "/images/default/avatar.jpg"}
               fallback="/nestjs-icon.ico"
               preview={false}
             />

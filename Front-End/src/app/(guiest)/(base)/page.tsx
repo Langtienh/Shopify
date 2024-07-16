@@ -1,4 +1,4 @@
-import Section from "@/components/home/section";
+import Section from "@/app/(guiest)/_components/home/section";
 import { getAllCategory } from "@/actions/product.services";
 import { Suspense } from "react";
 import Loading from "@/app/loading";

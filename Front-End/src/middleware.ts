@@ -1,20 +1,69 @@
-import { NextResponse } from "next/server";
-import type { NextFetchEvent, NextRequest } from "next/server";
+import { auth } from "@/auth/auth";
 
-const key = process.env.NO_SECRET!;
+// hard coding
+const loginPage = ["/login", "/register"];
+const firstLoginPage = "/first-login";
+const userPage = ["/smember/:path*", "/cart", "/invoice"];
+const adminPage = [];
+export default auth((req) => {
+  // input var
+  const path = req.nextUrl.pathname;
+  const callbackUrl = req.nextUrl.searchParams.get("callbackUrl") || "/";
+  const newUrl = new URL(callbackUrl || "/", req.nextUrl.origin);
+  const isLogin = req.auth;
+  const isFirstLogin = !req?.auth?.refreshToken;
+  const isUserPage = userPage.includes(path);
+  const isLoginPage = loginPage.includes(path);
+  const isFirstLoginPage = path === firstLoginPage;
 
-export function middleware(request: NextRequest, event: NextFetchEvent) {
-  // event.waitUntil(
-  //   fetch("http://localhost:3000/api/restricted", {
-  //     method: "POST",
-  //     body: JSON.stringify({
-  //       key,
-  //     }),
-  //   })
-  // );
-}
+  // logic
+  // Trang đăng nhập bằng provider lần đầu
+  if (isFirstLoginPage) {
+    // + chưa đăng nhập => đăng nhập
+    if (!isLogin) {
+      const newUrl = new URL(
+        `/login?callbackUrl=${callbackUrl}`,
+        req.nextUrl.origin
+      );
+      return Response.redirect(newUrl);
+    }
+    //  đã đăng nhập, không phải đăng nhập lần đầu => không cho vào
+    if (isLogin && !isFirstLogin) {
+      return Response.redirect(newUrl);
+    }
+  }
+  // Trang đăng nhập đăng kí
+  else if (isLoginPage) {
+    // + đã đăng nhập => đá về trang home hoặc callback
+    if (isLogin) return Response.redirect(newUrl);
+  }
+  // Trang user, trang admin (cần đăng nhập)
+  else if (isUserPage) {
+    // + Chưa đăng nhập => bắt đăng nhập
+    if (!isLogin) {
+      const newUrl = new URL(`/login?callbackUrl=${path}`, req.nextUrl.origin);
+      return Response.redirect(newUrl);
+    }
+    // + Đã đăng nhập, chưa có token => đăng nhập lần đầu, thêm số đt
+    if (isLogin && isFirstLogin) {
+      const newUrl = new URL(
+        `/first-login?callbackUrl=${path}`,
+        req.nextUrl.origin
+      );
+      return Response.redirect(newUrl);
+    }
+  }
+});
 
-// See "Matching Paths" below to learn more
 export const config = {
-  matcher: ["/smember/:path*", "/cart", "/invoice", "/login", "/register"],
+  matcher: [
+    "/smember/:path*",
+    "/cart",
+    "/invoice",
+    "/login",
+    "/register",
+    "/first-login",
+    // bảo vệ ảnh ??
+    // "/((?!api|_next/static|_next/image|favicon.ico).*)",
+  ],
 };

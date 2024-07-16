@@ -25,7 +25,7 @@ export default function ProductItem({ product }: { product: ProductResponse }) {
               height={160}
               alt={product.name}
               src={product.image}
-              fallback="/productError.png"
+              fallback="/images/error/productError.png"
               preview={false}
             />
           </div>

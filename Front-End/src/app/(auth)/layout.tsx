@@ -1,4 +1,5 @@
-import HeaderAuth from "@/components/header/auth.header";
+import HeaderAuth from "@/app/(auth)/_components/header/auth.header";
+import BackBtn from "./_components/btn.back";
 
 export default function RootLayout({
   children,
@@ -11,6 +12,9 @@ export default function RootLayout({
         <HeaderAuth />
       </div>
       <main className="text-[#444444] max-w-[680px] mx-auto w-full px-2 pt-16">
+        <div className="w-full p-[10px]">
+          <BackBtn />
+        </div>
         {children}
       </main>
     </div>

@@ -13,6 +13,7 @@ export default function SearchInput() {
   const [products, setProducts] = useState<ProductResponse[]>([]);
   const [input, setInput] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  // todo
   const debounceOnChange = useCallback(
     debounce((value: string) => {
       setSearchQuery(value);

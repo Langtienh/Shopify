@@ -1,5 +1,5 @@
 import { get } from "@/actions/axios.helper";
-import { NavBrandButton } from "@/components/global/navbrand/nav.btn";
+import { NavBrandButton } from "@/components/navbrand/nav.btn";
 import Link from "next/link";
 
 export default async function NavBrand({ category }: { category: string }) {

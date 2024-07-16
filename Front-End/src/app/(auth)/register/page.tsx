@@ -1,5 +1,5 @@
-import RegesterForm from "@/components/auth/regester.form";
-import AuthTitle from "@/components/auth/title";
+import RegesterForm from "@/app/(auth)/_components/register/regester.form";
+import AuthTitle from "@/app/(auth)/_components/title";
 
 export default async function Page() {
   return (

@@ -1,4 +1,4 @@
-import Header from "@/components/header/guiest.header";
+import Header from "@/app/(guiest)/_components/header/guiest.header";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

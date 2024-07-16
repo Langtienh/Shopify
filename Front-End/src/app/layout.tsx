@@ -1,7 +1,7 @@
 import "./globals.css";
 import { Roboto } from "next/font/google";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
-import NextAuthWrapper from "@/hooks/nextauth.wrapper";
+import NextAuthWrapper from "@/auth/nextauth.wrapper";
 
 const roboto = Roboto({
   weight: "400",

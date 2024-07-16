@@ -9,17 +9,17 @@ import { useState } from "react";
 const providers = [
   {
     title: "Google",
-    image: "/logo/google.png",
+    image: "/images/logo/google.png",
     name: "google",
   },
   {
     title: "Github",
-    image: "/logo/Github.jfif",
+    image: "/images/logo/Github.jfif",
     name: "github",
   },
   {
     title: "Zalo",
-    image: "/logo/zalo.png",
+    image: "/images/logo/zalo.png",
     name: "zalo",
   },
 ];

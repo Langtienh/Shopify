@@ -1,8 +1,8 @@
 import Image from "next/image";
 const banner_url = [
-  "/topBanner/top banner (1).svg",
-  "/topBanner/top banner (2).svg",
-  "/topBanner/top banner (3).svg",
+  "/images/topBanner/top banner (1).svg",
+  "/images/topBanner/top banner (2).svg",
+  "/images/topBanner/top banner (3).svg",
 ];
 export default async function Header1() {
   return (

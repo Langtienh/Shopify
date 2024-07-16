@@ -1,5 +1,5 @@
-import NavBrand from "@/components/global/navbrand/nav.brand";
-import ProductTop from "@/components/product/product.top";
+import NavBrand from "@/components/navbrand/nav.brand";
+import ProductTop from "@/app/(guiest)/_components/home/product.top";
 import { translateCategory } from "@/lib/ultils";
 
 export default async function Section({

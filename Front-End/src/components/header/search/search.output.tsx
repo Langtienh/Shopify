@@ -1,7 +1,7 @@
 "use client";
 import { productToSlug } from "@/lib/ultils";
 import Link from "next/link";
-import ImageWithFallback from "@/components/global/image";
+import ImageWithFallback from "@/components/image/image";
 import { priceShow, priceThrough } from "@/lib/ultils";
 import { Empty } from "antd";
 
@@ -41,7 +41,7 @@ export const SearchOutput = ({
                   height={50}
                   alt={product.name}
                   src={product.image}
-                  fallbackSrc="/productError.png"
+                  fallbackSrc="/images/error/productError.png"
                 />
                 <div>
                   <h2 className="font-bold line-clamp-1">{product.name}</h2>

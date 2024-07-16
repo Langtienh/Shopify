@@ -54,7 +54,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
                         // height={400}
                         src={product.image}
                         alt={product.name}
-                        fallback="/productError.png"
+                        fallback="/images/error/productError.png"
                       />
                     </div>
                   </div>
@@ -96,7 +96,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
                     height={400}
                     src={item}
                     alt={`slider`}
-                    fallback="/productError.png"
+                    fallback="/images/error/productError.png"
                   />
                   <div className="absolute bottom-1/2 translate-y-1/2 -translate-x-1/2 left-0 p-10 rounded-full bg-black opacity-40"></div>
                   <div className="absolute bottom-1/2 translate-y-1/2 translate-x-1/2 right-0 p-10 rounded-full bg-black opacity-40"></div>

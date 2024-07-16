@@ -7,6 +7,14 @@ type RegisterDTO = {
   avatar: string;
 };
 
+type FirstLoginDTO = {
+  providerId: string;
+  fullName: string;
+  phone: string;
+  email: string;
+  avatar: string;
+};
+
 type LoginDTO = {
   phone: string;
   password: string;

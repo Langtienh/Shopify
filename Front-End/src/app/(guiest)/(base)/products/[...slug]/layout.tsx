@@ -1,4 +1,4 @@
-import NavBrand from "@/components/global/navbrand/nav.brand";
+import NavBrand from "@/components/navbrand/nav.brand";
 import ProductFilterProps from "@/app/(guiest)/(base)/products/_components/filter/filters.server";
 import ProductSort from "@/app/(guiest)/(base)/products/_components/sort/product.sort";
 import { translateCategory } from "@/lib/ultils";
