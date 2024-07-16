@@ -10,9 +10,8 @@ export const registerAction = async (input: RegisterForm) => {
     address: `${input.province}-${input.district}-${input.ward}`,
   };
 
-  const res = await post<UserResponse>("/users/register", registerDTO);
-  const data = res.data;
-  return data;
+  const res = await post("/users/register", registerDTO);
+  return res;
 };
 
 export const loginAction = async (input: LoginDTO) => {

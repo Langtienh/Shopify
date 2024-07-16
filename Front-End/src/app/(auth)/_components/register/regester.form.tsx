@@ -51,10 +51,10 @@ const RegesterForm: React.FC = () => {
   const router = useRouter();
   const onFinish = async (values: RegisterForm) => {
     setLoading(true);
-    const data = await registerAction(values);
-    if (data) {
+    const res = await registerAction(values);
+    if (res.status === 201) {
       openNotification({
-        message: "Đăng kí thành công",
+        message: res.message || "Đăng kí thành công",
         description: "Đăng nhập để tiếp tục",
         notificationType: "success",
       });
@@ -63,7 +63,7 @@ const RegesterForm: React.FC = () => {
       router.push("/login");
     } else {
       openNotification({
-        message: "Đăng kí thất bại",
+        message: res.message || "Đăng kí thất bại",
         description: "Tài khoản đã tồn tại hoặc không hợp lệ",
         notificationType: "error",
       });
