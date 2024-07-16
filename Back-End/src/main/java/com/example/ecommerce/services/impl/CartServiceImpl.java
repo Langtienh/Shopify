@@ -66,38 +66,7 @@ public class CartServiceImpl implements CartService {
         return CartResponse.fromCart(cart, cartItemResponses);
     }
 
-    @Override
-    public PageResponse getAllCarts(int page, int limit) {
-        page = page > 0 ? page - 1 : page;
-        Pageable pageable = PageRequest.of(page, limit);
-        Page<Cart> pageCart = cartRepository.findAll(pageable);
-        return PageResponse.builder()
-                .page(page + 1)
-                .limit(limit)
-                .totalPage(pageCart.getTotalPages())
-                .totalItem((int)pageCart.getTotalElements())
-                .result(pageCart.get()
-                        .map(cart -> {
-                            List<CartItemResponse> cartItems = cartItemRepository.findAllByCart(cart)
-                                    .stream()
-                                    .map(CartItemResponse::fromCartItem)
-                                    .toList();
-                            return CartResponse.fromCart(cart, cartItems);
-                        })
-                        .toList())
-                        .build();
-    }
 
-    @Override
-    public CartResponse getCartById(long id) {
-        Cart cart = cartRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
-        List<CartItemResponse> cartItems = cartItemRepository.findAllByCart(cart)
-                .stream()
-                .map(CartItemResponse::fromCartItem)
-                .toList();
-        return CartResponse.fromCart(cart, cartItems);
-    }
 
     @Override
     public CartResponse getCartByUser(long userId) {

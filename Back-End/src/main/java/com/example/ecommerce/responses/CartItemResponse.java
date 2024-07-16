@@ -16,6 +16,8 @@ public class CartItemResponse {
     private String name;
     private String image;
     private Double price;
+    private Long discount;
+    private Double discountForMember;
     private Long quantity;
 
     public static CartItemResponse fromCartItem(CartItem cartItem){
@@ -25,7 +27,9 @@ public class CartItemResponse {
                 .productId(product.getId())
                 .name(product.getName())
                 .image(product.getImage())
-                .price(product.getPrice()*(1 - (double)product.getDiscount()/100))
+                .price(product.getPrice())
+                .discount(product.getDiscount())
+                .discountForMember(product.getDiscountForMember())
                 .quantity(cartItem.getQuantity())
                 .build();
     }

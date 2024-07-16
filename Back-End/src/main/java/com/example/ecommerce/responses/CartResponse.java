@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 @Builder
 public class CartResponse {
     private Long id;
+    private Long userId;
     private Double total;
     private Long totalProduct;
     private Long totalQuantity;
@@ -22,6 +23,7 @@ public class CartResponse {
     public static CartResponse fromCart(Cart cart, List<CartItemResponse> cartItemResponses){
         return CartResponse.builder()
                 .id(cart.getId())
+                .userId(cart.getUser().getId())
                 .total(cartItemResponses.stream()
                         .mapToDouble(cartItem -> cartItem.getPrice() * cartItem.getQuantity()).sum())
                 .totalProduct((long)cartItemResponses.size())

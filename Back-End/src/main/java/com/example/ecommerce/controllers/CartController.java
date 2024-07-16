@@ -20,7 +20,7 @@ public class CartController {
     private final CartService cartService;
 
     @PostMapping("")
-    @PreAuthorize("#id == authentication.principal.id or hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ResponseSuccess> createCart(@Valid @RequestBody CartDTO cartDTO){
         CartResponse cartResponse = cartService.createCart(cartDTO);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
@@ -30,20 +30,9 @@ public class CartController {
                 .build());
     }
 
-    @GetMapping("")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<ResponseSuccess> getAllCarts(@RequestParam(defaultValue = "1") int page,
-                                                       @RequestParam(defaultValue = "5") int limit){
-        PageResponse pageResponse = cartService.getAllCarts(page, limit);
-        return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Get all carts information successfully")
-                .status(HttpStatus.OK.value())
-                .data(pageResponse)
-                .build());
-    }
 
     @GetMapping("/user/{id}")
-    @PreAuthorize("#id == authentication.principal.id or hasRole('ROLE_ADMIN')")
+    @PreAuthorize("#id == authentication.principal.id")
     public ResponseEntity<ResponseSuccess> getCartByUser(@PathVariable long id){
         CartResponse cartResponse = cartService.getCartByUser(id);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
@@ -53,19 +42,9 @@ public class CartController {
                 .build());
     }
 
-    @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<ResponseSuccess> getCartById(@PathVariable long id){
-        CartResponse cartResponse = cartService.getCartById(id);
-        return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Get cart information successfully")
-                .status(HttpStatus.OK.value())
-                .data(cartResponse)
-                .build());
-    }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ResponseSuccess> updateCart(@PathVariable long id,
                                                       @Valid @RequestBody CartUpdateDTO cartUpdateDTO){
         CartResponse cartResponse = cartService.updateCart(id, cartUpdateDTO);
@@ -77,7 +56,7 @@ public class CartController {
     }
 
     @DeleteMapping("/cart-item/{id}")
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ResponseSuccess> deleteCartItem(@PathVariable long id){
         cartService.deleteCartItem(id);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
@@ -87,7 +66,7 @@ public class CartController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ResponseSuccess> deleteCart(@PathVariable long id){
         cartService.deleteCart(id);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
