@@ -1,6 +1,7 @@
 package com.example.ecommerce.services;
 
 import com.example.ecommerce.dtos.*;
+import com.example.ecommerce.models.User;
 import com.example.ecommerce.responses.LoginResponse;
 import com.example.ecommerce.responses.PageResponse;
 import com.example.ecommerce.responses.UserResponse;
@@ -19,4 +20,5 @@ public interface UserService {
 
     LoginResponse loginWithGoogle(LoginWithGoogle loginWithGoogle, HttpServletRequest request);
     LoginResponse checkLoginWithGoogle(String providerId, HttpServletRequest request);
+    User findById(long id);
 }

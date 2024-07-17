@@ -16,6 +16,8 @@ import com.example.ecommerce.responses.CartItemResponse;
 import com.example.ecommerce.responses.CartResponse;
 import com.example.ecommerce.responses.PageResponse;
 import com.example.ecommerce.services.CartService;
+import com.example.ecommerce.services.ProductService;
+import com.example.ecommerce.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,13 +34,12 @@ import java.util.Optional;
 public class CartServiceImpl implements CartService {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
-    private final UserRepository userRepository;
-    private final ProductRepository productRepository;
+    private final UserService userService;
+    private final ProductService productService;
     @Override
     @Transactional
     public CartResponse createCart(CartDTO cartDTO) {
-        User user = userRepository.findById(cartDTO.getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        User user = userService.findById(cartDTO.getUserId());
         Optional<Cart> existsCart = cartRepository.findByUser(user);
 
         // User chưa có giỏ hàng => Tạo mới
@@ -47,9 +48,7 @@ public class CartServiceImpl implements CartService {
                 .build()));
         List<CartItemResponse> cartItemResponses = new ArrayList<>();
         for(CartItemDTO cartItemDTO : cartDTO.getCartItemDTOS()){
-            Product product = productRepository.findById(cartItemDTO.getProductId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Product not found with id = "
-                            + cartItemDTO.getProductId()));
+            Product product = productService.findById(cartItemDTO.getProductId());
             Optional<CartItem> cartItem = cartItemRepository.findByProductAndCart(product, cart);
             CartItem newCartItem = new CartItem();
             newCartItem.setProduct(product);
@@ -70,8 +69,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartResponse getCartByUser(long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        User user = userService.findById(userId);
         Cart cart = cartRepository.findByUser(user).get();
         List<CartItemResponse> cartItems = cartItemRepository.findAllByCart(cart)
                 .stream()
@@ -87,9 +85,7 @@ public class CartServiceImpl implements CartService {
                 .orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
         List<CartItemResponse> cartItemResponses = new ArrayList<>();
         for(CartItemDTO cartItemDTO : cartUpdateDTO.getCartItemDTOS()){
-            Product product = productRepository.findById(cartItemDTO.getProductId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Product not found with id = "
-                            + cartItemDTO.getProductId()));
+            Product product = productService.findById(cartItemDTO.getProductId());
             CartItem cartItem = cartItemRepository.findByProductAndCart(product, cart).get();
             cartItem.setQuantity(cartItemDTO.getQuantity());
             cartItemResponses.add(CartItemResponse.fromCartItem(cartItemRepository.save(cartItem)));
@@ -101,7 +97,7 @@ public class CartServiceImpl implements CartService {
     @Transactional
     public void deleteCart(long id) {
         Cart cart = cartRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Cart not found with id = " + id));
         List<CartItem> cartItems = cartItemRepository.findAllByCart(cart);
         cartItemRepository.deleteAll(cartItems);
     }

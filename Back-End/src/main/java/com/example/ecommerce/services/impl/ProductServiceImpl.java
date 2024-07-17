@@ -6,6 +6,8 @@ import com.example.ecommerce.models.*;
 import com.example.ecommerce.repositories.*;
 import com.example.ecommerce.responses.PageResponse;
 import com.example.ecommerce.responses.ProductResponse;
+import com.example.ecommerce.services.BrandService;
+import com.example.ecommerce.services.CategoryService;
 import com.example.ecommerce.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,9 +23,9 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ProductAttributeRepository productAttributeRepository;
     private final AttributeRepository attributeRepository;
-    private final BrandRepository brandRepository;
+    private final BrandService brandService;
     private final SearchRepository searchRepository;
-    private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
     @Override
     public PageResponse searchProduct(
             int page, int limit, String brand,String category, String[] search, String... sort) {
@@ -39,19 +41,22 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Product findById(long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id = " + id));
+    }
+
+    @Override
     public ProductResponse getProductById(Long id) {
-        Product p = productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+        Product p = findById(id);
         return ProductResponse.fromProduct(p, productAttributeRepository.findAllByProduct(p));
     }
 
     @Override
     @Transactional
     public ProductResponse createProduct(ProductDTO productDTO) {
-        Brand brand = brandRepository.findById(productDTO.getBrandId())
-                .orElseThrow(() -> new ResourceNotFoundException("Brand not found"));
-        Category category = categoryRepository.findById(productDTO.getCategoryId())
-                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+        Brand brand = brandService.getBrandById(productDTO.getBrandId());
+        Category category = categoryService.getCategoryById(productDTO.getCategoryId());
         Product product = productRepository.save(Product.builder()
                 .name(productDTO.getName())
                 .price(productDTO.getPrice())
@@ -81,12 +86,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public ProductResponse updateProduct(long id, ProductDTO productDTO) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
-        Brand brand = brandRepository.findById(productDTO.getBrandId())
-                .orElseThrow(() -> new ResourceNotFoundException("Brand not found"));
-        Category category = categoryRepository.findById(productDTO.getCategoryId())
-                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+        Product product = findById(id);
+        Brand brand = brandService.getBrandById(productDTO.getBrandId());
+        Category category = categoryService.getCategoryById(productDTO.getCategoryId());
         product.setName(productDTO.getName());
         product.setPrice(productDTO.getPrice());
         product.setDiscount(productDTO.getDiscount());

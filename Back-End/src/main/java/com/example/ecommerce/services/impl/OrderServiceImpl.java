@@ -9,6 +9,7 @@ import com.example.ecommerce.responses.OrderResponse;
 import com.example.ecommerce.responses.PageResponse;
 import com.example.ecommerce.services.EmailService;
 import com.example.ecommerce.services.OrderService;
+import com.example.ecommerce.services.UserService;
 import com.example.ecommerce.utils.EmailTemplate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,7 +27,7 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final CartRepository cartRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final OrderDetailRepository orderDetailRepository;
     private final CartItemRepository cartItemRepository;
     private final EmailService emailService;
@@ -34,8 +35,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrderResponse createOrder(OrderDTO orderDTO) {
-        User user = userRepository.findById(orderDTO.getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        User user = userService.findById(orderDTO.getUserId());
         List<CartItem> cartItems = cartItemRepository.findAllByCart(cartRepository.findByUser(user).get());
         Double totalPrice = cartItems.stream()
                 .mapToDouble(item -> {
@@ -92,15 +92,19 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderResponse getOrderById(long id) {
-        Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+        Order order = findById(id);
         return OrderResponse.fromOrder(order);
     }
 
     @Override
+    public Order findById(long id) {
+        return orderRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id = " + id));
+    }
+
+    @Override
     public PageResponse getOrderByUser(long uid, int page, int limit) {
-        User user = userRepository.findById(uid)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        User user = userService.findById(uid);
         page = page > 0 ? page - 1 : page;
         Pageable pageable = PageRequest.of(page, limit);
         Page<Order> orderPage = orderRepository.findAllByUser(user, pageable);
@@ -115,8 +119,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderResponse updateOrderStatus(long id, OrderStatus orderStatus) {
-        Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+        Order order = findById(id);
         order.setOrderStatus(orderStatus);
         orderRepository.save(order);
         return OrderResponse.fromOrder(order);
@@ -124,8 +127,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void deleteOrder(long id) {
-        Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+        Order order = findById(id);
         order.setActive(false);
         orderRepository.save(order);
     }

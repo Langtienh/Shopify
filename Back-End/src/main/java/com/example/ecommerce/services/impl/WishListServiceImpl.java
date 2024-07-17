@@ -1,6 +1,7 @@
 package com.example.ecommerce.services.impl;
 
 import com.example.ecommerce.dtos.WishListDTO;
+import com.example.ecommerce.exceptions.InvalidParamException;
 import com.example.ecommerce.exceptions.ResourceNotFoundException;
 import com.example.ecommerce.models.Product;
 import com.example.ecommerce.models.User;
@@ -9,6 +10,8 @@ import com.example.ecommerce.repositories.ProductRepository;
 import com.example.ecommerce.repositories.UserRepository;
 import com.example.ecommerce.repositories.WishListRepository;
 import com.example.ecommerce.responses.WishListResponse;
+import com.example.ecommerce.services.ProductService;
+import com.example.ecommerce.services.UserService;
 import com.example.ecommerce.services.WishListService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,16 +23,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WishListServiceImpl implements WishListService {
     private final WishListRepository wishListRepository;
-    private final UserRepository userRepository;
-    private final ProductRepository productRepository;
+    private final UserService userService;
+    private final ProductService productService;
 
     @Override
     @Transactional
     public WishListResponse createWishList(WishListDTO wishListDTO) {
-        User user = userRepository.findById(wishListDTO.getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        Product product = productRepository.findById(wishListDTO.getProductId())
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+        User user = userService.findById(wishListDTO.getUserId());
+        Product product = productService.findById(wishListDTO.getProductId());
+        if(wishListRepository.existsByProductAndUser(product, user))
+            throw new InvalidParamException("Product already exists with id = " + product.getId());
         WishList wishList = WishList.builder()
                 .user(user)
                 .product(product)
@@ -39,8 +42,7 @@ public class WishListServiceImpl implements WishListService {
 
     @Override
     public List<WishListResponse> getAllWishListsByUser(long uid) {
-        User user = userRepository.findById(uid)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        User user = userService.findById(uid);
         return wishListRepository.findAllByUser(user)
                 .stream()
                 .map(WishListResponse::fromWishList)
@@ -58,8 +60,7 @@ public class WishListServiceImpl implements WishListService {
     @Override
     @Transactional
     public void deleteAll(long uid) {
-        User user = userRepository.findById(uid)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        User user = userService.findById(uid);
         List<WishList> wishLists = wishListRepository.findAllByUser(user);
         wishListRepository.deleteAll(wishLists);
     }

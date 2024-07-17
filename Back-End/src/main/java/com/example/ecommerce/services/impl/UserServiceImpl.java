@@ -65,8 +65,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse getUserById(long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        User user = findById(id);
         return UserResponse.fromUser(user);
     }
 
@@ -87,8 +86,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserResponse updateUser(long id, UserDTO userDTO) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        User user = findById(id);
         user.setFullName(userDTO.getFullName());
         user.setPhone(userDTO.getPhone());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
@@ -187,5 +185,11 @@ public class UserServiceImpl implements UserService {
                 .refreshToken(newToken.getRefreshToken())
                 .user(UserResponse.fromUser(user.get()))
                 .build();
+    }
+
+    @Override
+    public User findById(long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id = " + id));
     }
 }

@@ -11,6 +11,8 @@ import com.example.ecommerce.repositories.UserRepository;
 import com.example.ecommerce.responses.CommentResponse;
 import com.example.ecommerce.responses.PageResponse;
 import com.example.ecommerce.services.CommentService;
+import com.example.ecommerce.services.ProductService;
+import com.example.ecommerce.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,15 +26,13 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
-    private final UserRepository userRepository;
-    private final ProductRepository productRepository;
+    private final UserService userService;
+    private final ProductService productService;
     @Override
     @Transactional
     public CommentResponse createComment(CommentDTO commentDTO) {
-        Product product = productRepository.findById(commentDTO.getProductId())
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
-        User user = userRepository.findById(commentDTO.getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        Product product = productService.findById(commentDTO.getProductId());
+        User user = userService.findById(commentDTO.getUserId());
         Comment comment = Comment.builder()
                 .content(commentDTO.getContent())
                 .rate(commentDTO.getRate())
@@ -45,8 +45,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public PageResponse getAllCommentsByProduct(Long pid, int page, int limit) {
-        Product product = productRepository.findById(pid)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+        Product product = productService.findById(pid);
         page = page > 0 ? page - 1 : page;
         Pageable pageable = PageRequest.of(page, limit);
         Page<Comment> commentPage = commentRepository.findAllByProduct(product, pageable);
@@ -62,7 +61,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentResponse getCommentById(long id) {
         Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Comment not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Comment not found with id = " + id));
         return CommentResponse.fromComment(comment);
     }
 }

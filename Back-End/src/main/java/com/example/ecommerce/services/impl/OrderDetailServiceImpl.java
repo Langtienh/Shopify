@@ -7,6 +7,7 @@ import com.example.ecommerce.repositories.OrderDetailRepository;
 import com.example.ecommerce.repositories.OrderRepository;
 import com.example.ecommerce.responses.OrderDetailResponse;
 import com.example.ecommerce.services.OrderDetailService;
+import com.example.ecommerce.services.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +17,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderDetailServiceImpl implements OrderDetailService {
     private final OrderDetailRepository orderDetailRepository;
-    private final OrderRepository orderRepository;
+    private final OrderService orderService;
     @Override
     public List<OrderDetailResponse> getOrderDetailByOrder(long oid) {
-        Order order = orderRepository.findById(oid)
-                .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+        Order order = orderService.findById(oid);
         List<OrderDetail> orderDetails = orderDetailRepository.findAllByOrder(order);
         return orderDetails.stream()
                 .map(OrderDetailResponse::fromOrderDetail)

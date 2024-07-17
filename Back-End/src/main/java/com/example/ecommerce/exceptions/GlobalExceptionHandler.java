@@ -18,6 +18,16 @@ import java.util.regex.Pattern;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<ResponseError> handleGeneralException(Exception exception) {
+        return ResponseEntity.internalServerError().body(
+                ResponseError.builder()
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                        .message(exception.getMessage())
+                        .build()
+        );
+    }
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ResponseError> handleDataNotFoundException(ResourceNotFoundException e){
@@ -66,13 +76,10 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ResponseError> handleInvalidParamException(
             InvalidParamException e){
-        int start = e.getMessage().indexOf("attribute");
-        int end = e.getMessage().indexOf("of") - 1;
-        String message = "Could not find " + e.getMessage().substring(start, end);
         return ResponseEntity.badRequest().body(
                 ResponseError.builder()
                         .status(HttpStatus.BAD_REQUEST.value())
-                        .message(message)
+                        .message(e.getMessage())
                         .build()
         );
     }
