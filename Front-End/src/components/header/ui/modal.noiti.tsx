@@ -17,7 +17,7 @@ export default function Noiti({ hiddenNoiti, show }: PropsType) {
           className="absolute z-50 w-full h-full bg-black opacity-50 cursor-pointer"
         ></div>
         <div className="absolute z-[51] h-[440px] right-[10px] top-[10px] w-[350px] bg-white rounded-2xl flex flex-col">
-          <div className="absolute top-0 right-4 -translate-y-full w-0 h-0 border-l-8 border-r-8 border-b-[16px] border-l-transparent border-r-transparent border-b-white"></div>
+          <div className="absolute top-0 right-6 xl:right-14 -translate-y-full w-0 h-0 border-l-8 border-r-8 border-b-[16px] border-l-transparent border-r-transparent border-b-white"></div>
           <div className="p-[10px]">
             <Link
               href="/smember"

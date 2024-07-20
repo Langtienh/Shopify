@@ -1,6 +1,4 @@
 import HeaderAuth from "@/app/(auth)/_components/header/auth.header";
-import BackBtn from "./_components/btn.back";
-
 export default function RootLayout({
   children,
 }: Readonly<{

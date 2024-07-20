@@ -9,7 +9,7 @@ export const InvoiceIcon = () => {
   const session = useSession();
   const isLogin = !!session.data?.user;
   const dispatch = useAppDispatch();
-  const onclick = () => dispatch(showLoginModal("/smember/invoice"));
+  const onclick = () => dispatch(showLoginModal("/smember/order"));
   if (isLogin) return <IsLogin />;
   return (
     <div onClick={onclick} className="flex gap-1 cursor-pointer">
@@ -23,7 +23,7 @@ export const InvoiceIcon = () => {
 };
 
 const IsLogin = () => (
-  <Link href={"/smember/invoice"} className="flex gap-1 cursor-pointer">
+  <Link href={"/smember/order"} className="flex gap-1 cursor-pointer">
     <CiDeliveryTruck size={34} />
     <p className="text-[12px]">
       Tra cứu <br />

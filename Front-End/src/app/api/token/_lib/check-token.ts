@@ -35,16 +35,6 @@ export default async function checkToken() {
         value: id.toString(),
         path: "/",
       });
-    // const tokenNow = cookies().get("TOKEN")?.value;
-    // const userId = cookies().get("USER_ID")?.value;
-    // if (tokenNow && userId) {
-    //   const result = {
-    //     message: "sucsess",
-    //     token: tokenNow,
-    //     userId,
-    //   };
-    //   return result;
-    // }
     return true;
   } catch {
     return false;

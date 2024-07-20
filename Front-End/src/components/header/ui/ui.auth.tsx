@@ -17,20 +17,13 @@ export const Auth = () => {
   useEffect(() => {
     setShow(false);
   }, [path]);
-  // const Logout = async () => {
-  //   setSpinning(true);
-  //   await DELAY(1000);
-  //   await logoutAction(session?.token);
-  //   await httpCustom.get("/cookies/logout");
-  //   await signOut({ callbackUrl: "/login" });
-  //   setSpinning(false);
-  // };
+
   if (user) {
     return (
       <>
-        <div
-          onClick={() => setShow(true)}
-          className="flex flex-col text-white items-center"
+        <button
+          onClick={() => setShow((pre) => !pre)}
+          className="flex flex-col text-white items-center px-4 py-1 rounded-lg bg-white bg-opacity-30"
         >
           <Image
             className="rounded-full cursor-pointer"
@@ -41,7 +34,7 @@ export const Auth = () => {
             fallback="/nestjs-icon.ico"
             preview={false}
           />
-        </div>
+        </button>
         <Noiti hiddenNoiti={hiddenNoiti} show={show} />
       </>
     );

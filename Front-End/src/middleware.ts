@@ -3,7 +3,7 @@ import { auth } from "@/auth/auth";
 // hard coding
 const loginPage = ["/login", "/register"];
 const firstLoginPage = "/first-login";
-const userPage = ["/smember/:path*", "/cart", "/invoice"];
+const userPage = ["/smember/:path*", "/cart"];
 const adminPage = [];
 export default auth((req) => {
   // input var
@@ -58,8 +58,7 @@ export default auth((req) => {
 export const config = {
   matcher: [
     "/smember/:path*",
-    "/cart",
-    "/invoice",
+    "/cart/:path*",
     "/login",
     "/register",
     "/first-login",
