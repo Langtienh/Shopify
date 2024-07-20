@@ -1,51 +1,14 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { Button, Checkbox, Form, Input, Select, Spin } from "antd";
+import React, { useState } from "react";
+import { Button, Checkbox, Form, Input, Spin } from "antd";
 import Link from "next/link";
-import {
-  getDistrictByParentCode,
-  getWardByParentCode,
-  getProvinceAll,
-} from "@/actions/vnAPI.services";
 import { registerAction } from "@/app/(auth)/_lib/actions";
 import { openNotification } from "@/lib/nofication";
 import { useRouter } from "next/navigation";
 import { DELAY } from "@/lib/ultils";
-
-const { Option } = Select;
+import { Address } from "./selectAddress";
 
 const RegesterForm: React.FC = () => {
-  // module address
-  // todo fix bug chọn lại tỉnh nhưng huyện không reset
-  const [provinces, setProvinces] = useState<provinceType[]>([]);
-  const [provinceCode, setProvinceCode] = useState<string>("");
-  useEffect(() => {
-    const fetchProvince = async () => {
-      const data = await getProvinceAll();
-      setProvinces(data);
-    };
-    fetchProvince();
-  }, []);
-  const [districts, setDistricts] = useState<districtType[]>([]);
-  const [districtCode, setDistrictCode] = useState<string | null>("");
-  useEffect(() => {
-    const fetchDistricts = async () => {
-      const data = await getDistrictByParentCode(provinceCode);
-      setDistricts(data);
-    };
-    if (!!provinceCode) fetchDistricts();
-  }, [provinceCode]);
-
-  const [ward, setWard] = useState<wardType[]>([]);
-  useEffect(() => {
-    const fetchWard = async () => {
-      if (districtCode) {
-        const data = await getWardByParentCode(districtCode);
-        setWard(data);
-      }
-    };
-    if (!!districtCode) fetchWard();
-  }, [districtCode]);
   const [form] = Form.useForm();
   // xử lý đăng kí
   const router = useRouter();
@@ -77,10 +40,6 @@ const RegesterForm: React.FC = () => {
         form={form}
         name="register"
         onFinish={onFinish}
-        initialValues={{
-          residence: ["zhejiang", "hangzhou", "xihu"],
-          prefix: "86",
-        }}
         scrollToFirstError
         size="large"
       >
@@ -136,57 +95,7 @@ const RegesterForm: React.FC = () => {
             placeholder="Địa chỉ ảnh đại diện ví dụ https://My Avata.png"
           />
         </Form.Item>
-
-        <div className="grid grid-cols-3 gap-3">
-          <Form.Item
-            name="province"
-            rules={[
-              { required: true, message: "Vui lòng chọn Tỉnh/Thành phố" },
-            ]}
-          >
-            <Select
-              onChange={(v) => setProvinceCode(v)}
-              placeholder="Tỉnh/Thành phố"
-            >
-              {!!provinces.length &&
-                provinces.map((item) => (
-                  <Option key={item.code} value={item.code}>
-                    {item.name}
-                  </Option>
-                ))}
-            </Select>
-          </Form.Item>
-          <Form.Item
-            name="district"
-            rules={[{ required: true, message: "Vui lòng chọn Quận/Huyện" }]}
-          >
-            <Select
-              onChange={(v) => setDistrictCode(v)}
-              placeholder="Quận/Huyện"
-            >
-              {!!provinceCode &&
-                districts.map((item) => (
-                  <Option key={item.code} value={item.code}>
-                    {item.name}
-                  </Option>
-                ))}
-            </Select>
-          </Form.Item>
-          <Form.Item
-            name="ward"
-            rules={[{ required: true, message: "Vui lòng chọn Phường/Xã" }]}
-          >
-            <Select placeholder="Phường/Xã">
-              {!!districtCode &&
-                ward.map((item) => (
-                  <Option key={item.code} value={item.code}>
-                    {item.name}
-                  </Option>
-                ))}
-            </Select>
-          </Form.Item>
-        </div>
-
+        <Address />
         <Form.Item
           name="password"
           rules={[
