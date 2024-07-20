@@ -3,6 +3,7 @@ import { Roboto } from "next/font/google";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import NextAuthWrapper from "@/auth/wrapper";
 import ReduxWrapper from "@/redux/wrapper";
+import LoginModal from "@/components/loginModal/loginModal";
 
 const roboto = Roboto({
   weight: "400",
@@ -24,7 +25,10 @@ export default function RootLayout({
       <AntdRegistry>
         <NextAuthWrapper>
           <ReduxWrapper>
-            <body>{children}</body>
+            <body className="relative">
+              {children}
+              <LoginModal />
+            </body>
           </ReduxWrapper>
         </NextAuthWrapper>
       </AntdRegistry>

@@ -9,17 +9,25 @@ export const getAllCategory = async (): Promise<CategoryResponse[]> => {
 export const getAllCategoryBrand = async (): Promise<
   CategoryBrandResponse[]
 > => {
-  const res = await get<CategoryBrandResponse[]>(`/category-brands`);
-  const CategoryBrands = res.data;
-  return CategoryBrands;
+  try {
+    const res = await get<CategoryBrandResponse[]>(`/category-brands`);
+    const CategoryBrands = res.data;
+    return CategoryBrands;
+  } catch {
+    return [];
+  }
 };
 
 export const getbrandsByCategory = async (
   category: string
 ): Promise<BrandResponse[]> => {
-  const res = await get<CategoryResponse[]>(`/brands/category/${category}`);
-  const brands = res.data;
-  return brands;
+  try {
+    const res = await get<CategoryResponse[]>(`/brands/category/${category}`);
+    const brands = res.data;
+    return brands;
+  } catch {
+    return [];
+  }
 };
 
 export const getTopProduct = async (
@@ -33,7 +41,7 @@ export const getTopProduct = async (
     const products = res.data.result;
     return products;
   } catch (error) {
-    return Promise.reject(error);
+    return [];
   }
 };
 // sort,  filter
@@ -62,7 +70,7 @@ export const getProductOption = async (
     const totalItem = res.data.totalItem;
     return [products, totalItem];
   } catch (error) {
-    return Promise.reject(error);
+    return [[], 0];
   }
 };
 
@@ -73,48 +81,82 @@ export const getProductByCategory = async (
   SORT: string,
   filter?: string
 ): Promise<[ProductResponse[], number]> => {
-  const res = await get<PageResponse<ProductResponse>>(
-    `/products/search-product?category=${category}&page=${PAGE}&limit=${LIMIT}&sort=${SORT}${
-      filter ? `&search=${filter}` : ""
-    }`
-  );
-  const products = res.data.result;
-  const totalItem = res.data.totalItem;
-  return [products, totalItem];
+  try {
+    const res = await get<PageResponse<ProductResponse>>(
+      `/products/search-product?category=${category}&page=${PAGE}&limit=${LIMIT}&sort=${SORT}${
+        filter ? `&search=${filter}` : ""
+      }`
+    );
+    const products = res.data.result;
+    const totalItem = res.data.totalItem;
+    return [products, totalItem];
+  } catch {
+    return [[], 0];
+  }
 };
 
 export const getAllProduct = async (
   LIMIT: number
 ): Promise<ProductResponse[]> => {
-  const res = await get<PageResponse<ProductResponse>>(
-    `/products/search-product?limit=${LIMIT}`
-  );
-  const products = res.data.result;
-  return products;
+  try {
+    const res = await get<PageResponse<ProductResponse>>(
+      `/products/search-product?limit=${LIMIT}`
+    );
+    const products = res.data.result;
+    return products;
+  } catch {
+    return [];
+  }
 };
 
 export const getAttributesByCategory = async (
   category: string,
   brand?: string
 ): Promise<AttibulteResponse[]> => {
-  const res = await get<AttibulteResponse[]>(
-    `/attributes?category=${category}${brand ? `&brand=${brand}` : ""}`
-  );
-  const attributes = res.data;
-  return attributes;
+  try {
+    const res = await get<AttibulteResponse[]>(
+      `/attributes?category=${category}${brand ? `&brand=${brand}` : ""}`
+    );
+    const attributes = res.data;
+    return attributes;
+  } catch {
+    return [];
+  }
 };
 
 export const SearchProductAction = async (searchQuery: string) => {
   // todo
-  const res = await get<PageResponse<ProductResponse>>(
-    `/products/search-product?search=name:${searchQuery}&limit=5`
-  );
-  const products = res.data.result;
-  return products;
+  try {
+    const res = await get<PageResponse<ProductResponse>>(
+      `/products/search-product?search=name:${searchQuery}&limit=5`
+    );
+    const products = res.data.result;
+    return products;
+  } catch {
+    return [];
+  }
 };
 
 export const getProductById = async (id: string) => {
-  const res = await get<ProductResponse>(`/products/${id}`);
-  const data = res.data;
-  return data;
+  try {
+    const res = await get<ProductResponse>(`/products/${id}`);
+    const data = res.data;
+    return data;
+  } catch {
+    const product = {
+      id: 1,
+      name: "",
+      price: 1,
+      discount: 1,
+      stock: 1,
+      viewCount: 1,
+      description: "",
+      image: "",
+      discountForMember: 1,
+      active: true,
+      brand: "",
+      category: "",
+    };
+    return product;
+  }
 };

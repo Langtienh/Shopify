@@ -6,6 +6,8 @@ import { Button } from "antd";
 import { FaCartPlus } from "react-icons/fa";
 import { openNotification } from "@/lib/nofication";
 import { useAddCartItemMutation } from "@/redux/cart/services";
+import { usePathname, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 export default function AddProductToCart({
   productId,
   size = "large",
@@ -13,15 +15,21 @@ export default function AddProductToCart({
   productId: number;
   size?: TSizes;
 }) {
+  const path = usePathname();
+  const session = useSession();
+  const router = useRouter();
+  const user = session.data?.user;
   const [addCartItem, addCartItemResult] = useAddCartItemMutation();
 
   const onClick = () => {
-    addCartItem({ productId, quantity: 1 });
-    openNotification({
-      message: "Thêm vào giỏ hàng thành công",
-      description: "Thanh toán ngay để nhận ưu đãi",
-      notificationType: "success",
-    });
+    if (user) {
+      addCartItem({ productId, quantity: 1 });
+      openNotification({
+        message: "Thêm vào giỏ hàng thành công",
+        description: "Thanh toán ngay để nhận ưu đãi",
+        notificationType: "success",
+      });
+    } else router.push(`/login?callbackUrl=${path}`);
   };
   if (size === "large")
     return (

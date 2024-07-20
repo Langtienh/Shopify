@@ -31,9 +31,9 @@ export default async function RootLayout({
   const product = await getProductById(productId);
   return (
     <div className="max-w-[1400px] mx-auto relative">
-      <ProductHeader product={product} />
+      <ProductHeader productId={productId} />
       <main className="text-[#444444] max-w-[1200px] mx-auto w-full px-2 pt-[132px]">
-        <Suspense fallback={<p>Loading feed...</p>}>{children}</Suspense>
+        {children}
       </main>
     </div>
   );

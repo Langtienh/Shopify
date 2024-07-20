@@ -3,6 +3,7 @@ import { Nav } from "@/components/header/ui/ui.navmain";
 import { Cart } from "@/components/header/ui/ui.cart.icon";
 import Link from "next/link";
 import SearchInput from "@/components/header/search/search";
+import { InvoiceIcon } from "./ui/ui.invoice.icon";
 export default async function Header2() {
   return (
     <>
@@ -18,6 +19,7 @@ export default async function Header2() {
           </Link>
           <SearchInput />
           <Nav />
+          <InvoiceIcon />
           <Cart />
           <span className="hidden md:inline-block">
             <Auth />

@@ -1,5 +1,6 @@
 import { getAllProduct, getProductById } from "@/actions/product.services";
 import {
+  discoutForMember,
   priceShow,
   priceThrough,
   productSlugToId,
@@ -39,7 +40,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
         </h1>
         <div className="flex flex-wrap gap-y-5 md:flex-nowrap">
           <div className="xl:w-2/3 md:w-1/2 w-full flex-1 md:pr-5">
-            <Carousel dots={false} arrows infinite={true}>
+            <Carousel dots={false} autoplay infinite arrows>
               <div className="relative overflow-hidden h-fulloverflow-hidden rounded-xl border border-gray-200 shadow-lg">
                 <div
                   style={{
@@ -120,7 +121,15 @@ export default async function Page({ params }: { params: { slug: string } }) {
                 ))}
               </Carousel>
             </div>
-            <div className="h-[60px]rounded-lg bg-[#eeeeef] flex gap-3 p-[5px]">
+            <ul className="list-disc rounded-xl bg-[#eeeeef] flex flex-col gap-1 p-[5px] pl-10">
+              <li className="text-base text-red-600 font-bold">
+                Giảm thêm {discoutForMember(product)} cho SMember
+              </li>
+              <li className="text-black">
+                Liên hệ hotline 1800.2097 để được GIÁ ĐẶC BIỆT
+              </li>
+            </ul>
+            <div className="h-[60px] rounded-xl bg-[#eeeeef] flex gap-3 p-[5px]">
               <div className="text-gray-700 flex-1 gap-3 h-full flex justify-center items-center hover:bg-white rounded-lg">
                 <MdCurrencyExchange size={30} />
                 <div>

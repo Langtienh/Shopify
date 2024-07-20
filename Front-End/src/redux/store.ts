@@ -3,9 +3,11 @@ import cartReducers from "@/redux/cart/slice";
 import { cartApi } from "@/redux/cart/services";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { useDispatch, useSelector } from "react-redux";
+import LoginModalReducers from "@/redux/login/slice";
 
 export const store = configureStore({
   reducer: {
+    login: LoginModalReducers,
     cart: cartReducers,
     [cartApi.reducerPath]: cartApi.reducer,
   },

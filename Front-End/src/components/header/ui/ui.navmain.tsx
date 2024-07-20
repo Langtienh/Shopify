@@ -23,16 +23,6 @@ const nav = [
     ),
     link: "/shop",
   },
-  {
-    icon: <CiDeliveryTruck size={34} />,
-    label: (
-      <p className="text-[12px]">
-        Tra cứu <br />
-        Đơn hàng
-      </p>
-    ),
-    link: "/invoice",
-  },
 ];
 
 export const Nav = () => {

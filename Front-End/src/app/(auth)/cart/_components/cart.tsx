@@ -25,7 +25,6 @@ import { useEffect, useState } from "react";
 
 export default function Cart() {
   const { data, isFetching, isLoading } = useGetCartQuery();
-  const [deleteCart] = useDeleteCartMutation();
   const dispath = useAppDispatch();
   const [indeterminate, setIndeterminate] = useState<boolean>(false);
   const [checkAll, setCheckAll] = useState<boolean>(false);
@@ -52,7 +51,7 @@ export default function Cart() {
   if (data)
     return (
       <>
-        <div className="flex justify-between items-center mb-[10px]">
+        <div className="flex justify-between items-center mb-[10px] h-9">
           <Checkbox
             indeterminate={indeterminate}
             checked={checkAll}
@@ -90,14 +89,16 @@ export default function Cart() {
                   <div className=" w-3/4 flex flex-col gap-2 justify-between">
                     <div className="flex justify-between">
                       <Link
-                        className="w-[7/10] hover:underline text-[#3a3a3a] hover:text-[#6a6a6a]"
+                        className="flex-1 hover:underline text-[#3a3a3a] hover:text-[#6a6a6a]"
                         href={productToSlug(item)}
                       >
                         {item.name}
                       </Link>
-                      <DeleteItemBTN disabled={isFetching} id={item.id} />
+                      <div className="w-[1/6] flex flex-shrink-0 justify-end">
+                        <DeleteItemBTN disabled={isFetching} id={item.id} />
+                      </div>
                     </div>
-                    <div className="flex justify-between items-center">
+                    <div className="flex gap-[10px] flex-wrap justify-between items-center">
                       <div className="flex gap-[10px] items-baseline">
                         <p className="text-red-600 font-bold text-[17px]">
                           {priceShow(item)}
@@ -106,7 +107,7 @@ export default function Cart() {
                           {priceThrough(item)}
                         </p>
                       </div>
-                      <div className="px-0">
+                      <div className="px-0 ml-auto">
                         <div className="flex">
                           <SubItemBTN
                             disabled={isFetching || item.quantity === 1}

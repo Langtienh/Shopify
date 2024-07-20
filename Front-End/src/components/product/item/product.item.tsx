@@ -5,9 +5,9 @@ import {
   productToSlug,
   view,
 } from "@/lib/ultils";
-import { Image } from "antd";
 import Link from "next/link";
 import RibbonCustom from "@/components/product/item/badge.ribbon.custom";
+import Image from "next/image";
 export default function ProductItem({ product }: { product: ProductResponse }) {
   return (
     <Link
@@ -25,8 +25,6 @@ export default function ProductItem({ product }: { product: ProductResponse }) {
               height={160}
               alt={product.name}
               src={product.image}
-              fallback="/images/error/productError.png"
-              preview={false}
             />
           </div>
           <h2 className="font-bold text-sm h-[60px] line-clamp-3">

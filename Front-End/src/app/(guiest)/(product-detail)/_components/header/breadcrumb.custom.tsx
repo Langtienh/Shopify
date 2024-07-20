@@ -1,15 +1,16 @@
+import { getProductById } from "@/actions/product.services";
 import { productToSlug } from "@/lib/ultils";
 import Link from "next/link";
 import { AiFillHome } from "react-icons/ai";
 import { MdNavigateNext } from "react-icons/md";
 
-export default function BreadcrumbCustom({
-  product,
+export default async function BreadcrumbCustom({
+  productId,
 }: {
-  product: ProductResponse;
+  productId: string;
 }) {
+  const product = await getProductById(productId);
   const breadcrumb: { name: string; link: string }[] = [];
-  // breadcrumb.push({ name: "products", link: `/products` });
   breadcrumb.push({
     name: product.category,
     link: `/products/${product.category}.html`,

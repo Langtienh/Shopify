@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { IoListOutline } from "react-icons/io5";
 
 export default function NavCategoryMobile({
@@ -10,6 +11,10 @@ export default function NavCategoryMobile({
   categories: CategoryResponse[];
 }) {
   const [show, setShow] = useState<boolean>(false);
+  const path = usePathname();
+  useEffect(() => {
+    setShow(false);
+  }, [path]);
   return (
     <>
       <span

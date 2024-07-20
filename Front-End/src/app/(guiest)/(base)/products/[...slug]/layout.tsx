@@ -40,8 +40,12 @@ export default function RootLayout({
   const brandCP = brand?.replace(".html", "");
   return (
     <div className="flex flex-col gap-4 px-2 pt-4 pb-10">
-      <NavBrand category={categoryCP} />
-      <ProductFilter brand={brandCP} category={categoryCP} />
+      {categoryCP && (
+        <>
+          <NavBrand category={categoryCP} />
+          <ProductFilter brand={brandCP} category={categoryCP} />
+        </>
+      )}
       <ProductSort />
       {children}
     </div>
