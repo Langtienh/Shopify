@@ -9,7 +9,7 @@ export default async function Page() {
   const categories = await getAllCategory();
   return (
     <Suspense fallback={<Loading />}>
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 px-2 py-4">
         {categories.map((category: CategoryResponse) => (
           <Section key={`category_${category.id}`} category={category} />
         ))}

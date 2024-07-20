@@ -19,6 +19,7 @@ declare module "next-auth/jwt" {
     token?: string;
     refreshToken?: string;
     user?: IUser;
+    exp_token: number;
   }
 }
 declare module "next-auth" {
@@ -29,5 +30,6 @@ declare module "next-auth" {
     user?: IUser;
     token?: string;
     refreshToken?: string;
+    exp_token: number;
   }
 }

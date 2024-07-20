@@ -62,7 +62,6 @@ export const logoutAction = async (token?: string) => {
 };
 
 export const revalidatePathTo = (path: string) => {
-  console.log("run >> server", path);
   revalidatePath(path);
   redirect(path);
 };

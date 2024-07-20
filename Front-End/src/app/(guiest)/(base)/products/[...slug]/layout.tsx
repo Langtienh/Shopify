@@ -1,5 +1,5 @@
 import NavBrand from "@/components/navbrand/nav.brand";
-import ProductFilterProps from "@/app/(guiest)/(base)/products/_components/filter/filters.server";
+import ProductFilter from "@/app/(guiest)/(base)/products/_components/filter/filters.server";
 import ProductSort from "@/app/(guiest)/(base)/products/_components/sort/product.sort";
 import { translateCategory } from "@/lib/ultils";
 import { Metadata } from "next";
@@ -39,13 +39,11 @@ export default function RootLayout({
   const categoryCP = category.replace(".html", "");
   const brandCP = brand?.replace(".html", "");
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 px-2 pt-4 pb-10">
       <NavBrand category={categoryCP} />
-      <ProductFilterProps brand={brandCP} category={categoryCP} />
+      <ProductFilter brand={brandCP} category={categoryCP} />
       <ProductSort />
       {children}
-      <div></div>
-      <div></div>
     </div>
   );
 }

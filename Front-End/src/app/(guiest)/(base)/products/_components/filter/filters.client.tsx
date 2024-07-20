@@ -5,7 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IoIosCloseCircle } from "react-icons/io";
 
-export default function ProductFilter({
+export default function ProductFilterClient({
   filters,
 }: {
   filters: AttibulteResponse[];

@@ -3,7 +3,8 @@ import Google from "next-auth/providers/google";
 import Github from "next-auth/providers/github";
 import Credentials from "next-auth/providers/credentials";
 import { checkAccount } from "@/app/(auth)/_lib/actions";
-
+const EXP_REFRESH_TOKEN = +process.env.REFRESH_TOKEN! || 604800;
+const EXP_TOKEN = +process.env.TOKEN! || 36000;
 export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
   providers: [
     Credentials({
@@ -49,54 +50,60 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
     Github,
   ],
   callbacks: {
-    // authorized: async ({ auth, request }) => {
-    //   console.log("check >>>");
-    //   // Logged in users are authenticated, otherwise redirect to login page
-    //   return !!auth;
-    // },
     signIn: async ({ account, user, credentials, email, profile }) => {
       return true;
     },
     jwt: async ({ session, token, user, trigger, account, profile }) => {
+      const exp_token = Date.now() + EXP_TOKEN;
       if (trigger === "update") {
         if (session.user) token.user = session.user;
         if (session.token) token.token = session.token;
         if (session.refreshToken) token.refreshToken = session.refreshToken;
+        token.exp_token = exp_token;
         return token;
       }
-      if (
-        trigger === "signIn" &&
-        account?.providerAccountId &&
-        account?.provider !== "credentials"
-      ) {
-        const customUser = {
-          providerId: account?.providerAccountId,
-          avatar: token.picture,
-          fullName: token.name,
-          email: token.email,
-        };
-        // token.
-        token.user = customUser;
-        const res = await checkAccount(account.providerAccountId);
-        if (res) {
-          token.token = res?.token;
-          token.refreshToken = res?.refreshToken;
+      if (trigger === "signIn") {
+        if (account?.providerAccountId && account?.provider !== "credentials") {
+          const customUser = {
+            providerId: account?.providerAccountId,
+            avatar: token.picture,
+            fullName: token.name,
+            email: token.email,
+          };
+          // token.
+          token.user = customUser;
+          const res = await checkAccount(account.providerAccountId);
+          if (res) {
+            token.token = res?.token;
+            token.refreshToken = res?.refreshToken;
+          }
+        } else if (account?.provider === "credentials") {
+          // @ts-ignore
+          token = user;
         }
-      } else if (trigger === "signIn" && account?.provider === "credentials") {
-        // @ts-ignore
-        token = user;
+        token.exp_token = exp_token;
+        return token;
       }
-      return token;
+      const newToken = {
+        user: token.user,
+        refreshToken: token.refreshToken,
+        exp_token: token.exp_token,
+        token: token.token,
+      };
+      return newToken;
     },
     session: async ({ newSession, session, token, user, trigger }) => {
-      if (trigger === "update") {
-        console.log("run update session");
-      }
+      const sessionCustom = {
+        user: token.user,
+        refreshToken: token.refreshToken,
+        exp_token: token.exp_token,
+        token: token.token,
+      };
       // @ts-ignore
       (session.user = token.user),
         (session.token = token.token),
         (session.refreshToken = token.refreshToken),
-        console.log("");
+        (session.exp_token = token.exp_token);
       return session;
     },
   },
@@ -105,7 +112,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
   },
   trustHost: true,
   session: {
-    maxAge: 2592000,
-    updateAge: 86400,
+    maxAge: EXP_REFRESH_TOKEN,
+    updateAge: EXP_REFRESH_TOKEN,
   },
 });

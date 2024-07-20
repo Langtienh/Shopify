@@ -15,7 +15,7 @@ export const toSlugify = (slug: string) =>
     trim: true, // trim leading and trailing replacement chars, defaults to `true`
   });
 
-export const productToSlug = (product: ProductResponse) =>
+export const productToSlug = (product: ProductResponse | CartItemResponse) =>
   `/product/${toSlugify(product.name)}-${product.id}.html`;
 
 export const productSlugToId = (slug: string) => {
@@ -25,13 +25,13 @@ export const productSlugToId = (slug: string) => {
 
 export const converPriceToVN = (price: number, unit?: string) =>
   price.toLocaleString("vi-VN") + (unit ? unit : "");
-export const priceThrough = (product: ProductResponse) =>
+export const priceThrough = (product: ProductResponse | CartItemResponse) =>
   !!product.price ? converPriceToVN(product.price, "đ") : "0";
-export const priceShow = (product: ProductResponse) =>
+export const priceShow = (product: ProductResponse | CartItemResponse) =>
   !!product.price
     ? converPriceToVN((product.price * (100 - product.discount)) / 100, "đ")
     : "0";
-export const discoutForMember = (product: ProductResponse) =>
+export const discoutForMember = (product: ProductResponse | CartItemResponse) =>
   !!product.discountForMember &&
   converPriceToVN(product.discountForMember, "đ");
 export const view = (product: ProductResponse) =>

@@ -5,6 +5,7 @@ type TSizes = "small" | "none" | "large";
 import { Button } from "antd";
 import { FaCartPlus } from "react-icons/fa";
 import { openNotification } from "@/lib/nofication";
+import { useAddCartItemMutation } from "@/redux/cart/services";
 export default function AddProductToCart({
   productId,
   size = "large",
@@ -12,8 +13,10 @@ export default function AddProductToCart({
   productId: number;
   size?: TSizes;
 }) {
+  const [addCartItem, addCartItemResult] = useAddCartItemMutation();
+
   const onClick = () => {
-    console.log(productId);
+    addCartItem({ productId, quantity: 1 });
     openNotification({
       message: "Thêm vào giỏ hàng thành công",
       description: "Thanh toán ngay để nhận ưu đãi",

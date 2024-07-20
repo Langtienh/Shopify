@@ -28,51 +28,36 @@ type LogoutDTO = {
   token: string;
 };
 
-type ProductDTO = {
-  name: string;
-  price: Double;
-  discount: Long;
-  stock: Long;
-  description: string;
-  image: string;
-  discountForMember: Double;
-  active: boolean;
-  brandId: Long;
-  categoryId: Long;
-};
+type ProductDTO = Omit<ProductType, ["id", "viewCount, active"]>;
 
 type OrderDTO = {
   fullName: string;
   phone: string;
   email: string;
   address: string;
-  userId: Long;
+  userId: number;
 };
 
 type CommentDTO = {
   content: string;
-  rate: Long;
-  userId: Long;
-  productId: Long;
+  rate: number;
+  userId: number;
+  productId: number;
 };
 
 type CategoryDTO = {
   name: string;
 };
-// type CartUpdateDTO= {
-//    <CartItemDTO: List> cartItemDTOS;
-// }
+
 type CartItemDTO = {
-  productId: Long;
-  quantity: Long;
+  productId: number;
+  quantity: number;
 };
-// type CartDTO= {
-//     userId: Long;
-//    <CartItemDTO: List> cartItemDTOS;
-// }
+
 type BrandDTO = {
   name: string;
 };
+
 type AttributeDTO = {
   name: string;
 };

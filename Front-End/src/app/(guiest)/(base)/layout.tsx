@@ -14,7 +14,7 @@ export default function RootLayout({
   return (
     <div className="max-w-[1400px] mx-auto relative">
       <Header />
-      <main className="text-[#444444] max-w-[1200px] mx-auto w-full px-2 pt-[152px]">
+      <main className="text-[#444444] max-w-[1200px] mx-auto w-full pt-[122px]">
         {children}
       </main>
     </div>

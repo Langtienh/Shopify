@@ -1,7 +1,7 @@
 import { getAttributesByCategory } from "@/actions/product.services";
-import ProductFilter from "@/app/(guiest)/(base)/products/_components/filter/filters.client";
+import ProductFilterClient from "@/app/(guiest)/(base)/products/_components/filter/filters.client";
 
-export default async function ProductFilterProps({
+export default async function ProductFilter({
   category,
   brand,
 }: {
@@ -9,5 +9,5 @@ export default async function ProductFilterProps({
   brand?: string;
 }) {
   const filters = await getAttributesByCategory(category, brand);
-  return <ProductFilter filters={filters} />;
+  return <ProductFilterClient filters={filters} />;
 }

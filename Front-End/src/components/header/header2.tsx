@@ -3,7 +3,6 @@ import { Nav } from "@/components/header/ui/ui.navmain";
 import { Cart } from "@/components/header/ui/ui.cart.icon";
 import Link from "next/link";
 import SearchInput from "@/components/header/search/search";
-import { FaShopify } from "react-icons/fa";
 export default async function Header2() {
   return (
     <>
@@ -16,11 +15,6 @@ export default async function Header2() {
             <h2 className="md:hidden block text-white font-bold text-2xl">
               Shopify
             </h2>
-            {/* // todo
-            <FaShopify
-              size={35}
-              className="md:hidden block text-white font-bold text-2xl mr-4"
-            /> */}
           </Link>
           <SearchInput />
           <Nav />

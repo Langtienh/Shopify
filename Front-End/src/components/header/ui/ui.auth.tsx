@@ -1,5 +1,6 @@
 "use client";
 
+import httpCustom from "@/actions/customAPI";
 import { logoutAction } from "@/app/(auth)/_lib/actions";
 import { DELAY } from "@/lib/ultils";
 import { splitFullName } from "@/lib/ultils";
@@ -11,13 +12,13 @@ import { FaUser } from "react-icons/fa";
 
 export const Auth = () => {
   const { data: session } = useSession();
-  if (session) console.log(session);
   const [spinning, setSpinning] = useState<boolean>(false);
   const user = session?.user;
   const Logout = async () => {
     setSpinning(true);
     await DELAY(1000);
     await logoutAction(session?.token);
+    await httpCustom.get("/cookies/logout");
     await signOut({ callbackUrl: "/login" });
     setSpinning(false);
   };
@@ -31,8 +32,6 @@ export const Auth = () => {
     </Button>,
   ];
 
-  // console.log(user);
-  // if (user && user.avatar && user.fullName) {
   if (user) {
     return (
       <>
@@ -56,7 +55,6 @@ export const Auth = () => {
               fallback="/nestjs-icon.ico"
               preview={false}
             />
-            {/* <p>{splitFullName(user.fullName)}</p> */}
           </div>
         </Tooltip>
       </>
