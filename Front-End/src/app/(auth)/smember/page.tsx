@@ -111,7 +111,7 @@ export default function Page() {
             </Carousel>
           </div>
           <div className="w-full rounded-xl overflow-hidden">
-            <Carousel arrows>
+            <Carousel arrows autoplay autoplaySpeed={5000}>
               {Array.from({ length: 5 }, (_, i) => (
                 <Image
                   className="w-full"
