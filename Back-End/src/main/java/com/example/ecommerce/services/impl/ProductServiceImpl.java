@@ -26,6 +26,7 @@ public class ProductServiceImpl implements ProductService {
     private final BrandService brandService;
     private final SearchRepository searchRepository;
     private final CategoryService categoryService;
+    private final CommentRepository commentRepository;
     @Override
     public PageResponse searchProduct(
             int page, int limit, String brand,String category, String[] search, String... sort) {
@@ -36,7 +37,8 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductResponse> getAllProducts() {
         return productRepository.findAll()
                 .stream()
-                .map(p -> ProductResponse.fromProduct(p, null))
+                .map(p -> ProductResponse.fromProduct(
+                        p,calcAvgRate(commentRepository.findAllByProduct(p)), null))
                 .toList();
     }
 
@@ -49,7 +51,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse getProductById(Long id) {
         Product p = findById(id);
-        return ProductResponse.fromProduct(p, productAttributeRepository.findAllByProduct(p));
+        return ProductResponse.fromProduct(p,
+                calcAvgRate(commentRepository.findAllByProduct(p)),
+                productAttributeRepository.findAllByProduct(p));
     }
 
     @Override
@@ -80,7 +84,9 @@ public class ProductServiceImpl implements ProductService {
                     .build();
             productAttributes.add(productAttributeRepository.save(productAttribute));
         });
-        return ProductResponse.fromProduct(product, productAttributes);
+        return ProductResponse.fromProduct(product,
+                calcAvgRate(commentRepository.findAllByProduct(product)),
+                productAttributes);
     }
 
     @Override
@@ -99,6 +105,13 @@ public class ProductServiceImpl implements ProductService {
         product.setActive(productDTO.isActive());
         product.setBrand(brand);
         product.setCategory(category);
-        return ProductResponse.fromProduct(productRepository.save(product), null);
+        productRepository.save(product);
+        return ProductResponse.fromProduct(product,
+                calcAvgRate(commentRepository.findAllByProduct(product)), null);
+    }
+
+    private Double calcAvgRate(List<Comment> comments){
+        return comments.stream()
+                .collect(Collectors.averagingDouble(Comment::getRate));
     }
 }

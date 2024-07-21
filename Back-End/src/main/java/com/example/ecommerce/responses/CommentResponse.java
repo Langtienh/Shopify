@@ -13,16 +13,17 @@ public class CommentResponse {
     private Long id;
     private String content;
     private Long rate;
-    private Long userId;
-    private Long productId;
+    private UserResponse user;
+    private ProductResponse product;
 
-    public static CommentResponse fromComment(Comment comment){
+    public static CommentResponse fromComment(Comment comment,
+                                              ProductResponse productResponse, UserResponse userResponse){
         return CommentResponse.builder()
                 .id(comment.getId())
                 .content(comment.getContent())
                 .rate(comment.getRate())
-                .userId(comment.getUser().getId())
-                .productId(comment.getProduct().getId())
+                .user(userResponse)
+                .product(productResponse)
                 .build();
     }
 }

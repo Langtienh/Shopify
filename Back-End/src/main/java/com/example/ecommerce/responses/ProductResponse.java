@@ -23,6 +23,7 @@ public class ProductResponse {
     private Long discount;
     private Long stock;
     private Long viewCount;
+    private double avgRate;
     private String description;
     private String image;
     private Double discountForMember;
@@ -32,7 +33,8 @@ public class ProductResponse {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Map<String, String> attributes;
 
-    public static ProductResponse fromProduct(Product p, List<ProductAttribute> productAttributes){
+    public static ProductResponse fromProduct(Product p, double avgRate,
+                                              List<ProductAttribute> productAttributes){
         ProductResponse productResponse = ProductResponse.builder()
                 .id(p.getId())
                 .name(p.getName())
@@ -40,6 +42,7 @@ public class ProductResponse {
                 .discount(p.getDiscount())
                 .stock(p.getStock())
                 .viewCount(p.getViewCount())
+                .avgRate(avgRate)
                 .description(p.getDescription())
                 .image(p.getImage())
                 .discountForMember(p.getDiscountForMember())

@@ -2,16 +2,14 @@ package com.example.ecommerce.repositories;
 
 import com.example.ecommerce.exceptions.InvalidParamException;
 import com.example.ecommerce.exceptions.ResourceNotFoundException;
-import com.example.ecommerce.models.Brand;
-import com.example.ecommerce.models.Category;
-import com.example.ecommerce.models.Product;
-import com.example.ecommerce.models.ProductAttribute;
+import com.example.ecommerce.models.*;
 import com.example.ecommerce.repositories.custom.SearchProduct;
 import com.example.ecommerce.responses.PageResponse;
 import com.example.ecommerce.responses.ProductResponse;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.*;
+import jakarta.persistence.criteria.Order;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.query.sqm.PathElementException;
@@ -28,6 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -37,6 +36,7 @@ public class SearchRepository {
     private EntityManager entityManager;
     private final ProductAttributeRepository productAttributeRepository;
     private final BrandRepository brandRepository;
+    private final CommentRepository commentRepository;
     /**
      * api/v1/products?brand=iphone&category=smartphone&search=name:iphone,price>25000000&page=1&limit=10&sort=price:desc
      * */
@@ -150,7 +150,12 @@ public class SearchRepository {
                 .totalItem((int)pageImpl.getTotalElements())
                 .result(pageImpl.stream()
                         .map(p -> ProductResponse.fromProduct((Product) p,
+                                calcAvgRate(commentRepository.findAllByProduct((Product)p)),
                                 productAttributeRepository.findAllByProduct((Product) p))))
                 .build();
+    }
+    private Double calcAvgRate(List<Comment> comments){
+        return comments.stream()
+                .collect(Collectors.averagingDouble(Comment::getRate));
     }
 }

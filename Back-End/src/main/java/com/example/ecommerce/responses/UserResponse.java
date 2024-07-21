@@ -1,6 +1,7 @@
 package com.example.ecommerce.responses;
 
 import com.example.ecommerce.models.User;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -31,7 +32,7 @@ public class UserResponse {
                 .address(user.getAddress())
                 .avatar(user.getAvatar())
                 .active(user.isActive())
-                .roles(user.getUserRoles().stream()
+                .roles(user.getUserRoles() == null ? null : user.getUserRoles().stream()
                         .map(userRole -> userRole.getRole().getName())
                         .toList())
                 .build();

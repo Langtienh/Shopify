@@ -10,6 +10,8 @@ import com.example.ecommerce.repositories.ProductRepository;
 import com.example.ecommerce.repositories.UserRepository;
 import com.example.ecommerce.responses.CommentResponse;
 import com.example.ecommerce.responses.PageResponse;
+import com.example.ecommerce.responses.ProductResponse;
+import com.example.ecommerce.responses.UserResponse;
 import com.example.ecommerce.services.CommentService;
 import com.example.ecommerce.services.ProductService;
 import com.example.ecommerce.services.UserService;
@@ -40,7 +42,9 @@ public class CommentServiceImpl implements CommentService {
                 .product(product)
                 .date(LocalDateTime.now())
                 .build();
-        return CommentResponse.fromComment(commentRepository.save(comment));
+        return CommentResponse.fromComment(commentRepository.save(comment),
+                ProductResponse.fromProduct(product,0, null),
+                UserResponse.fromUser(user));
     }
 
     @Override
@@ -54,7 +58,11 @@ public class CommentServiceImpl implements CommentService {
                 .limit(limit)
                 .totalPage(commentPage.getTotalPages())
                 .totalItem((int)commentPage.getTotalElements())
-                .result(commentPage.stream().map(CommentResponse::fromComment).toList())
+                .result(commentPage.stream().map(comment ->
+                     CommentResponse.fromComment(comment,
+                            ProductResponse.fromProduct(comment.getProduct(), 0,null),
+                            UserResponse.fromUser(comment.getUser()))
+                ).toList())
                 .build();
     }
 
@@ -62,6 +70,8 @@ public class CommentServiceImpl implements CommentService {
     public CommentResponse getCommentById(long id) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Comment not found with id = " + id));
-        return CommentResponse.fromComment(comment);
+        return CommentResponse.fromComment(comment,
+                ProductResponse.fromProduct(comment.getProduct(), 0,null),
+                UserResponse.fromUser(comment.getUser()));
     }
 }
