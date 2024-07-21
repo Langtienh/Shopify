@@ -1,6 +1,6 @@
 "use client";
 
-import { useDeleteCartMutation, useGetCartQuery } from "@/redux/cart/services";
+import { useGetCartQuery } from "@/redux/cart/services";
 import { Checkbox, InputNumber } from "antd";
 import Image from "next/image";
 import Link from "next/link";

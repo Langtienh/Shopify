@@ -19,19 +19,18 @@ export default function RootLayout({
   return (
     <html lang="en" className={roboto.className}>
       <head>
-        <link rel="icon" href="/nestjs-icon.ico" />
+        <link rel="icon" href="/images/logo/shopifyy.ico" />
       </head>
-
-      <AntdRegistry>
-        <NextAuthWrapper>
-          <ReduxWrapper>
-            <body className="relative">
+      <body className="relative">
+        <AntdRegistry>
+          <NextAuthWrapper>
+            <ReduxWrapper>
               {children}
               <LoginModal />
-            </body>
-          </ReduxWrapper>
-        </NextAuthWrapper>
-      </AntdRegistry>
+            </ReduxWrapper>
+          </NextAuthWrapper>
+        </AntdRegistry>
+      </body>
     </html>
   );
 }

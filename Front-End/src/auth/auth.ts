@@ -64,19 +64,24 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
       }
       if (trigger === "signIn") {
         if (account?.providerAccountId && account?.provider !== "credentials") {
-          const customUser = {
+          let customUser = {
             providerId: account?.providerAccountId,
             avatar: token.picture,
             fullName: token.name,
             email: token.email,
           };
-          // token.
-          token.user = customUser;
           const res = await checkAccount(account.providerAccountId);
           if (res) {
             token.token = res?.token;
             token.refreshToken = res?.refreshToken;
+
+            customUser = {
+              ...res.user,
+              providerId: account?.providerAccountId,
+            };
           }
+          // @ts-ignore
+          token.user = customUser;
         } else if (account?.provider === "credentials") {
           // @ts-ignore
           token = user;

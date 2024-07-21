@@ -6,7 +6,7 @@ interface IUser {
   email?: string | null;
   avatar?: string | null;
   phone?: string;
-  id?: number;
+  id: number;
   providerId?: string;
   address?: string;
   active?: boolean;

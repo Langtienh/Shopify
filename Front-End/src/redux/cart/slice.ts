@@ -24,11 +24,14 @@ const cartSlice = createSlice({
       action: PayloadAction<{ checked: boolean; listId: number[] }>
     ) => {
       if (action.payload.checked) state.checked = action.payload.listId;
-      else state.checked = state.checked = [];
+      else state.checked = [];
+    },
+    uncheckedAll: (state) => {
+      state.checked = [];
     },
   },
 });
 
 const cartReducers = cartSlice.reducer;
 export default cartReducers;
-export const { checkedTogger, checkedAll } = cartSlice.actions;
+export const { checkedTogger, checkedAll, uncheckedAll } = cartSlice.actions;

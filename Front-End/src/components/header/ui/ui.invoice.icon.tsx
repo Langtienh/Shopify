@@ -12,7 +12,7 @@ export const InvoiceIcon = () => {
   const onclick = () => dispatch(showLoginModal("/smember/order"));
   if (isLogin) return <IsLogin />;
   return (
-    <div onClick={onclick} className="flex gap-1 cursor-pointer">
+    <div onClick={onclick} className="hidden md:flex gap-1 cursor-pointer">
       <CiDeliveryTruck size={34} />
       <p className="text-[12px]">
         Tra cứu <br />
@@ -23,7 +23,7 @@ export const InvoiceIcon = () => {
 };
 
 const IsLogin = () => (
-  <Link href={"/smember/order"} className="flex gap-1 cursor-pointer">
+  <Link href={"/smember/order"} className="hidden md:flex gap-1 cursor-pointer">
     <CiDeliveryTruck size={34} />
     <p className="text-[12px]">
       Tra cứu <br />

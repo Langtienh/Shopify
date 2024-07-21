@@ -37,7 +37,7 @@ export default function LoginModal() {
               href="/register"
               className="text-center hover:scale-[1.02] font-bold relative inline-flex items-center justify-center p-0.5  me-2 overflow-hidden text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400  dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800"
             >
-              <span className="text-red-600 font-bold relative w-full py-2.5 transition-all ease-in duration-75 bg-white text-base dark:bg-gray-900 rounded-md">
+              <span className="text-red-600 font-bold relative w-full py-2.5 transition-all ease-in duration-75 bg-white text-base rounded-md">
                 Đăng kí
               </span>
             </Link>

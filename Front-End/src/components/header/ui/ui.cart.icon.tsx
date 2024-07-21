@@ -4,6 +4,7 @@ import { showLoginModal } from "@/redux/login/slice";
 import { useAppDispatch } from "@/redux/store";
 import { Badge } from "antd";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FaShopify } from "react-icons/fa";
@@ -23,17 +24,28 @@ const IsLogin = () => {
       }, 0)
     : 0;
   return (
-    <Badge count={counter}>
-      <Link href="/cart">
-        <div className="flex flex-col md:flex-row gap-1 items-center text-white">
-          <FaShopify size={30} />
-          <div className="text-[12px] hidden md:block">
-            <p>Giỏ</p>
-            <p>hàng</p>
-          </div>
+    <Link href="/cart">
+      <div className="flex flex-col md:flex-row gap-1 items-center text-white">
+        <Badge
+          offset={[-13, 15]}
+          size="small"
+          count={
+            <span className="text-white text-sm font-bold">{counter}</span>
+          }
+        >
+          <Image
+            width={27}
+            height={27}
+            src="/images/header/header2-cart.svg"
+            alt="cart-icon"
+          />
+        </Badge>
+        <div className="text-[12px] hidden md:block">
+          <p>Giỏ</p>
+          <p>hàng</p>
         </div>
-      </Link>
-    </Badge>
+      </div>
+    </Link>
   );
 };
 const CartIcon = () => {
@@ -44,7 +56,12 @@ const CartIcon = () => {
       onClick={onclick}
       className="flex cursor-pointer flex-col md:flex-row gap-1 items-center text-white"
     >
-      <FaShopify size={30} />
+      <Image
+        width={27}
+        height={27}
+        src="/images/header/header2-cart.svg"
+        alt="cart-icon"
+      />
       <div className="text-[12px] hidden md:block">
         <p>Giỏ</p>
         <p>hàng</p>
