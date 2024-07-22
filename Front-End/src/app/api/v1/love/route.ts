@@ -1,4 +1,4 @@
-import { del, get, post } from "@/actions/axios.helper";
+import { get, post } from "@/actions/axios.helper";
 import { NextRequest, NextResponse } from "next/server";
 import checkToken from "@/app/api/v1/_lib/check-token";
 import getToken from "@/app/api/v1/_lib/getToken";
@@ -8,7 +8,7 @@ export async function GET() {
   const { userId, token } = getToken();
   if (check && token && userId) {
     try {
-      const res = await get<CartResponse>(`/carts/user/${userId}`, {
+      const res = await get<CartResponse>(`/wish-lists/user/${userId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -23,8 +23,9 @@ export async function GET() {
     { status: 401 }
   );
 }
-export type BODY = {
-  productId: number;
+
+type BODY = {
+  loveId: number;
 };
 
 export async function POST(req: NextRequest) {
@@ -34,7 +35,7 @@ export async function POST(req: NextRequest) {
   if (check && userId && token) {
     try {
       const res = await post(
-        `/carts`,
+        `/wish-lists`,
         { ...data, userId },
         {
           headers: {
@@ -48,27 +49,6 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  return NextResponse.json(
-    { message: "Token hết hạn hoặc lỗi logic" },
-    { status: 401 }
-  );
-}
-
-export async function DELETE() {
-  const check = await checkToken();
-  const { token, userId } = getToken();
-  if (check && token) {
-    try {
-      const res = await del(`/carts/user/${userId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      return NextResponse.json(res, { status: 200 });
-    } catch {
-      return NextResponse.json({ message: "error" }, { status: 500 });
-    }
-  }
   return NextResponse.json(
     { message: "Token hết hạn hoặc lỗi logic" },
     { status: 401 }

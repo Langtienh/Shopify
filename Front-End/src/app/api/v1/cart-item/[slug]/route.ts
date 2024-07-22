@@ -12,7 +12,7 @@ export async function PUT(
   if (check && token && userId) {
     const data = await req.json();
     try {
-      const res = await put(`/carts2/cart-item/${params.slug}`, data, {
+      const res = await put(`/carts/cart-item/${params.slug}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -36,7 +36,7 @@ export async function DELETE(
   const { userId, token } = getToken();
   if (check && token && userId) {
     try {
-      await del(`/carts2/cart-item/${params.slug}`, {
+      await del(`/carts/cart-item/${params.slug}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

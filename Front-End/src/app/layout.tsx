@@ -4,6 +4,7 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 import NextAuthWrapper from "@/auth/wrapper";
 import ReduxWrapper from "@/redux/wrapper";
 import LoginModal from "@/components/loginModal/loginModal";
+import CacheListLove from "@/redux/love/cache";
 
 const roboto = Roboto({
   weight: "400",
@@ -27,6 +28,7 @@ export default function RootLayout({
             <ReduxWrapper>
               {children}
               <LoginModal />
+              <CacheListLove />
             </ReduxWrapper>
           </NextAuthWrapper>
         </AntdRegistry>

@@ -10,7 +10,7 @@ export default async function Section({
   return (
     <div className="flex flex-col gap-3">
       <h2 className="font-bold text-2xl capitalize">
-        {translateCategory(category.name)} bán chạy hôm nay
+        {translateCategory(category.name)} nổi bật
       </h2>
       <NavBrand category={category.name} />
       <ProductTop category={category} />

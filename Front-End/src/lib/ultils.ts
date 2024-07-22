@@ -15,8 +15,9 @@ export const toSlugify = (slug: string) =>
     trim: true, // trim leading and trailing replacement chars, defaults to `true`
   });
 
-export const productToSlug = (product: ProductResponse | CartItemResponse) =>
-  `/product/${toSlugify(product.name)}-${product.id}.html`;
+export const productToSlug = (
+  product: ProductResponse | CartItemResponse | Love
+) => `/product/${toSlugify(product.name)}-${product.id}.html`;
 
 export const productSlugToId = (slug: string) => {
   const id = slug.substring(slug.lastIndexOf("-") + 1, slug.lastIndexOf("."));
@@ -25,16 +26,16 @@ export const productSlugToId = (slug: string) => {
 
 export const converPriceToVN = (price: number, unit?: string) =>
   price.toLocaleString("vi-VN") + (unit ? unit : "");
-export const priceThrough = (product: ProductResponse | CartItemResponse) =>
+export const priceThrough = (product: ProductType | CartItemType | Love) =>
   !!product.price ? converPriceToVN(product.price, "đ") : "0";
-export const priceShow = (product: ProductResponse | CartItemResponse) =>
+export const priceShow = (product: ProductType | CartItemType | Love) =>
   !!product.price
     ? converPriceToVN((product.price * (100 - product.discount)) / 100, "đ")
     : "0";
-export const discoutForMember = (product: ProductResponse | CartItemResponse) =>
+export const discoutForMember = (product: ProductType | CartItemType | Love) =>
   !!product.discountForMember &&
   converPriceToVN(product.discountForMember, "đ");
-export const view = (product: ProductResponse) =>
+export const view = (product: ProductType) =>
   !!product.viewCount && converPriceToVN(product.viewCount);
 
 export const DELAY = (ms: number) =>

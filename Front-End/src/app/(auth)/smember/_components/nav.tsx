@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { LogoutBtn } from "@/app/(auth)/smember/_components/button";
+import { Tooltip } from "antd";
 
 export default function NavSmemver() {
   const [path, setPath] = useState<string>("/");
@@ -14,23 +15,30 @@ export default function NavSmemver() {
     setPath(newPath);
   }, [pathname]);
   return (
-    <ul className="p-[10px] rounded-xl bg-[#f6fbfc] flex flex-col gap-2">
+    <ul className="p-[10px] rounded-xl bg-[#f6fbfc] flex lg:flex-col gap-1 justify-between border">
       {NavSmemverData.map((item) => (
-        <Link
-          className={
-            `${
-              path === item.link
-                ? "text-red-500 bg-[#ffeeee] border-red-500"
-                : " text-gray-600 border-[#f6fbfc]"
-            }` + " px-[10px] py-2 flex gap-4  rounded-xl border #ffeeee"
-          }
-          href={`/smember${item.link}`}
+        <Tooltip
           key={item.link}
+          title={item.label}
+          placement="bottom"
+          color="red"
         >
-          <Image width={18} height={18} alt={item.label} src={item.icon} />
-          <span>{item.label}</span>
-        </Link>
+          <Link
+            className={
+              `${
+                path === item.link
+                  ? "text-red-500 lg:bg-[#ffeeee] border-red-500 px-[10px] py-2 border "
+                  : " text-gray-600 border-[#f6fbfc] border "
+              }` + "lg:px-[10px] lg:py-2 flex gap-4 rounded-xl"
+            }
+            href={`/smember${item.link}`}
+          >
+            <Image width={18} height={18} alt={item.label} src={item.icon} />
+            <span className="hidden lg:inline-block">{item.label}</span>
+          </Link>
+        </Tooltip>
       ))}
+
       <LogoutBtn />
     </ul>
   );

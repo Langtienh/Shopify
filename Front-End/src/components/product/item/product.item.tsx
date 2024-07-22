@@ -3,21 +3,17 @@ import {
   priceShow,
   priceThrough,
   productToSlug,
-  view,
 } from "@/lib/ultils";
 import Link from "next/link";
 import RibbonCustom from "@/components/product/item/badge.ribbon.custom";
 import Image from "next/image";
+import LoveButton from "@/components/product/item/love.button";
 export default function ProductItem({ product }: { product: ProductResponse }) {
   return (
-    <Link
-      className="group"
-      key={`$product-item-${product.id}`}
-      href={productToSlug(product)}
-    >
-      <div className="relative">
-        <div className="flex gap-1 flex-col p-[10px] border shadow-md rounded-lg hover:shadow-xl cursor-pointer">
-          <RibbonCustom text={`Giảm ${product.discount}%`} />
+    <div className="relative">
+      <div className="flex gap-1 flex-col p-[10px] bg-white border shadow-md rounded-lg hover:shadow-xl">
+        <RibbonCustom text={`Giảm ${product.discount}%`} />
+        <Link className="group" href={productToSlug(product)}>
           <div className="flex justify-center">
             <Image
               className="relative z-0 group-hover:scale-[1.05]"
@@ -55,26 +51,42 @@ export default function ProductItem({ product }: { product: ProductResponse }) {
               </p>
             )}
           </div>
-          <div className="flex items-center border-t py-1">
-            <svg
-              className="w-4 h-4 text-yellow-300 me-1"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              viewBox="0 0 22 20"
-            >
-              <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-            </svg>
-            <p className="ms-2 text-sm font-bold text-gray-900 dark:text-white">
-              4.95
-            </p>
-            <span className="w-1 h-1 mx-1.5 bg-gray-500 rounded-full dark:bg-gray-400"></span>
-            <span className="text-sm font-medium text-gray-900 underline hover:no-underline dark:text-white">
-              {view(product)} reviews
-            </span>
+        </Link>
+
+        <div className="flex gap-1 items-center justify-between border-t -mb-[10px]">
+          <div className="flex items-center">
+            <StarYellow />
+            <StarYellow />
+            <StarYellow />
+            <StarYellow />
+            <StarGray />
           </div>
+          <LoveButton productId={product.id} />
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
+
+const StarYellow = () => (
+  <svg
+    className="size-4 text-yellow-300 ms-1"
+    aria-hidden="true"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="currentColor"
+    viewBox="0 0 22 20"
+  >
+    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+  </svg>
+);
+const StarGray = () => (
+  <svg
+    className="size-4 ms-1 text-gray-300 dark:text-gray-500"
+    aria-hidden="true"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="currentColor"
+    viewBox="0 0 22 20"
+  >
+    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+  </svg>
+);
