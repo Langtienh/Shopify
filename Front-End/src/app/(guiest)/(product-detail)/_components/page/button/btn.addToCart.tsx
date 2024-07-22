@@ -19,11 +19,11 @@ export default function AddProductToCart({
   const session = useSession();
   const router = useRouter();
   const user = session.data?.user;
-  const [addCartItem, addCartItemResult] = useAddCartItemMutation();
+  const [addCartItem] = useAddCartItemMutation();
 
   const onClick = () => {
     if (user) {
-      addCartItem({ productId, quantity: 1 });
+      addCartItem(productId);
       openNotification({
         message: "Thêm vào giỏ hàng thành công",
         description: "Thanh toán ngay để nhận ưu đãi",

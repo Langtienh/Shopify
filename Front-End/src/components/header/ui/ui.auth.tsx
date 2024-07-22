@@ -30,8 +30,8 @@ export const Auth = () => {
             width={34}
             height={34}
             alt="avatar"
-            src={user.avatar || "/images/default/avatar.jpg"}
-            fallback="/nestjs-icon.ico"
+            src={user.avatar || "/images/default/user.svg"}
+            fallback="/images/default/user.svg"
             preview={false}
           />
         </button>

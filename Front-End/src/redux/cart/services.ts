@@ -2,36 +2,26 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const cartApi = createApi({
   reducerPath: "cartApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000/api/token" }),
+  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000/api/v1" }),
   tagTypes: ["Cart"],
   endpoints: (builder) => ({
-    getCart: builder.query<CartItemResponse[], void>({
+    getCart: builder.query<CartResponse, void>({
       query: () => "/cart-item",
-      providesTags: (result) => {
-        if (result) {
-          const final = [
-            ...result.map((item) => ({ type: "Cart" as const, id: item.id })),
-            { type: "Cart" as const, id: "LIST" },
-          ];
-          return final;
-        }
-        return [{ type: "Cart" as const, id: "LIST" }];
-      },
+      providesTags: [{ type: "Cart" as const, id: "LIST" }],
     }),
-    addCartItem: builder.mutation<any, CartItemDTO>({
-      query: (item) => {
+    addCartItem: builder.mutation<unknown, number>({
+      query: (productId) => {
         return {
           url: "/cart-item",
           method: "POST",
           body: {
-            type: "POST",
-            item,
+            productId,
           },
         };
       },
       invalidatesTags: () => [{ type: "Cart" as const, id: "LIST" }],
     }),
-    deleteCartItem: builder.mutation<any, number>({
+    deleteCartItem: builder.mutation<unknown, number>({
       query: (id) => {
         return {
           url: `/cart-item/${id}`,
@@ -40,44 +30,40 @@ export const cartApi = createApi({
       },
       invalidatesTags: () => [{ type: "Cart" as const, id: "LIST" }],
     }),
-    addQuantity: builder.mutation<any, number>({
+    addQuantity: builder.mutation<unknown, Omit<CartItemDTO, "productId">>({
       query: (item) => {
         return {
-          url: `/cart-item/${item}`,
+          url: `/cart-item/${item.id}`,
           method: "PUT",
           body: {
-            type: "ADD",
+            quantity: item.quantity + 1,
           },
         };
       },
       invalidatesTags: () => [{ type: "Cart" as const, id: "LIST" }],
     }),
-    subQuantity: builder.mutation<any, number>({
+    subQuantity: builder.mutation<unknown, Omit<CartItemDTO, "productId">>({
       query: (item) => {
         return {
-          url: `/cart-item/${item}`,
+          url: `/cart-item/${item.id}`,
           method: "PUT",
           body: {
-            type: "SUB",
+            quantity: item.quantity - 1,
           },
         };
       },
       invalidatesTags: () => [{ type: "Cart" as const, id: "LIST" }],
     }),
-    deleteListItem: builder.mutation<any, number[]>({
+    deleteListItem: builder.mutation<unknown, number[]>({
       query: (listId) => {
         return {
-          url: `/cart-item`,
-          method: "POST",
-          body: {
-            type: "DELETE",
-            list: listId,
-          },
+          url: `/cart-item/${listId.toString()}`,
+          method: "DELETE",
         };
       },
       invalidatesTags: () => [{ type: "Cart" as const, id: "LIST" }],
     }),
-    deleteCart: builder.mutation<any, void>({
+    deleteCart: builder.mutation<unknown, void>({
       query: () => {
         return {
           url: `/cart-item`,

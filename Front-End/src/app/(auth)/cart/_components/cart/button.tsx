@@ -1,5 +1,6 @@
 "use client";
 
+import { converPriceToVN } from "@/lib/ultils";
 import {
   useDeleteCartItemMutation,
   useAddQuantityMutation,
@@ -37,15 +38,15 @@ export function DeleteItemBTN({
 }
 
 export function AddItemBTN({
-  id,
+  cartItem,
   disabled,
 }: {
-  id: number;
+  cartItem: CartItemResponse;
   disabled?: boolean;
 }) {
   const [addQuantity] = useAddQuantityMutation();
   const handleClick = () => {
-    addQuantity(id);
+    addQuantity({ id: cartItem.id, quantity: cartItem.quantity });
   };
   return (
     <Button disabled={disabled} onClick={handleClick} icon={<IoIosAdd />} />
@@ -53,15 +54,15 @@ export function AddItemBTN({
 }
 
 export function SubItemBTN({
-  id,
+  cartItem,
   disabled,
 }: {
-  id: number;
+  cartItem: CartItemResponse;
   disabled?: boolean;
 }) {
   const [subQuantity] = useSubQuantityMutation();
   const handleClick = () => {
-    subQuantity(id);
+    subQuantity({ id: cartItem.id, quantity: cartItem.quantity });
   };
   return (
     <Button
@@ -93,19 +94,22 @@ export const ClearListBtn = ({ disabled }: { disabled?: boolean }) => {
 };
 
 export function BuyBtn() {
-  const checked = useAppSelector((state) => state.cart.checked);
+  const totalPrice = useAppSelector((state) => state.cart.totalPrice);
   return (
     <div className="w-full px-[10px] fixed z-10 top-full left-0 -translate-y-full">
       <div className="border  bg-white flex justify-between items-center p-[10px] pb-4 w-full max-w-[600px] mx-auto rounded-t-lg shadow-xl">
         <div>
           <p>
-            Tạm tính: <span className="text-red-600 font-bold">0đ</span>
+            Tạm tính:{" "}
+            <span className="text-red-600 font-bold">
+              {converPriceToVN(totalPrice, "đ")}
+            </span>
           </p>
           <p className="text-[12px] text-gray-500">
             Chưa gồm chiết khấu SMember
           </p>
         </div>
-        <Button disabled={!checked.length} size="large" type="primary" danger>
+        <Button disabled={!totalPrice} size="large" type="primary" danger>
           Mua ngay
         </Button>
       </div>

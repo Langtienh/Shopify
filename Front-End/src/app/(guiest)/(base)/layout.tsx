@@ -2,7 +2,7 @@ import Header from "@/app/(guiest)/_components/header/guiest.header";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Smart shop | Uy tín-Chất lượng-Giá rẻ",
+  title: "Shopify | Uy tín-Chất lượng-Giá rẻ",
   description:
     "Shop bán đồ công nghệ  giá rẻ uy tín, chất lượng nhất nhất Việt Nam",
 };

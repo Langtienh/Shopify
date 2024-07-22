@@ -16,15 +16,14 @@ export default function Page() {
           {isSucsess && (
             <div className="flex gap-4 items-center w-full">
               <div className="size-[74px] flex-shrink-0 rounded-full border-2 border-purple-800 bg-white">
-                {user.avatar && (
-                  <AntdImage
-                    className="rounded-full"
-                    width={70}
-                    height={70}
-                    src={user.avatar}
-                    alt="avatar"
-                  />
-                )}
+                <AntdImage
+                  className="rounded-full"
+                  width={70}
+                  height={70}
+                  src={user?.avatar || "/images/default/user.svg"}
+                  fallback="/images/default/user.svg"
+                  alt="avatar"
+                />
               </div>
               <div className="flex-1 w-full flex flex-col gap-1">
                 <h2 className="text-[24px] font-bold text-[#ac3c8e]">

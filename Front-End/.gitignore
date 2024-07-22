@@ -13,8 +13,8 @@ package-lock.json
 
 # next.js
 /.next/
-/.next2/
-/.next3/
+/.nextdev/
+/.nextpro/
 
 /out/
 

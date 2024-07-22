@@ -5,7 +5,7 @@ import { signOut } from "next-auth/react";
 
 export const LogoutBtn = () => {
   const Logout = async () => {
-    await httpCustom.get("/token/logout");
+    await httpCustom.get("/v1/logout");
     await signOut({ callbackUrl: "/login" });
   };
   return (

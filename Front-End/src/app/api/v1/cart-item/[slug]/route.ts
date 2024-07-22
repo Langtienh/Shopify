@@ -1,11 +1,8 @@
-import { post, del } from "@/actions/axios.helper";
+import { del, put } from "@/actions/axios.helper";
 import { NextRequest, NextResponse } from "next/server";
-import getToken from "../../_lib/getToken";
-import checkToken from "../../_lib/check-token";
+import getToken from "@/app/api/v1/_lib/getToken";
+import checkToken from "@/app/api/v1/_lib/check-token";
 
-type editCartItemType = {
-  type: "ADD" | "SUB";
-};
 export async function PUT(
   req: NextRequest,
   { params }: { params: { slug: string } }
@@ -13,21 +10,9 @@ export async function PUT(
   const check = await checkToken();
   const { userId, token } = getToken();
   if (check && token && userId) {
-    const data = (await req.json()) as editCartItemType;
-    const body: {
-      userId: string;
-      cartItems: CartItemDTO[];
-    } = {
-      userId,
-      cartItems: [],
-    };
-    const item: CartItemDTO = {
-      productId: +params.slug,
-      quantity: data.type === "ADD" ? 1 : -1,
-    };
-    body.cartItems.push(item);
+    const data = await req.json();
     try {
-      const res = await post(`/carts`, body, {
+      const res = await put(`/carts2/cart-item/${params.slug}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -50,9 +35,8 @@ export async function DELETE(
   const check = await checkToken();
   const { userId, token } = getToken();
   if (check && token && userId) {
-    console.log(`/carts/cart-item/${params.slug}`);
     try {
-      await del(`/carts/cart-item/${params.slug}`, {
+      await del(`/carts2/cart-item/${params.slug}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

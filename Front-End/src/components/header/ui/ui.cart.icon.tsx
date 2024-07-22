@@ -6,8 +6,7 @@ import { Badge } from "antd";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { FaShopify } from "react-icons/fa";
+import { useEffect, useState } from "react";
 
 export const Cart = () => {
   const session = useSession();
@@ -18,11 +17,11 @@ export const Cart = () => {
 
 const IsLogin = () => {
   const { data } = useGetCartQuery();
-  const counter = data
-    ? data.reduce((total, item) => {
-        return total + item.quantity;
-      }, 0)
-    : 0;
+  const [counter, setCounter] = useState<number>(0);
+  useEffect(() => {
+    if (data?.totalQuantity) setCounter(data.totalQuantity);
+    else setCounter(0);
+  }, [data]);
   return (
     <Link href="/cart">
       <div className="flex flex-col md:flex-row gap-1 items-center text-white">

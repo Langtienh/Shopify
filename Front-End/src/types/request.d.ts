@@ -50,6 +50,7 @@ type CategoryDTO = {
 };
 
 type CartItemDTO = {
+  id: number;
   productId: number;
   quantity: number;
 };

@@ -1,6 +1,6 @@
-import Cart from "@/app/(auth)/cart/_components/cart";
+import Cart from "@/app/(auth)/cart/_components/cart/cart";
 import BackBtn from "@/app/(auth)/_components/btn.back";
-import { BuyBtn } from "@/app/(auth)/cart/_components/button";
+import { BuyBtn } from "@/app/(auth)/cart/_components/cart/button";
 
 export default function Page() {
   return (

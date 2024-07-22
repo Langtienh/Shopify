@@ -76,7 +76,6 @@ const RefreshToken = async (refreshToken: string) => {
   const res = await post<RefreshTokenResponse>("/users/refreshToken", {
     refreshToken,
   });
-  console.log(res.message);
   setToken(res.data.token);
   setRefreshToken(res.data.refreshToken);
 };
