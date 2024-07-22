@@ -15,21 +15,24 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderDTO {
 
-    @NotBlank(message = "Full name must be not blank")
+    @NotBlank(message = "Họ và tên không được để trống")
     private String fullName;
 
-    @NotBlank(message = "Phone must be not blank")
+    @NotBlank(message = "Số điện thoại không được để trống")
     private String phone;
 
-    @NotBlank(message = "Email must be not blank")
+    @NotBlank(message = "Email không được để trống")
     private String email;
 
-    @NotBlank(message = "Address must be not blank")
+    @NotBlank(message = "Địa chỉ không được để trống")
     private String address;
 
-    @NotNull(message = "User ID must be not null")
+    @NotNull(message = "ID người dùng không được để trống")
     private Long userId;
 
-    @NotNull(message = "CartItemIds must be not null")
+    @NotNull(message = "Danh sách ID sản phẩm không được rỗng")
     private List<Long> cartItemIds;
+
+    @NotNull(message = "ID phương thức thanh toán không được rỗng")
+    private Long paymentMethodId;
 }

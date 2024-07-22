@@ -11,18 +11,18 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginWithGoogle {
-    @NotBlank(message = "FullName must be not blank")
+    @NotBlank(message = "Họ và tên không được để trống")
     private String fullName;
 
-    @NotBlank(message = "Phone must be not blank")
+    @NotBlank(message = "Điện thoại không được để trống")
     private String phone;
 
-    @NotBlank(message = "Email must be not blank")
+    @NotBlank(message = "Email không được để trống")
     private String email;
 
-    @NotBlank(message = "Avatar must be not blank")
+    @NotBlank(message = "Ảnh đại diện không được để trống")
     private String avatar;
 
-    @NotBlank(message = "ProviderID must be not blank")
+    @NotBlank(message = "ID nhà cung cấp không được để trống")
     private String providerId;
 }

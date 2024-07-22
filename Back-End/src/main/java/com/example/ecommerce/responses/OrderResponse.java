@@ -20,6 +20,7 @@ public class OrderResponse {
     private Double totalPrice;
     private String orderStatus;
     private boolean active;
+    private String paymentMethod;
     private Long userId;
 
     public static OrderResponse fromOrder(Order order){
@@ -34,6 +35,7 @@ public class OrderResponse {
                 .orderStatus(order.getOrderStatus().toString())
                 .active(order.isActive())
                 .userId(order.getUser().getId())
+                .paymentMethod(order.getPaymentMethod().getName())
                 .build();
     }
 }

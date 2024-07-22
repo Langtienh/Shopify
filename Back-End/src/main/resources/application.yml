@@ -41,6 +41,7 @@ springdoc:
   api-docs:
     path: /api-docs
   show-actuator: true
+
 # jwt
 jwt:
   expiration: 3600000 # (1 * 60 * 1000 mls) 1 phút 60000

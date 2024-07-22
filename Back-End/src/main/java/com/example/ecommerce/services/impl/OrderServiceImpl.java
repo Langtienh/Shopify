@@ -9,6 +9,7 @@ import com.example.ecommerce.responses.OrderResponse;
 import com.example.ecommerce.responses.PageResponse;
 import com.example.ecommerce.services.EmailService;
 import com.example.ecommerce.services.OrderService;
+import com.example.ecommerce.services.PaymentMethodService;
 import com.example.ecommerce.services.UserService;
 import com.example.ecommerce.utils.EmailTemplate;
 import lombok.RequiredArgsConstructor;
@@ -26,16 +27,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
-    private final CartRepository cartRepository;
     private final UserService userService;
     private final OrderDetailRepository orderDetailRepository;
     private final CartItemRepository cartItemRepository;
     private final EmailService emailService;
+    private final PaymentMethodService paymentMethodService;
 
     @Override
     @Transactional
     public OrderResponse createOrder(OrderDTO orderDTO) {
         User user = userService.findById(orderDTO.getUserId());
+        PaymentMethod paymentMethod =
+                paymentMethodService.getPaymentMethodById(orderDTO.getPaymentMethodId());
         List<CartItem> cartItems = new ArrayList<>();
         for(Long cartItemId : orderDTO.getCartItemIds()){
             CartItem cartItem = cartItemRepository.findById(cartItemId)
@@ -58,6 +61,7 @@ public class OrderServiceImpl implements OrderService {
                 .orderStatus(OrderStatus.PENDING)
                 .active(true)
                 .user(user)
+                .paymentMethod(paymentMethod)
                 .build();
         orderRepository.save(order);
         List<OrderDetail> orderDetails = new ArrayList<>();

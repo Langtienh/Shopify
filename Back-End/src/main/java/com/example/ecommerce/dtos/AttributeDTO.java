@@ -12,6 +12,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AttributeDTO {
 
-    @NotBlank(message = "Attribute name must be not blank")
+    @NotBlank(message = "Tên thuộc tính không được để trống")
     private String name;
 }

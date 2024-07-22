@@ -13,15 +13,15 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CommentDTO {
 
-    @NotBlank(message = "Content must be not blank")
+    @NotBlank(message = "Nội dung không được để trống")
     private String content;
 
-    @NotNull(message = "Rate must be not null")
+    @NotNull(message = "Số sao không được rỗng")
     private Long rate;
 
-    @NotNull(message = "User ID must be not null")
+    @NotNull(message = "ID người dùng không được rỗng")
     private Long userId;
 
-    @NotNull(message = "Product ID must be not null")
+    @NotNull(message = "ID sản phẩm không được rỗng")
     private Long productId;
 }

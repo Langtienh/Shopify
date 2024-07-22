@@ -17,37 +17,37 @@ import java.util.Map;
 @AllArgsConstructor
 public class ProductDTO {
 
-    @NotBlank(message = "Product name must be not blank")
+    @NotBlank(message = "Tên sản phẩm không được để trống")
     private String name;
 
-    @NotNull(message = "Price must be not null")
-    @Min(value = 1, message="Price must be greater than or equal to 1")
+    @NotNull(message = "Giá không được rỗng")
+    @Min(value = 1, message="Giá phải lớn hơn hoặc bằng 1")
     private Double price;
 
-    @NotNull(message = "Discount must be not null")
-    @Min(value = 0, message="Discount must be greater than or equal to 0")
+    @NotNull(message = "Giảm giá không được rỗng")
+    @Min(value = 0, message="Mức giảm giá phải lớn hơn hoặc bằng 0")
     private Long discount;
 
-    @NotNull(message = "Stock must be not null")
-    @Min(value = 1, message="Stock must be greater than or equal to 1")
+    @NotNull(message = "Số lượng tồn kho không được rỗng")
+    @Min(value = 1, message="Số lượng tồn kho phải lớn hơn hoặc bằng 1")
     private Long stock;
 
-    @NotBlank(message = "Description must be not blank")
+    @NotBlank(message = "Mô tả không được để trống")
     private String description;
 
-    @NotBlank(message = "Image must be not blank")
+    @NotBlank(message = "Ảnh sản phẩm không được trống")
     private String image;
 
-    @NotNull(message = "DiscountForMember must be not null")
-    @Min(value = 1, message="DiscountForMember must be greater than or equal to 1")
+    @NotNull(message = "Giảm giá cho học sinh/sinh viên không được rỗng")
+    @Min(value = 1, message="Giảm giá cho học sinh/sinh viên phải lớn hơn hoặc bằng 1")
     private Double discountForMember;
 
     private boolean active;
 
-    @NotNull(message = "Brand id must be not null")
+    @NotNull(message = "ID thương hiệu không được rỗng")
     private Long brandId;
 
-    @NotNull(message = "Category id must be not null")
+    @NotNull(message = "ID danh mục không được rỗng")
     private Long categoryId;
 
     private Map<String, String> attributes;

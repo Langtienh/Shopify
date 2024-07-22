@@ -14,6 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CartUpdateDTO {
-    @NotNull(message = "Quantity must be not null")
+    @NotNull(message = "Số lượng không được rỗng")
     private Long quantity;
 }

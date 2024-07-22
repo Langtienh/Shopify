@@ -12,6 +12,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class BrandDTO {
 
-    @NotBlank(message = "Brand name must be not blank")
+    @NotBlank(message = "Tên thương hiệu không được để trống")
     private String name;
 }

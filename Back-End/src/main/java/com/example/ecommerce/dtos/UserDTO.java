@@ -12,21 +12,21 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserDTO {
 
-    @NotBlank(message = "Full name must be not blank")
+    @NotBlank(message = "Tên đầy đủ không được để trống")
     private String fullName;
 
-    @NotBlank(message = "Phone must be not blank")
+    @NotBlank(message = "Số điện thoại không được để trống")
     private String phone;
 
-    @NotBlank(message = "Password must be not blank")
+    @NotBlank(message = "Mật khẩu không được để trống")
     private String password;
 
-    @NotBlank(message = "Email must be not blank")
+    @NotBlank(message = "Email không được để trống")
     private String email;
 
-    @NotBlank(message = "Address must be not blank")
+    @NotBlank(message = "Địa chỉ không được để trống")
     private String address;
 
-    @NotBlank(message = "Avatar must be not blank")
+    @NotBlank(message = "Ảnh đại diện không được rỗng")
     private String avatar;
 }
