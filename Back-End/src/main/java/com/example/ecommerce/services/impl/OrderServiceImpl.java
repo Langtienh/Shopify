@@ -36,7 +36,13 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderResponse createOrder(OrderDTO orderDTO) {
         User user = userService.findById(orderDTO.getUserId());
-        List<CartItem> cartItems = cartItemRepository.findAllByCart(cartRepository.findByUser(user).get());
+        List<CartItem> cartItems = new ArrayList<>();
+        for(Long cartItemId : orderDTO.getCartItemIds()){
+            CartItem cartItem = cartItemRepository.findById(cartItemId)
+                    .orElseThrow(() ->
+                            new ResourceNotFoundException("CartItem not found with id = " + cartItemId));
+            cartItems.add(cartItem);
+        }
         Double totalPrice = cartItems.stream()
                 .mapToDouble(item -> {
                     Product p = item.getProduct();

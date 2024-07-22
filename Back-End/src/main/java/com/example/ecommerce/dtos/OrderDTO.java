@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -27,4 +29,7 @@ public class OrderDTO {
 
     @NotNull(message = "User ID must be not null")
     private Long userId;
+
+    @NotNull(message = "CartItemIds must be not null")
+    private List<Long> cartItemIds;
 }
