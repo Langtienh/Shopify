@@ -1,5 +1,6 @@
 package com.example.ecommerce.models;
 
+import com.example.ecommerce.repositories.custom.ProductCustom;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,7 +20,7 @@ public class Product {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name", unique = true)
+    @Column(name = "name")
     private String name;
 
     @Column(name = "price")
@@ -56,4 +57,24 @@ public class Product {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ProductAttribute> productAttributes;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Comment> comments;
+
+    public static Product fromProductCustom(ProductCustom productCustom){
+        return Product.builder()
+                .id(productCustom.getId())
+                .name(productCustom.getName())
+                .price(productCustom.getPrice())
+                .discount(productCustom.getDiscount())
+                .stock(productCustom.getStock())
+                .viewCount(productCustom.getViewCount())
+                .description(productCustom.getDescription())
+                .image(productCustom.getImage())
+                .discountForMember(productCustom.getDiscountForMember())
+                .active(productCustom.isActive())
+                .brand(productCustom.getBrand())
+                .category(productCustom.getCategory())
+                .build();
+    }
 }

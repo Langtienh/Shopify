@@ -1,6 +1,7 @@
 package com.example.ecommerce.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CartUpdateDTO {
-    @JsonProperty("cartItems")
-    private List<CartItemDTO> cartItemDTOS;
+    @NotNull(message = "Quantity must be not null")
+    private Long quantity;
 }

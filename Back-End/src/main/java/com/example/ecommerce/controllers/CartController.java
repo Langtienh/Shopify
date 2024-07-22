@@ -3,7 +3,6 @@ package com.example.ecommerce.controllers;
 import com.example.ecommerce.dtos.CartDTO;
 import com.example.ecommerce.dtos.CartUpdateDTO;
 import com.example.ecommerce.responses.CartResponse;
-import com.example.ecommerce.responses.PageResponse;
 import com.example.ecommerce.responses.ResponseSuccess;
 import com.example.ecommerce.services.CartService;
 import jakarta.validation.Valid;
@@ -12,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("${api.prefix}/carts")
@@ -43,7 +44,7 @@ public class CartController {
     }
 
 
-    @PutMapping("/{id}")
+    @PutMapping("/cart-item/{id}")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ResponseSuccess> updateCart(@PathVariable long id,
                                                       @Valid @RequestBody CartUpdateDTO cartUpdateDTO){
@@ -55,22 +56,22 @@ public class CartController {
                 .build());
     }
 
-    @DeleteMapping("/cart-item/{id}")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ResponseSuccess> deleteCartItem(@PathVariable long id){
-        cartService.deleteCartItem(id);
+    @DeleteMapping("/user/{userId}")
+    @PreAuthorize("#userId == authentication.principal.id")
+    public ResponseEntity<ResponseSuccess> deleteCartByUser(@PathVariable long userId){
+        cartService.deleteCartByUser(userId);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Delete cartItem successfully")
+                .message("Delete cart by user successfully")
                 .status(HttpStatus.NO_CONTENT.value())
                 .build());
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/cart-item/{ids}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ResponseSuccess> deleteCart(@PathVariable long id){
-        cartService.deleteCart(id);
+    public ResponseEntity<ResponseSuccess> deleteCart(@PathVariable List<Long> ids){
+        cartService.deleteCart(ids);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Delete cart successfully")
+                .message("Delete cart-item successfully")
                 .status(HttpStatus.NO_CONTENT.value())
                 .build());
     }

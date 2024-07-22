@@ -16,6 +16,8 @@ import java.util.List;
 public class CartDTO {
     @NotNull(message = "User ID must be not null")
     private Long userId;
-    @JsonProperty("cartItems")
-    private List<CartItemDTO> cartItemDTOS;
+
+    @NotNull(message = "Product ID must be not null")
+    private Long productId;
+
 }

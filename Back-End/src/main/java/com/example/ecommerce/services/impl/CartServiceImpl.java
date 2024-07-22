@@ -1,10 +1,7 @@
 package com.example.ecommerce.services.impl;
 
 import com.example.ecommerce.dtos.CartDTO;
-import com.example.ecommerce.dtos.CartItemDTO;
 import com.example.ecommerce.dtos.CartUpdateDTO;
-import com.example.ecommerce.dtos.test.CartDTOv1;
-import com.example.ecommerce.dtos.test.CartUpdateDTOv1;
 import com.example.ecommerce.exceptions.ResourceNotFoundException;
 import com.example.ecommerce.models.Cart;
 import com.example.ecommerce.models.CartItem;
@@ -32,35 +29,6 @@ public class CartServiceImpl implements CartService {
     private final CartItemRepository cartItemRepository;
     private final UserService userService;
     private final ProductService productService;
-    @Override
-    @Transactional
-    public CartResponse createCart(CartDTO cartDTO) {
-        User user = userService.findById(cartDTO.getUserId());
-        Optional<Cart> existsCart = cartRepository.findByUser(user);
-
-        // User chưa có giỏ hàng => Tạo mới
-        Cart cart = existsCart.orElseGet(() -> cartRepository.save(Cart.builder()
-                .user(user)
-                .build()));
-        List<CartItemResponse> cartItemResponses = new ArrayList<>();
-        for(CartItemDTO cartItemDTO : cartDTO.getCartItemDTOS()){
-            Product product = productService.findById(cartItemDTO.getProductId());
-            Optional<CartItem> cartItem = cartItemRepository.findByProductAndCart(product, cart);
-            CartItem newCartItem = new CartItem();
-            newCartItem.setProduct(product);
-            newCartItem.setCart(cart);
-            if(cartItem.isEmpty()){ // Chưa có => Tạo mới
-                newCartItem.setQuantity(cartItemDTO.getQuantity());
-            }
-            else{ // Đã tồn tại => Tăng quantity
-                newCartItem.setId(cartItem.get().getId());
-                newCartItem.setQuantity(cartItemDTO.getQuantity() + cartItem.get().getQuantity());
-            }
-            cartItemResponses.add(CartItemResponse.fromCartItem(cartItemRepository.save(newCartItem)));
-        }
-        return CartResponse.fromCart(cart, cartItemResponses);
-    }
-
 
 
     @Override
@@ -76,42 +44,8 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional
-    public CartResponse updateCart(long id, CartUpdateDTO cartUpdateDTO) {
-        Cart cart = cartRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
-        List<CartItemResponse> cartItemResponses = new ArrayList<>();
-        for(CartItemDTO cartItemDTO : cartUpdateDTO.getCartItemDTOS()){
-            Product product = productService.findById(cartItemDTO.getProductId());
-            CartItem cartItem = cartItemRepository.findByProductAndCart(product, cart).get();
-            cartItem.setQuantity(cartItemDTO.getQuantity());
-            cartItemResponses.add(CartItemResponse.fromCartItem(cartItemRepository.save(cartItem)));
-        }
-        return CartResponse.fromCart(cart, cartItemResponses);
-    }
-
-    @Override
-    @Transactional
-    public void deleteCart(long id) {
-        Cart cart = cartRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Cart not found with id = " + id));
-        List<CartItem> cartItems = cartItemRepository.findAllByCart(cart);
-        cartItemRepository.deleteAll(cartItems);
-    }
-
-    @Override
-    @Transactional
-    public void deleteCartItem(long cartItemId) {
-        CartItem cartItem = cartItemRepository.findById(cartItemId)
-                .orElseThrow(() -> new ResourceNotFoundException("CartItem not found"));
-        cartItemRepository.delete(cartItem);
-    }
-
-
-    // Test
-    @Override
-    @Transactional
-    public CartResponse createCartv1(CartDTOv1 cartDTOv1) {
-        User user = userService.findById(cartDTOv1.getUserId());
+    public CartResponse createCart(CartDTO cartDTO) {
+        User user = userService.findById(cartDTO.getUserId());
         Optional<Cart> existsCart = cartRepository.findByUser(user);
 
         // User chưa có giỏ hàng => Tạo mới
@@ -119,7 +53,7 @@ public class CartServiceImpl implements CartService {
                 .user(user)
                 .build()));
 
-        Product product = productService.findById(cartDTOv1.getProductId());
+        Product product = productService.findById(cartDTO.getProductId());
         Optional<CartItem> cartItem = cartItemRepository.findByProductAndCart(product, cart);
         CartItem newCartItem = new CartItem();
         newCartItem.setProduct(product);
@@ -135,33 +69,17 @@ public class CartServiceImpl implements CartService {
                 CartItemResponse.fromCartItem(cartItemRepository.save(newCartItem));
         return CartResponse.fromCart(cart, List.of(cartItemResponse));
     }
-
-    @Override
-    public CartResponse getCartByUserv1(long userId) {
-        User user = userService.findById(userId);
-        Optional<Cart> cart = cartRepository.findByUser(user);
-        if(cart.isPresent()){
-            List<CartItemResponse> cartItems = cartItemRepository.findAllByCart(cart.get())
-                    .stream()
-                    .map(CartItemResponse::fromCartItem)
-                    .toList();
-            return CartResponse.fromCart(cart.get(), cartItems);
-        }
-        return null;
-    }
-
     @Override
     @Transactional
-    public CartResponse updateCartv1(long id, CartUpdateDTOv1 cartUpdateDTOv1) {
+    public CartResponse updateCart(long id, CartUpdateDTO cartUpdateDTO) {
         CartItem cartItem = cartItemRepository.findById(id)
                         .orElseThrow(()
                                 -> new ResourceNotFoundException("CartItem not found with id = " + id));
-        cartItem.setQuantity(cartUpdateDTOv1.getQuantity());
+        cartItem.setQuantity(cartUpdateDTO.getQuantity());
         CartItemResponse cartItemResponse =
                 CartItemResponse.fromCartItem(cartItemRepository.save(cartItem));
         return CartResponse.fromCart(cartItem.getCart(), List.of(cartItemResponse));
     }
-
     @Override
     @Transactional
     public void deleteCart(List<Long> ids) {
@@ -172,7 +90,6 @@ public class CartServiceImpl implements CartService {
             cartItemRepository.delete(cartItem);
         }
     }
-
     @Override
     @Transactional
     public void deleteCartByUser(long userId) {
