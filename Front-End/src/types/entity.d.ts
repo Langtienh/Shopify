@@ -32,6 +32,17 @@ type CartType = {
   cartItems: CartItemType[];
 };
 
+type Love = {
+  id: number;
+  userId: number;
+  productId: number;
+  name: string;
+  image: string;
+  price: number;
+  discount: number;
+  discountForMember: number;
+};
+
 type CommentType = {
   id: number;
   content: string;

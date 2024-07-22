@@ -12,11 +12,14 @@ export default function RootLayout({
 }>) {
   return (
     <div className="bg-[#f4f6f8]">
-      <div className="flex py-5 px-[10px] mx-6 flex-wrap gap-6">
-        <div className="hidden md:block md:w-[250px] flex-shrink-0">
-          <NavSmemver />
+      <div className="flex flex-col lg:flex-row py-5 lg:mx-6 gap-6 relative">
+        <div className="lg:w-[250px] fixed z-20 w-full px-[10px]">
+          <div>
+            <NavSmemver />
+          </div>
         </div>
-        <main className="flex-1">{children}</main>
+        <div className="lg:w-[250px] h-16 flex-shrink-0"></div>
+        <main className="flex-1 px-[10px] overflow-hidden">{children}</main>
       </div>
     </div>
   );

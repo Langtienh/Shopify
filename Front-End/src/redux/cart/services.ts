@@ -2,12 +2,12 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const cartApi = createApi({
   reducerPath: "cartApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000/api/v1" }),
+  baseQuery: fetchBaseQuery({ baseUrl: "/api/v1" }),
   tagTypes: ["Cart"],
   endpoints: (builder) => ({
     getCart: builder.query<CartResponse, void>({
       query: () => "/cart-item",
-      providesTags: [{ type: "Cart" as const, id: "LIST" }],
+      providesTags: [{ type: "Cart" as const, id: "ListCart" }],
     }),
     addCartItem: builder.mutation<unknown, number>({
       query: (productId) => {
@@ -19,7 +19,7 @@ export const cartApi = createApi({
           },
         };
       },
-      invalidatesTags: () => [{ type: "Cart" as const, id: "LIST" }],
+      invalidatesTags: () => [{ type: "Cart" as const, id: "ListCart" }],
     }),
     deleteCartItem: builder.mutation<unknown, number>({
       query: (id) => {
@@ -28,7 +28,7 @@ export const cartApi = createApi({
           method: "DELETE",
         };
       },
-      invalidatesTags: () => [{ type: "Cart" as const, id: "LIST" }],
+      invalidatesTags: () => [{ type: "Cart" as const, id: "ListCart" }],
     }),
     addQuantity: builder.mutation<unknown, Omit<CartItemDTO, "productId">>({
       query: (item) => {
@@ -40,7 +40,7 @@ export const cartApi = createApi({
           },
         };
       },
-      invalidatesTags: () => [{ type: "Cart" as const, id: "LIST" }],
+      invalidatesTags: () => [{ type: "Cart" as const, id: "ListCart" }],
     }),
     subQuantity: builder.mutation<unknown, Omit<CartItemDTO, "productId">>({
       query: (item) => {
@@ -52,7 +52,7 @@ export const cartApi = createApi({
           },
         };
       },
-      invalidatesTags: () => [{ type: "Cart" as const, id: "LIST" }],
+      invalidatesTags: () => [{ type: "Cart" as const, id: "ListCart" }],
     }),
     deleteListItem: builder.mutation<unknown, number[]>({
       query: (listId) => {
@@ -61,7 +61,7 @@ export const cartApi = createApi({
           method: "DELETE",
         };
       },
-      invalidatesTags: () => [{ type: "Cart" as const, id: "LIST" }],
+      invalidatesTags: () => [{ type: "Cart" as const, id: "ListCart" }],
     }),
     deleteCart: builder.mutation<unknown, void>({
       query: () => {
@@ -70,7 +70,7 @@ export const cartApi = createApi({
           method: "DELETE",
         };
       },
-      invalidatesTags: () => [{ type: "Cart" as const, id: "LIST" }],
+      invalidatesTags: () => [{ type: "Cart" as const, id: "ListCart" }],
     }),
   }),
 });
