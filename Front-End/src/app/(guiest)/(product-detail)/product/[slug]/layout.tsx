@@ -30,7 +30,7 @@ export default async function RootLayout({
   const productId = productSlugToId(params.slug);
   const product = await getProductById(productId);
   return (
-    <div className="max-w-[1400px] mx-auto relative">
+    <div className="relative">
       <ProductHeader productId={productId} />
       <main className="text-[#444444] max-w-[1200px] mx-auto w-full px-2 pt-[132px]">
         {children}

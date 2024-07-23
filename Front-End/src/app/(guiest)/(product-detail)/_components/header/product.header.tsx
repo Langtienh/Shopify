@@ -9,7 +9,7 @@ export default async function ProductHeader({
   productId: string;
 }) {
   return (
-    <div className="fixed top-0 w-full max-w-[1400px] mx-auto z-30">
+    <div className="fixed top-0 w-full z-30">
       <Header2 />
       <Header3 />
       <Suspense

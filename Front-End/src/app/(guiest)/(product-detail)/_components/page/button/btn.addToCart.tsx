@@ -8,6 +8,8 @@ import { openNotification } from "@/lib/nofication";
 import { useAddCartItemMutation } from "@/redux/cart/services";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useAppDispatch } from "@/redux/store";
+import { showLoginModal } from "@/redux/login/slice";
 export default function AddProductToCart({
   productId,
   size = "large",
@@ -20,7 +22,7 @@ export default function AddProductToCart({
   const router = useRouter();
   const user = session.data?.user;
   const [addCartItem] = useAddCartItemMutation();
-
+  const dispatch = useAppDispatch();
   const onClick = () => {
     if (user) {
       addCartItem(productId);
@@ -29,7 +31,7 @@ export default function AddProductToCart({
         description: "Thanh toán ngay để nhận ưu đãi",
         notificationType: "success",
       });
-    } else router.push(`/login?callbackUrl=${path}`);
+    } else dispatch(showLoginModal(path));
   };
   if (size === "large")
     return (

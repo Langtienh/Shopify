@@ -57,7 +57,7 @@ export default function SearchInput() {
         >
           <div
             onClick={handleCancel}
-            className="absolute max-w-[1400px] left-1/2 -translate-x-1/2 top-0 w-full h-full bg-black opacity-50"
+            className="absolute left-1/2 -translate-x-1/2 top-0 w-full h-full bg-black opacity-50"
           ></div>
           <div className="absolute left-0 right-0 top-1">
             <div className="max-w-[1200px] mx-auto px-[10px] flex sm:gap-4 justify-between">

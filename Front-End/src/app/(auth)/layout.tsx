@@ -5,9 +5,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="max-w-[1400px] mx-auto">
+    <>
       <HeaderAuth />
       <div className="pt-14">{children}</div>
-    </main>
+    </>
   );
 }

@@ -22,9 +22,9 @@ export default async function ProductTop({
     const products1 = products.filter((_, i) => i < LIMIT / 2);
     const products2 = products.filter((_, i) => i >= LIMIT / 2);
     return (
-      <div className="py-1 px-2 bg-[#f6f6f6] rounded-lg overflow-hidden">
+      <div className="py-2 ps-2 rounded-lg overflow-hidden">
         <Carousel>
-          <CarouselContent className="-ml-2">
+          <CarouselContent className="-ml-2 pr-[10px]">
             {products1.map((_, i) => (
               <CarouselItem
                 className="pl-2 basis-1/2  md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
@@ -44,9 +44,9 @@ export default async function ProductTop({
     );
   }
   return (
-    <div className="py-1 px-2 bg-[#f6f6f6] rounded-lg overflow-hidden">
+    <div className="py-2 ps-2 rounded-lg overflow-hidden">
       <Carousel>
-        <CarouselContent className="-ml-2">
+        <CarouselContent className="-ml-2 pr-[10px]">
           {products.map((product: ProductResponse) => (
             <CarouselItem
               className="pl-2 basis-1/2  md:basis-1/3 lg:basis-1/4 xl:basis-1/5"

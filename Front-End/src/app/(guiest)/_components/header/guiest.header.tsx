@@ -5,7 +5,7 @@ import Breadcrumb from "@/app/(guiest)/_components/header/breadcrumb";
 
 export default async function Header() {
   return (
-    <div className="fixed top-0 w-full max-w-[1400px] mx-auto z-30">
+    <div className="fixed top-0 w-full z-30">
       {/* <Header1 /> */}
       <Header2 />
       <Header3 />

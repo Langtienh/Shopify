@@ -11,10 +11,10 @@ type PropsType = {
 export default function Noiti({ hiddenNoiti, show }: PropsType) {
   if (show) {
     return (
-      <div className="fixed z-50 top-14 w-full max-w-[1400px] left-1/2 -translate-x-1/2 bottom-0">
+      <div className="fixed z-50 top-14 w-full left-1/2 -translate-x-1/2 bottom-0">
         <div
           onClick={hiddenNoiti}
-          className="absolute w-full max-w-[1400px] left-1/2 -translate-x-1/2 h-full bg-black opacity-50 cursor-pointer"
+          className="absolute w-full left-1/2 -translate-x-1/2 h-full bg-black opacity-50 cursor-pointer"
         ></div>
         <div className="absolute w-full max-w-[1200px] left-1/2 -translate-x-1/2">
           <div className="absolute h-[440px] right-[10px] top-[10px] w-[350px] bg-white rounded-2xl flex flex-col">
