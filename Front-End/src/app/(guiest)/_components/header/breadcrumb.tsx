@@ -6,6 +6,7 @@ import { MdNavigateNext } from "react-icons/md";
 
 export default function Breadcrumb() {
   let path = usePathname();
+  if (path === "/") return <></>;
   path = path.replace("product/", "products/");
   const paths = path.split("/");
   const breadcrumb = paths

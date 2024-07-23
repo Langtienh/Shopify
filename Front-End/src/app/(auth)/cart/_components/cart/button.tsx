@@ -14,14 +14,8 @@ import { AiFillDelete } from "react-icons/ai";
 import { IoIosAdd } from "react-icons/io";
 import { RiSubtractFill } from "react-icons/ri";
 
-export function DeleteItemBTN({
-  id,
-  disabled,
-}: {
-  id: number;
-  disabled?: boolean;
-}) {
-  const [deleteItem] = useDeleteCartItemMutation();
+export function DeleteItemBTN({ id }: { id: number }) {
+  const [deleteItem, { isLoading }] = useDeleteCartItemMutation();
   const dispath = useAppDispatch();
   const handleClick = () => {
     deleteItem(id);
@@ -29,7 +23,7 @@ export function DeleteItemBTN({
   };
   return (
     <Button
-      disabled={disabled}
+      loading={isLoading}
       onClick={handleClick}
       type="text"
       icon={<AiFillDelete size={20} />}
@@ -37,19 +31,13 @@ export function DeleteItemBTN({
   );
 }
 
-export function AddItemBTN({
-  cartItem,
-  disabled,
-}: {
-  cartItem: CartItemResponse;
-  disabled?: boolean;
-}) {
-  const [addQuantity] = useAddQuantityMutation();
+export function AddItemBTN({ cartItem }: { cartItem: CartItemResponse }) {
+  const [addQuantity, { isLoading }] = useAddQuantityMutation();
   const handleClick = () => {
     addQuantity({ id: cartItem.id, quantity: cartItem.quantity });
   };
   return (
-    <Button disabled={disabled} onClick={handleClick} icon={<IoIosAdd />} />
+    <Button loading={isLoading} onClick={handleClick} icon={<IoIosAdd />} />
   );
 }
 
@@ -60,13 +48,14 @@ export function SubItemBTN({
   cartItem: CartItemResponse;
   disabled?: boolean;
 }) {
-  const [subQuantity] = useSubQuantityMutation();
+  const [subQuantity, { isLoading }] = useSubQuantityMutation();
   const handleClick = () => {
     subQuantity({ id: cartItem.id, quantity: cartItem.quantity });
   };
   return (
     <Button
       disabled={disabled}
+      loading={isLoading}
       onClick={handleClick}
       icon={<RiSubtractFill />}
     />
@@ -74,7 +63,7 @@ export function SubItemBTN({
 }
 
 export const ClearListBtn = ({ disabled }: { disabled?: boolean }) => {
-  const [deleteList] = useDeleteListItemMutation();
+  const [deleteList, { isLoading }] = useDeleteListItemMutation();
   const checked = useAppSelector((state) => state.cart.checked);
   const dispath = useAppDispatch();
   const deletelist = () => {
@@ -82,7 +71,7 @@ export const ClearListBtn = ({ disabled }: { disabled?: boolean }) => {
     dispath(uncheckedAll());
   };
   return (
-    <Button disabled={disabled} type="text">
+    <Button loading={isLoading} type="text">
       <p
         onClick={deletelist}
         className="cursor-pointer text-gray-400 text-sm italic font-semibold"

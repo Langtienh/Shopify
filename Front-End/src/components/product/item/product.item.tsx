@@ -53,7 +53,7 @@ export default function ProductItem({ product }: { product: ProductResponse }) {
           </div>
         </Link>
 
-        <div className="flex gap-1 items-center justify-between border-t -mb-[10px]">
+        <div className="flex gap-1 items-center justify-between border-t pt-[10px]">
           <div className="flex items-center">
             <StarYellow />
             <StarYellow />

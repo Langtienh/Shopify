@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "antd";
 import {
   useDeleteLoveMutation,
   usePostLoveMutation,
@@ -15,27 +15,37 @@ export default function LoveButton({ productId }: { productId: number }) {
     if (_item) setItem(_item);
     else setItem(undefined);
   }, [loveList, productId]);
-  const [PostAction, { isLoading }] = usePostLoveMutation();
-  const [DeleteAction] = useDeleteLoveMutation();
-  if (item)
-    return (
-      <Button
-        size="icon"
-        disabled={isLoading}
-        variant="ghost"
-        onClick={() => DeleteAction(item.id)}
-      >
-        <FaHeart className="text-red-500 hover:scale-[1.2] p-0" size={22} />
-      </Button>
-    );
+  if (item) return <Loved id={item.id} />;
+  return <NoLove productId={productId} />;
+}
+
+const Loved = ({ id }: { id: number }) => {
+  const [DeleteAction, { isLoading }] = useDeleteLoveMutation();
+
   return (
     <Button
-      disabled={isLoading}
-      size="icon"
-      variant="ghost"
-      onClick={() => PostAction(productId)}
-    >
-      <FaRegHeart className="text-red-500 hover:scale-[1.2] p-0" size={22} />
-    </Button>
+      size="small"
+      type="text"
+      loading={isLoading}
+      onClick={() => DeleteAction(id)}
+      icon={
+        <FaHeart className="text-red-500 hover:scale-[1.2] p-0" size={22} />
+      }
+    />
   );
-}
+};
+
+const NoLove = ({ productId }: { productId: number }) => {
+  const [PostAction, { isLoading, isSuccess }] = usePostLoveMutation();
+  return (
+    <Button
+      loading={isLoading}
+      size="small"
+      type="text"
+      onClick={() => PostAction(productId)}
+      icon={
+        <FaRegHeart className="text-red-500 hover:scale-[1.2] p-0" size={22} />
+      }
+    />
+  );
+};
