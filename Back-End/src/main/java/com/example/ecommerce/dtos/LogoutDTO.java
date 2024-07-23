@@ -9,6 +9,6 @@ import lombok.*;
 @AllArgsConstructor
 public class LogoutDTO {
 
-    @NotBlank(message = "Token must be not blank")
+    @NotBlank(message = "Token không được để trống")
     private String token;
 }

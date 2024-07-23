@@ -14,10 +14,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CartDTO {
-    @NotNull(message = "User ID must be not null")
+    @NotNull(message = "ID người dùng không được rỗng")
     private Long userId;
 
-    @NotNull(message = "Product ID must be not null")
+    @NotNull(message = "ID sản phẩm không được rỗng")
     private Long productId;
 
 }
