@@ -47,3 +47,13 @@ jwt:
   expiration: 3600000 # (1 * 60 * 1000 mls) 1 phút 60000
   refreshExpiration: 7200000 # 5 phút 300000
   secretKey: XeKCntPJuk/iJoaxpv9ifO4aj+6TXWpL123R9b47aqH0=
+
+payment:
+  vnPay:
+    url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+    tmnCode: TSFZ2A2L
+    secretKey: SNIHOORBOFJ6USCIPO48W9H6NYPBAKI4
+    returnUrl: http://localhost:8080/api/v1/payments/vn-pay-callback
+    version: 2.1.0
+    command: pay
+    orderType: other
