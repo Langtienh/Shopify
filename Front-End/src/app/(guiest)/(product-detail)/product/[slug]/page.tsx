@@ -8,7 +8,7 @@ import { productSlugToId, productToSlug } from "@/lib/ultils";
 import Title from "@/app/(guiest)/(product-detail)/product/[slug]/_components/title";
 import Gallery from "@/app/(guiest)/(product-detail)/product/[slug]/_components/box-gallery";
 import Similar from "@/app/(guiest)/(product-detail)/product/[slug]/_components/similar";
-import Comments from "./_components/comments";
+import Comments from "@/app/(guiest)/(product-detail)/product/[slug]/_components/comments";
 
 export async function generateStaticParams() {
   const count = process?.env?.PRODUCT_ITEM ?? "0";
@@ -20,9 +20,9 @@ export async function generateStaticParams() {
 }
 export default async function Page({ params }: { params: { slug: string } }) {
   const productId = productSlugToId(params.slug);
-  // const product = await getProductById(productId);
+  const product = await getProductById(productId);
   // const comments = await getAllComments(productId);
-  const { product, comments } = await getProductDetail(productId);
+  // const { product, comments } = await getProductDetail(productId);
   return (
     <>
       <Title viewCount={product.viewCount} name={product.name} />
@@ -34,7 +34,6 @@ export default async function Page({ params }: { params: { slug: string } }) {
       <Comments
         key={`comment-${productId}`}
         productId={product.id}
-        comments={comments}
         name={product.name}
       />
     </>

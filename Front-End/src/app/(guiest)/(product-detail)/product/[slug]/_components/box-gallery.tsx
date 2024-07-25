@@ -119,7 +119,7 @@ export default function Gallery({ product }: { product: ProductResponse }) {
           </div>
           {/* button */}
           <div className="h-[60px] flex gap-4">
-            <BuyButton />
+            <BuyButton productId={product.id} />
             <AddToCartButton productId={product.id} />
           </div>
           <div className="border-2 border-gray-200 overflow-hidden rounded-lg">

@@ -103,7 +103,7 @@ export const getAllProduct = async (
 ): Promise<ProductResponse[]> => {
   try {
     const res = await get<PageResponse<ProductResponse>>(
-      `/products/search-product?limit=${LIMIT}`
+      `/products/search-product?limit=${1000}`
     );
     const products = res.data.result;
     return products;

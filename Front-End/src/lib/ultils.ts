@@ -21,7 +21,9 @@ export const productToSlug = (name: string, id: number) =>
 export const productSlugToId = (slug: string) => {
   const _slug = slug.replace(".html", "");
   const slugs = _slug.split("-");
-  return +slugs[slugs.length - 1] || 1;
+  const id = +slugs[slugs.length - 1];
+  console.log(id);
+  return id || 1;
 };
 
 export const converPriceToVN = (price: number, unit?: string) =>

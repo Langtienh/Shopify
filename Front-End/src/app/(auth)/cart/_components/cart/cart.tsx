@@ -93,7 +93,7 @@ export default function Cart() {
                     <div className="flex justify-between">
                       <Link
                         className="flex-1 hover:underline text-[#3a3a3a] hover:text-[#6a6a6a]"
-                        href={productToSlug(item.name, item.id)}
+                        href={productToSlug(item.name, item.productId)}
                       >
                         {item.name}
                       </Link>

@@ -6,14 +6,20 @@ import { CommentModal } from "./comment.modal";
 type PropsType = {
   productId: number;
   name: string;
-  comments: CommentType[];
+  // comments: CommentType[];
 };
 export default async function Comments({
   productId,
-  comments,
+  // comments,
   name,
 }: PropsType) {
-  // const comments = await getAllComments(productId);
+  const comments = await getAllComments(productId);
+  const total =
+    Math.floor(
+      (comments.reduce((accumulator, item) => accumulator + item.rate, 0) *
+        10) /
+        comments.length
+    ) / 10 || 0;
   const sum = comments.length;
   const counter: number[] = [];
   counter.push(comments.filter((item) => item.rate === 1).length);
@@ -26,7 +32,7 @@ export default async function Comments({
       <h2 className="text-lg font-bold">Đánh giá & nhận xét{" " + name}</h2>
       <div className="pb-5 mb-5 flex flex-col sm:flex-row gap-5 border-b">
         <div className="sm:w-2/5 sm:basis-2/5 flex flex-col items-center justify-center text-center pt-4">
-          <span className="font-bold text-xl">4.5/5</span>
+          <span className="font-bold text-xl">{`${total}/5`}</span>
           <Rate disabled allowHalf defaultValue={4.5} />
           <span>{`${comments.length} đánh giá`}</span>
         </div>

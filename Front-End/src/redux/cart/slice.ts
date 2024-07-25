@@ -34,6 +34,10 @@ const cartSlice = createSlice({
     uncheckedAll: (state) => {
       state.checked = [];
     },
+    buyNow: (state, action: PayloadAction<number>) => {
+      state.checked = [];
+      state.checked.push(action.payload);
+    },
   },
   extraReducers: (builder) => {
     builder.addMatcher(
@@ -57,5 +61,5 @@ const cartSlice = createSlice({
 
 const cartReducers = cartSlice.reducer;
 export default cartReducers;
-export const { checkedTogger, checkedAll, uncheckedAll, cloneCart } =
+export const { checkedTogger, checkedAll, uncheckedAll, cloneCart, buyNow } =
   cartSlice.actions;

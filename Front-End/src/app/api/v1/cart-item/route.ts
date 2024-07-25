@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
   const { userId, token } = getToken();
   if (check && userId && token) {
     try {
-      const res = await post(
+      const res = await post<CartResponse>(
         `/carts`,
         { ...data, userId },
         {
@@ -42,7 +42,8 @@ export async function POST(req: NextRequest) {
           },
         }
       );
-      return NextResponse.json(res.data, { status: 200 });
+      console.log(res.data.cartItems[0].id);
+      return NextResponse.json(res.data.cartItems[0].id, { status: 200 });
     } catch {
       return NextResponse.json({ message: "error" }, { status: 500 });
     }

@@ -3,11 +3,12 @@ import { Button } from "@/components/ui/button";
 import { openNotification } from "@/lib/nofication";
 import { converPriceToVN } from "@/lib/ultils";
 import { useAddCartItemMutation } from "@/redux/cart/services";
+import { buyNow } from "@/redux/cart/slice";
 import { showLoginModal } from "@/redux/login/slice";
 import { useAppDispatch } from "@/redux/store";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
 const dataColor: {
@@ -58,9 +59,27 @@ export const SelectColor = ({ price }: { price: number }) => {
   );
 };
 
-export const BuyButton = () => {
+export const BuyButton = ({ productId }: { productId: number }) => {
+  const path = usePathname();
+  const session = useSession();
+  const user = session.data?.user;
+  const route = useRouter();
+  const dispatch = useAppDispatch();
+  const [addCartItem, { data }] = useAddCartItemMutation();
+  if (data) {
+    dispatch(buyNow(data));
+    route.push("/cart");
+  }
+  const onclick = () => {
+    if (user) {
+      addCartItem(productId);
+    } else dispatch(showLoginModal(path));
+  };
   return (
-    <Button className="flex-1 bg-red-600 h-full hover:bg-red-500">
+    <Button
+      onClick={onclick}
+      className="flex-1 bg-red-600 h-full hover:bg-red-500"
+    >
       <div className="text-center">
         <p className="font-bold text-base">Mua ngay</p>
         <p className="text-sm">Giao hàng trong 2h hoặc nhận tại cửa hàng</p>

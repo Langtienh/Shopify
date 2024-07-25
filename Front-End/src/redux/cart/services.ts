@@ -9,7 +9,7 @@ export const cartApi = createApi({
       query: () => "/cart-item",
       providesTags: [{ type: "Cart" as const, id: "ListCart" }],
     }),
-    addCartItem: builder.mutation<unknown, number>({
+    addCartItem: builder.mutation<number, number>({
       query: (productId) => {
         return {
           url: "/cart-item",
