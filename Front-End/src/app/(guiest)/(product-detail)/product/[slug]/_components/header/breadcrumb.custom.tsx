@@ -7,7 +7,7 @@ import { MdNavigateNext } from "react-icons/md";
 export default async function BreadcrumbCustom({
   productId,
 }: {
-  productId: string;
+  productId: number;
 }) {
   const product = await getProductById(productId);
   const breadcrumb: { name: string; link: string }[] = [];
@@ -21,7 +21,7 @@ export default async function BreadcrumbCustom({
   });
   breadcrumb.push({
     name: product.name,
-    link: productToSlug(product),
+    link: productToSlug(product.name, product.id),
   });
   return (
     <div className=" bg-white shadow-md">

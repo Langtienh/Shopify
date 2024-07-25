@@ -1,5 +1,8 @@
 "use server";
-import { get } from "@/actions/axios.helper";
+import { get, post } from "@/actions/axios.helper";
+import checkToken from "@/app/api/v1/_lib/check-token";
+import getToken from "@/app/api/v1/_lib/getToken";
+import { revalidatePath } from "next/cache";
 export const getAllCategory = async (): Promise<CategoryResponse[]> => {
   const res = await get<CategoryResponse[]>("/categories");
   const categories = res.data.sort((a, b) => a.id - b.id);
@@ -137,7 +140,7 @@ export const SearchProductAction = async (searchQuery: string) => {
   }
 };
 
-export const getProductById = async (id: string) => {
+export const getProductById = async (id: number | string) => {
   try {
     const res = await get<ProductResponse>(`/products/${id}`);
     const data = res.data;
@@ -159,4 +162,48 @@ export const getProductById = async (id: string) => {
     };
     return product;
   }
+};
+
+export const getAllComments = async (
+  id: number
+): Promise<CommentResponse[]> => {
+  try {
+    const res = await get<PageResponse<CommentResponse>>(
+      `/comments/product/${id}?page=1&limit=1000`
+    );
+    const products = res.data.result;
+    return products;
+  } catch {
+    return [];
+  }
+};
+
+export const postComment = async (
+  input: {
+    rate: number;
+    productId: number;
+    content: string;
+  },
+  path: string
+) => {
+  try {
+    await checkToken();
+    const { userId, token } = getToken();
+    const res = await post(
+      "/comments",
+      { ...input, userId },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    revalidatePath(path);
+  } catch {}
+};
+
+export const getProductDetail = async (id: number | string) => {
+  const comments = await getAllComments(id as number);
+  const product = await getProductById(id);
+  return { comments, product };
 };

@@ -47,7 +47,8 @@ type CommentType = {
   id: number;
   content: string;
   rate: number;
-  userId: number;
+  user: UserType;
+  product: ProductType;
   productId: number;
 };
 

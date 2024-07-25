@@ -13,7 +13,7 @@ export default function ProductItem({ product }: { product: ProductResponse }) {
     <div className="relative">
       <div className="flex gap-1 flex-col p-[10px] bg-white border shadow-md rounded-lg hover:shadow-xl">
         <RibbonCustom text={`Giảm ${product.discount}%`} />
-        <Link className="group" href={productToSlug(product)}>
+        <Link className="group" href={productToSlug(product.name, product.id)}>
           <div className="flex justify-center">
             <Image
               className="relative z-0 group-hover:scale-[1.05]"
@@ -27,19 +27,19 @@ export default function ProductItem({ product }: { product: ProductResponse }) {
             {product.name}
           </h2>
           <div className="flex items-baseline gap-1 font-bold">
-            <span className="text-[15px] sm:text-base text-red-500">
-              {priceShow(product)}
+            <span className="text-sm sm:text-base text-red-500">
+              {priceShow(product.price, product.discount)}
             </span>
-            <span className="line-through text-gray-500 text-[13px] sm:text-sm">
-              {priceThrough(product)}
+            <span className="line-through text-gray-500 text-[12px] sm:text-sm">
+              {priceThrough(product.price)}
             </span>
           </div>
           <div className="h-5">
             {!!product.discountForMember && (
               <p className="text-[10px] sm:text-[12px]">
-                Student giảm thêm đến{" "}
+                Student giảm thêm{" "}
                 <span className="text-red-500 text-[12px] sm:text-sm font-bold">
-                  {discoutForMember(product)}
+                  {discoutForMember(product.discountForMember)}
                 </span>
               </p>
             )}

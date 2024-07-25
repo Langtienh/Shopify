@@ -6,7 +6,7 @@ export default function ProductItem({ product }: { product: Love }) {
     <Link
       className="group"
       key={`$product-item-${product.id}`}
-      href={productToSlug(product)}
+      href={productToSlug(product.name, product.id)}
     >
       <div className="bg-white flex gap-1 flex-col p-[10px] border shadow-md rounded-lg hover:shadow-xl cursor-pointer">
         <div className="flex justify-center">
@@ -22,9 +22,11 @@ export default function ProductItem({ product }: { product: Love }) {
           {product.name}
         </h2>
         <div className="flex items-baseline gap-1 font-bold">
-          <span className="text-[15px] text-red-500">{priceShow(product)}</span>
+          <span className="text-[15px] text-red-500">
+            {priceShow(product.price, product.discount)}
+          </span>
           <span className="line-through text-gray-500 text-[13px]">
-            {priceThrough(product)}
+            {priceThrough(product.price)}
           </span>
         </div>
         <div className="flex gap-1 items-center border-t pt-[10px]">

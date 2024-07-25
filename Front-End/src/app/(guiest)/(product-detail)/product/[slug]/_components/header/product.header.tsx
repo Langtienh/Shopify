@@ -1,12 +1,12 @@
 import Header2 from "@/components/header/header2";
 import Header3 from "@/components/header/header3";
-import BreadcrumbCustom from "@/app/(guiest)/(product-detail)/_components/header/breadcrumb.custom";
+import BreadcrumbCustom from "@/app/(guiest)/(product-detail)/product/[slug]/_components/header/breadcrumb.custom";
 import { Suspense } from "react";
 
 export default async function ProductHeader({
   productId,
 }: {
-  productId: string;
+  productId: number;
 }) {
   return (
     <div className="fixed top-0 w-full z-30">

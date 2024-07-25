@@ -1,5 +1,5 @@
 import { getProductById } from "@/actions/product.services";
-import ProductHeader from "@/app/(guiest)/(product-detail)/_components/header/product.header";
+import ProductHeader from "@/app/(guiest)/(product-detail)/product/[slug]/_components/header/product.header";
 import { productSlugToId } from "@/lib/ultils";
 import { Metadata } from "next";
 import { Suspense } from "react";

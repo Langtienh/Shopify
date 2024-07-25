@@ -9,14 +9,12 @@ import {
 
 import { useGetLoveQuery } from "@/redux/love/services";
 import ProductItem from "@/app/(auth)/smember/_components/homePage/product.item";
-import React from "react";
+import { useRef } from "react";
 import Autoplay from "embla-carousel-autoplay";
 
 export default function Slider() {
   const { data, isLoading } = useGetLoveQuery();
-  const plugin = React.useRef(
-    Autoplay({ delay: 2000, stopOnInteraction: true })
-  );
+  const plugin = useRef(Autoplay({ delay: 2000, stopOnInteraction: true }));
   const isShow = isLoading || data?.length;
   if (isShow)
     return (
@@ -28,7 +26,7 @@ export default function Slider() {
               {data?.length &&
                 data.map((item) => (
                   <CarouselItem
-                    className="pl-2 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/4 xl:basis-1/5"
+                    className="pl-2 basis-1/2 sm:basis-1/3 md:basis-1/4"
                     key={`love-${item.id}`}
                   >
                     <ProductItem product={item} />
@@ -38,7 +36,7 @@ export default function Slider() {
                 Array.from({ length: 5 }, (_, i) => (
                   <CarouselItem
                     key={`productSkeleton-${i}`}
-                    className="pl-2 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/4 xl:basis-1/5"
+                    className="pl-2 basis-1/2 sm:basis-1/3 md:basis-1/4"
                   >
                     <ProductItemSkeleton />
                   </CarouselItem>

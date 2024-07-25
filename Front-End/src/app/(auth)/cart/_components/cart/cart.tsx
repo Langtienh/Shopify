@@ -93,7 +93,7 @@ export default function Cart() {
                     <div className="flex justify-between">
                       <Link
                         className="flex-1 hover:underline text-[#3a3a3a] hover:text-[#6a6a6a]"
-                        href={productToSlug(item)}
+                        href={productToSlug(item.name, item.id)}
                       >
                         {item.name}
                       </Link>
@@ -104,10 +104,10 @@ export default function Cart() {
                     <div className="flex gap-[10px] flex-wrap justify-between items-center">
                       <div className="flex gap-[10px] items-baseline">
                         <p className="text-red-600 font-bold text-[17px]">
-                          {priceShow(item)}
+                          {priceShow(item.price, item.discount)}
                         </p>
                         <p className="text-gray-600 font-bold text-sm line-through">
-                          {priceThrough(item)}
+                          {priceThrough(item.price)}
                         </p>
                       </div>
                       <div className="px-0 ml-auto">
@@ -132,7 +132,8 @@ export default function Cart() {
                   </div>
                   <ul className="pl-10 pt-1 list-disc text-[13px]">
                     <li className="text-base text-red-600 font-bold">
-                      Giảm thêm {discoutForMember(item)} cho SMember
+                      Giảm thêm {discoutForMember(item.discountForMember)} cho
+                      SMember
                     </li>
                     <li>
                       Giảm ngay 200K khi mua {item.name} (không áp dụng cùng

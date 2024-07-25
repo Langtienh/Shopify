@@ -21,7 +21,10 @@ export const SearchOutput = ({
             key={product.id}
             className="px-[10px] py-[5px] hover:bg-[#f5f5f5] text-sm text-[#7D7D7D] line-clamp-1"
           >
-            <Link onClick={handleCancel} href={productToSlug(product)}>
+            <Link
+              onClick={handleCancel}
+              href={productToSlug(product.name, product.id)}
+            >
               {product.name}
             </Link>
           </li>
@@ -34,7 +37,10 @@ export const SearchOutput = ({
             key={product.id}
             className="px-[10px] py-[5px] text-[12px] hover:bg-[#f5f5f5]"
           >
-            <Link onClick={handleCancel} href={productToSlug(product)}>
+            <Link
+              onClick={handleCancel}
+              href={productToSlug(product.name, product.id)}
+            >
               <div className="flex items-center gap-3">
                 <ImageWithFallback
                   width={50}
@@ -47,10 +53,10 @@ export const SearchOutput = ({
                   <h2 className="font-bold line-clamp-1">{product.name}</h2>
                   <div>
                     <span className="font-bold text-red-500 text-sm mr-1">
-                      {priceShow(product)}
+                      {priceShow(product.price, product.discount)}
                     </span>
                     <span className="line-through font-bold text-gray-500">
-                      {priceThrough(product)}
+                      {priceThrough(product.price)}
                     </span>
                   </div>
                 </div>

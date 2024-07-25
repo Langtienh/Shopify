@@ -8,6 +8,18 @@ const nextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "cdn2.cellphones.com.vn",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.cellphones.com.vn",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
 };
