@@ -44,6 +44,7 @@ public class SecurityConfig {
                             .requestMatchers(HttpMethod.GET, "/api/v1/roles/**").permitAll()
                             .requestMatchers(HttpMethod.GET, "/api/v1/category-brands/**").permitAll()
                             .requestMatchers(HttpMethod.GET, "/api/v1/payment_methods/**").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/api/v1/payments/vn-pay-callback").permitAll()
                             .anyRequest().authenticated(); // Các api khác chỉ cần đăng nhập là call được
                 })
                 // Không lưu token ở session phía server

@@ -30,6 +30,7 @@ public class JwtService {
 
         // Đưa các thuộc tính vào claims
         claims.put("username",user.getUsername());
+        claims.put("id", user.getId());
         Date currentTime = new Date(System.currentTimeMillis());
         Date expirationTime = new Date(System.currentTimeMillis() + expiration);
         return Jwts.builder()
