@@ -11,6 +11,7 @@ import com.example.ecommerce.repositories.CartItemRepository;
 import com.example.ecommerce.repositories.CartRepository;
 import com.example.ecommerce.responses.CartItemResponse;
 import com.example.ecommerce.responses.CartResponse;
+import com.example.ecommerce.services.AuthService;
 import com.example.ecommerce.services.CartService;
 import com.example.ecommerce.services.ProductService;
 import com.example.ecommerce.services.UserService;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +30,7 @@ public class CartServiceImpl implements CartService {
     private final CartItemRepository cartItemRepository;
     private final UserService userService;
     private final ProductService productService;
+    private final AuthService authService;
 
 
     @Override
@@ -44,6 +47,7 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public CartResponse createCart(CartDTO cartDTO) {
+        authService.checkAuth(cartDTO.getUserId());
         User user = userService.findById(cartDTO.getUserId());
         Optional<Cart> existsCart = cartRepository.findByUser(user);
 
@@ -74,6 +78,7 @@ public class CartServiceImpl implements CartService {
         CartItem cartItem = cartItemRepository.findById(id)
                         .orElseThrow(()
                                 -> new ResourceNotFoundException("CartItem not found with id = " + id));
+        authService.checkAuth(cartItem.getCart().getUser().getId());
         cartItem.setQuantity(cartUpdateDTO.getQuantity());
         CartItemResponse cartItemResponse =
                 CartItemResponse.fromCartItem(cartItemRepository.save(cartItem));
@@ -82,12 +87,17 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public void deleteCart(List<Long> ids) {
+        List<CartItem> cartItems = new ArrayList<>();
         for(long id: ids){
             CartItem cartItem = cartItemRepository.findById(id)
                     .orElseThrow(()
                             -> new ResourceNotFoundException("CartItem not found with id = " + id));
-            cartItemRepository.delete(cartItem);
+            cartItems.add(cartItem);
         }
+        if(!cartItems.isEmpty()){
+            authService.checkAuth(cartItems.get(0).getCart().getUser().getId());
+        }
+        cartItemRepository.deleteAll(cartItems);
     }
     @Override
     @Transactional

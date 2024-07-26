@@ -12,6 +12,7 @@ import com.example.ecommerce.responses.CommentResponse;
 import com.example.ecommerce.responses.PageResponse;
 import com.example.ecommerce.responses.ProductResponse;
 import com.example.ecommerce.responses.UserResponse;
+import com.example.ecommerce.services.AuthService;
 import com.example.ecommerce.services.CommentService;
 import com.example.ecommerce.services.ProductService;
 import com.example.ecommerce.services.UserService;
@@ -30,9 +31,11 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final UserService userService;
     private final ProductService productService;
+    private final AuthService authService;
     @Override
     @Transactional
     public CommentResponse createComment(CommentDTO commentDTO) {
+        authService.checkAuth(commentDTO.getUserId());
         Product product = productService.findById(commentDTO.getProductId());
         User user = userService.findById(commentDTO.getUserId());
         Comment comment = Comment.builder()
@@ -48,11 +51,11 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public PageResponse getAllCommentsByProduct(Long pid, int page, int limit) {
+    public PageResponse getAllCommentsByProduct(Long pid,Long rate, int page, int limit) {
         Product product = productService.findById(pid);
         page = page > 0 ? page - 1 : page;
         Pageable pageable = PageRequest.of(page, limit);
-        Page<Comment> commentPage = commentRepository.findAllByProduct(product, pageable);
+        Page<Comment> commentPage = commentRepository.findAllByProductAndRate(product,rate, pageable);
         return PageResponse.builder()
                 .page(page + 1)
                 .limit(limit)

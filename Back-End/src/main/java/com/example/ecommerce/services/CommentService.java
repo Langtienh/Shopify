@@ -6,6 +6,6 @@ import com.example.ecommerce.responses.PageResponse;
 
 public interface CommentService {
     CommentResponse createComment(CommentDTO commentDTO);
-    PageResponse getAllCommentsByProduct(Long pid, int page, int limit);
+    PageResponse getAllCommentsByProduct(Long pid,Long rate, int page, int limit);
     CommentResponse getCommentById(long id);
 }

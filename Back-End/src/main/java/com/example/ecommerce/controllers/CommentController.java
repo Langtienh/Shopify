@@ -32,9 +32,10 @@ public class CommentController {
 
     @GetMapping("/product/{pid}")
     public ResponseEntity<ResponseSuccess> getAllCommentsByProduct(@PathVariable long pid,
+                                                                   @RequestParam(value = "rate", required = false) Long rate,
                                                                    @RequestParam(defaultValue = "1") int page,
                                                                    @RequestParam(defaultValue = "5") int limit){
-        PageResponse pageResponse = commentService.getAllCommentsByProduct(pid, page, limit);
+        PageResponse pageResponse = commentService.getAllCommentsByProduct(pid,rate, page, limit);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
                 .message("Get all comments by product information successfully")
                 .status(HttpStatus.OK.value())

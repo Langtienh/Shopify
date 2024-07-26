@@ -10,6 +10,7 @@ import com.example.ecommerce.repositories.ProductRepository;
 import com.example.ecommerce.repositories.UserRepository;
 import com.example.ecommerce.repositories.WishListRepository;
 import com.example.ecommerce.responses.WishListResponse;
+import com.example.ecommerce.services.AuthService;
 import com.example.ecommerce.services.ProductService;
 import com.example.ecommerce.services.UserService;
 import com.example.ecommerce.services.WishListService;
@@ -25,10 +26,12 @@ public class WishListServiceImpl implements WishListService {
     private final WishListRepository wishListRepository;
     private final UserService userService;
     private final ProductService productService;
+    private final AuthService authService;
 
     @Override
     @Transactional
     public WishListResponse createWishList(WishListDTO wishListDTO) {
+        authService.checkAuth(wishListDTO.getUserId());
         User user = userService.findById(wishListDTO.getUserId());
         Product product = productService.findById(wishListDTO.getProductId());
         if(wishListRepository.existsByProductAndUser(product, user))
@@ -54,6 +57,7 @@ public class WishListServiceImpl implements WishListService {
     public void deleteOne(long id) {
         WishList wishList = wishListRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("WishList not found"));
+        authService.checkAuth(wishList.getUser().getId());
         wishListRepository.delete(wishList);
     }
 

@@ -3,6 +3,7 @@ package com.example.ecommerce.exceptions;
 import com.example.ecommerce.responses.ResponseError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -122,6 +123,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(
                 ResponseError.builder()
                         .status(HttpStatus.BAD_REQUEST.value())
+                        .message(e.getMessage())
+                        .build()
+        );
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ResponseEntity<ResponseError> handleAccessDeniedException(AccessDeniedException e){
+        return ResponseEntity.status(403).body(
+                ResponseError.builder()
+                        .status(HttpStatus.FORBIDDEN.value())
                         .message(e.getMessage())
                         .build()
         );

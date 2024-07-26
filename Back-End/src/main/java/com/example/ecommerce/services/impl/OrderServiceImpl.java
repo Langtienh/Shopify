@@ -7,10 +7,7 @@ import com.example.ecommerce.models.*;
 import com.example.ecommerce.repositories.*;
 import com.example.ecommerce.responses.OrderResponse;
 import com.example.ecommerce.responses.PageResponse;
-import com.example.ecommerce.services.EmailService;
-import com.example.ecommerce.services.OrderService;
-import com.example.ecommerce.services.PaymentMethodService;
-import com.example.ecommerce.services.UserService;
+import com.example.ecommerce.services.*;
 import com.example.ecommerce.utils.EmailTemplate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -32,10 +29,12 @@ public class OrderServiceImpl implements OrderService {
     private final CartItemRepository cartItemRepository;
     private final EmailService emailService;
     private final PaymentMethodService paymentMethodService;
+    private final AuthService authService;
 
     @Override
     @Transactional
     public OrderResponse createOrder(OrderDTO orderDTO) {
+        authService.checkAuth(orderDTO.getUserId());
         User user = userService.findById(orderDTO.getUserId());
         PaymentMethod paymentMethod =
                 paymentMethodService.getPaymentMethodById(orderDTO.getPaymentMethodId());
