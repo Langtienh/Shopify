@@ -5,12 +5,12 @@ import Gallery from "@/app/(guiest)/(product-detail)/product/[slug]/_components/
 import Similar from "@/app/(guiest)/(product-detail)/product/[slug]/_components/similar";
 import Comments from "@/app/(guiest)/(product-detail)/product/[slug]/_components/comments";
 
-export async function generateStaticParams() {
-  const products = await getAllProduct();
-  return products.map((product) => ({
-    slug: productToSlug(product.name, product.id),
-  }));
-}
+// export async function generateStaticParams() {
+//   const products = await getAllProduct();
+//   return products.map((product) => ({
+//     slug: productToSlug(product.name, product.id),
+//   }));
+// }
 export default async function Page({ params }: { params: { slug: string } }) {
   const productId = productSlugToId(params.slug);
   const product = await getProductById(productId);

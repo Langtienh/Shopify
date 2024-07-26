@@ -5,8 +5,8 @@ spring:
     name: Ecommerce
   datasource:
     url: jdbc:mysql://localhost:3306/Ecommerce
-    username: springstudent
-    password: springstudent
+    username: root
+    password: 123456
   jpa:
     hibernate:
       ddl-auto: none
@@ -17,7 +17,7 @@ spring:
         format_sql: true
     show-sql: true
 
-# send-mail
+  # send-mail
   mail:
     host: smtp.gmail.com
     port: 587
@@ -29,7 +29,6 @@ spring:
           auth: true
           starttls:
             enable: true
-
 
 api:
   prefix: /api/v1
