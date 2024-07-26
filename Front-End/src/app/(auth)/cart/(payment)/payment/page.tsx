@@ -1,3 +1,3 @@
 export default function Page() {
-  return <>Payment</>;
+  return <div className="h-[3000px]">Payment</div>;
 }

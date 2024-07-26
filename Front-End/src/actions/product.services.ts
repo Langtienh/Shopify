@@ -98,14 +98,10 @@ export const getProductByCategory = async (
   }
 };
 
-export const getAllProduct = async (
-  LIMIT: number
-): Promise<ProductResponse[]> => {
+export const getAllProduct = async (): Promise<ProductResponse[]> => {
   try {
-    const res = await get<PageResponse<ProductResponse>>(
-      `/products/search-product?limit=${1000}`
-    );
-    const products = res.data.result;
+    const res = await get<ProductResponse[]>(`/products`);
+    const products = res.data;
     return products;
   } catch {
     return [];

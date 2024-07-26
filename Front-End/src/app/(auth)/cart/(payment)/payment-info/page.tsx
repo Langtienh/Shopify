@@ -1,3 +1,3 @@
 export default function Page() {
-  return <>Payment info</>;
+  return <div className="">Payment info</div>;
 }

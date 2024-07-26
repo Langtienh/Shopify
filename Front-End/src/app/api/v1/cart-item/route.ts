@@ -42,7 +42,6 @@ export async function POST(req: NextRequest) {
           },
         }
       );
-      console.log(res.data.cartItems[0].id);
       return NextResponse.json(res.data.cartItems[0].id, { status: 200 });
     } catch {
       return NextResponse.json({ message: "error" }, { status: 500 });

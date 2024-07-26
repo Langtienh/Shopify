@@ -22,7 +22,6 @@ export const productSlugToId = (slug: string) => {
   const _slug = slug.replace(".html", "");
   const slugs = _slug.split("-");
   const id = +slugs[slugs.length - 1];
-  console.log(id);
   return id || 1;
 };
 
