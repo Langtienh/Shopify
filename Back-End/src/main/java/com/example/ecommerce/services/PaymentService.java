@@ -1,5 +1,7 @@
 package com.example.ecommerce.services;
 
+import com.example.ecommerce.dtos.OrderDTO;
+import com.example.ecommerce.responses.OrderResponse;
 import com.example.ecommerce.responses.PaymentResponse;
 import com.example.ecommerce.utils.VNPayUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -7,11 +9,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TimeZone;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +34,8 @@ public class PaymentService {
     @Value("${payment.vnPay.orderType}")
     private String orderType;
 
+    private final OrderService orderService;
+
     public Map<String, String> getVNPayConfig() {
         Map<String, String> vnpParamsMap = new HashMap<>();
         vnpParamsMap.put("vnp_Version", this.vnp_Version);
@@ -41,7 +46,6 @@ public class PaymentService {
         vnpParamsMap.put("vnp_OrderInfo", "Thanh toan don hang:" +  VNPayUtil.getRandomNumber(8));
         vnpParamsMap.put("vnp_OrderType", this.orderType);
         vnpParamsMap.put("vnp_Locale", "vn");
-        vnpParamsMap.put("vnp_ReturnUrl", this.vnp_ReturnUrl);
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
         String vnpCreateDate = formatter.format(calendar.getTime());
@@ -52,9 +56,11 @@ public class PaymentService {
         return vnpParamsMap;
     }
 
-    public PaymentResponse createVnPayPayment(long price, String bankCode, HttpServletRequest request) {
+    public PaymentResponse createVnPayPayment(long price, String bankCode,
+                                              HttpServletRequest request, OrderDTO orderDTO) throws UnsupportedEncodingException {
         long amount = price * 100L;
         Map<String, String> vnpParamsMap = getVNPayConfig();
+        vnpParamsMap.put("vnp_ReturnUrl", buildQueryString(orderDTO));
         vnpParamsMap.put("vnp_Amount", String.valueOf(amount));
         if (bankCode != null && !bankCode.isEmpty()) {
             vnpParamsMap.put("vnp_BankCode", bankCode);
@@ -70,5 +76,38 @@ public class PaymentService {
                 .code("00")
                 .paymentUrl(paymentUrl)
                 .build();
+    }
+
+    private String buildQueryString(OrderDTO orderDTO) throws UnsupportedEncodingException {
+        StringBuilder queryString = new StringBuilder();
+        queryString.append(this.vnp_ReturnUrl).append("?")
+                .append("fullName=").append(URLEncoder.encode(orderDTO.getFullName(), StandardCharsets.UTF_8))
+                .append("&phone=").append(URLEncoder.encode(orderDTO.getPhone(), StandardCharsets.UTF_8))
+                .append("&email=").append(URLEncoder.encode(orderDTO.getEmail(), StandardCharsets.UTF_8))
+                .append("&address=").append(URLEncoder.encode(orderDTO.getAddress(), StandardCharsets.UTF_8))
+                .append("&userId=").append(orderDTO.getUserId())
+                .append("&paymentMethodId=").append(orderDTO.getPaymentMethodId());
+
+        String cartItemIds = orderDTO.getCartItemIds().stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(","));
+        queryString.append("&cartItemIds=").append(URLEncoder.encode(cartItemIds, StandardCharsets.UTF_8));
+
+        return queryString.toString();
+    }
+
+    public OrderResponse handlePaymentSucess(HttpServletRequest request){
+        String fullName = request.getParameter("fullName");
+        String phone = request.getParameter("phone");
+        String email = request.getParameter("email");
+        String address = request.getParameter("address");
+        Long userId = Long.parseLong(request.getParameter("userId"));
+        Long paymentMethodId = Long.parseLong(request.getParameter("paymentMethodId"));
+        List<Long> cartItemIds = Arrays.stream(request.getParameter("cartItemIds").split(","))
+                .map(Long::parseLong)
+                .toList();
+        OrderDTO orderDTO = new OrderDTO(fullName, phone, email, address, userId, paymentMethodId,
+                cartItemIds);
+        return orderService.createOrder(orderDTO);
     }
 }

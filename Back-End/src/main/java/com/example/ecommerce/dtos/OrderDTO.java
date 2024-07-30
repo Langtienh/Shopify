@@ -30,9 +30,11 @@ public class OrderDTO {
     @NotNull(message = "ID người dùng không được để trống")
     private Long userId;
 
+    @NotNull(message = "ID phương thức thanh toán không được rỗng")
+    private Long paymentMethodId;
+
     @NotNull(message = "Danh sách ID sản phẩm không được rỗng")
     private List<Long> cartItemIds;
 
-    @NotNull(message = "ID phương thức thanh toán không được rỗng")
-    private Long paymentMethodId;
+
 }

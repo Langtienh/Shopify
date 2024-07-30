@@ -16,6 +16,9 @@ public class AuthService {
     private final UserRepository userRepository;
 
     public void checkAuth(long uid){
+        // VN-PAY call
+        if(SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser"))
+            return;
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
         Optional<User> user = userRepository.findByPhone(userDetails.getUsername());
