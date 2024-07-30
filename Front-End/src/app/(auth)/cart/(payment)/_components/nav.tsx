@@ -10,9 +10,10 @@ import { usePathname } from "next/navigation";
 export default function NavPayment() {
   const path = usePathname();
   const step1 = path === "/cart/payment-info";
+  const userInfo = !useAppSelector((state) => state.cart.paymentInfo?.address);
   return (
     <>
-      <div className="flex w-full gap-5 *:flex-1 mb-[10px] p-[10px] pt-[5px]">
+      <div className="flex w-full gap-5 *:flex-1 mb-[10px] p-[10px] pt-[5px] sticky z-10 top-0 bg-[#f4f6f8]">
         <Button
           className={`hover:no-underline border-b-[3px] rounded-none text-lg font-bold ${
             step1 ? "text-red-600 border-red-600" : "border-[#a9b4be]"
@@ -22,6 +23,7 @@ export default function NavPayment() {
           <Link href="/cart/payment-info">1. Thông tin</Link>
         </Button>
         <Button
+          disabled={userInfo}
           className={`hover:no-underline border-b-[3px] rounded-none text-lg font-bold ${
             !step1 ? "text-red-600 border-red-600" : "border-[#a9b4be]"
           }`}
@@ -62,8 +64,13 @@ export const NavSubmit = () => {
           Chưa gồm chiết khấu SMember
         </p>
       )}
-      <Button className="mt-1 w-full bg-red-600 hover:bg-red-500 text-base">
-        {step1 ? "Tiếp tục" : "Thanh toán"}
+      <Button className="mt-1 w-full bg-red-600 hover:bg-red-500 text-base p-0">
+        <label
+          className="w-full h-full flex items-center justify-center cursor-pointer"
+          htmlFor="submitPaymentInfo"
+        >
+          {step1 ? "Tiếp tục" : "Thanh toán"}
+        </label>
       </Button>
     </div>
   );

@@ -107,3 +107,9 @@ export const getWardByParentCode = async (
     return [];
   }
 };
+
+export const getAddressDetail = async (code: string) => {
+  const wards = await getWardtByCode(code);
+  if (wards) return wards.pathWithType;
+  else return "Lỗi không tìm thấy địa chỉ";
+};

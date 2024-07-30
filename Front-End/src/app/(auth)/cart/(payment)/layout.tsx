@@ -17,14 +17,12 @@ export default function RootLayout({
   return (
     <>
       <Header2 />
-      <div className="bg-[#f4f6f8] h-screen">
-        <div className="max-w-[600px] mx-auto">
+      <div className="bg-[#f4f6f8] min-h-screen">
+        <div className="max-w-[600px] mx-auto pb-[140px]">
           <NavHeader />
-          <div className="sticky top-0">
-            <NavPayment />
-            {children}
-            <NavSubmit />
-          </div>
+          <NavPayment />
+          {children}
+          <NavSubmit />
         </div>
       </div>
     </>

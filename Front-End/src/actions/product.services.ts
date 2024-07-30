@@ -203,3 +203,22 @@ export const getProductDetail = async (id: number | string) => {
   const product = await getProductById(id);
   return { comments, product };
 };
+
+export const postOrder = async (data: {}) => {
+  try {
+    await checkToken();
+    const { userId, token } = getToken();
+    const res = await post(
+      "/orders",
+      { ...data, userId },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return res;
+  } catch {
+    return "error";
+  }
+};

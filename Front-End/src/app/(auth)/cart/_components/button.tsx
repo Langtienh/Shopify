@@ -7,10 +7,10 @@ import {
   useSubQuantityMutation,
   useDeleteListItemMutation,
 } from "@/redux/cart/services";
-import { checkedTogger, uncheckedAll } from "@/redux/cart/slice";
+import { checkedTogger, toPayment, uncheckedAll } from "@/redux/cart/slice";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { Button } from "antd";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { AiFillDelete } from "react-icons/ai";
 import { IoIosAdd } from "react-icons/io";
 import { RiSubtractFill } from "react-icons/ri";
@@ -85,6 +85,12 @@ export const ClearListBtn = ({ disabled }: { disabled?: boolean }) => {
 
 export function BuyBtn() {
   const totalPrice = useAppSelector((state) => state.cart.totalPrice);
+  const dispath = useAppDispatch();
+  const router = useRouter();
+  const handleClick = () => {
+    dispath(toPayment());
+    router.push("/cart/payment-info");
+  };
   return (
     <div className="w-full px-[10px] fixed z-10 top-full left-0 -translate-y-full">
       <div className="border  bg-white flex justify-between items-center p-[10px] pb-4 w-full max-w-[600px] mx-auto rounded-t-lg shadow-xl">
@@ -99,8 +105,14 @@ export function BuyBtn() {
             Chưa gồm chiết khấu SMember
           </p>
         </div>
-        <Button disabled={!totalPrice} size="large" type="primary" danger>
-          <Link href="/cart/payment-info">Mua ngay</Link>
+        <Button
+          onClick={handleClick}
+          disabled={!totalPrice}
+          size="large"
+          type="primary"
+          danger
+        >
+          Mua ngay
         </Button>
       </div>
     </div>

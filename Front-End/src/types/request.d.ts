@@ -62,3 +62,10 @@ type BrandDTO = {
 type AttributeDTO = {
   name: string;
 };
+
+type paymentInfoType = {
+  fullName?: string | null;
+  email?: string | null;
+  phone?: string;
+  address?: string;
+};
