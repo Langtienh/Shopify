@@ -44,7 +44,7 @@ public class PaymentController {
     public ResponseEntity<?> payCallbackHandler(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String status = request.getParameter("vnp_ResponseCode");
         if (status.equals("00")) {
-            OrderResponse orderResponse = paymentService.handlePaymentSucess(request);
+            OrderResponse orderResponse = paymentService.handlePaymentSuccess(request);
             response.sendRedirect("http://localhost:3000/cart/checkout?vnp_ResponseCode="+status);
             return ResponseEntity.ok(ResponseSuccess.builder()
                     .status(HttpStatus.OK.value())
@@ -52,7 +52,7 @@ public class PaymentController {
                     .data(new PaymentResponse(status))
                     .build());
         } else {
-            response.sendRedirect("http://localhost:3000/checkout?vnp_ResponseCode="+status);
+            response.sendRedirect("http://localhost:3000/cart/checkout?vnp_ResponseCode="+status);
             return ResponseEntity.ok(ResponseSuccess.builder()
                     .status(HttpStatus.BAD_REQUEST.value())
                     .message("Failed")

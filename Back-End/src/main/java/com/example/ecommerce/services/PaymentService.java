@@ -96,7 +96,7 @@ public class PaymentService {
         return queryString.toString();
     }
 
-    public OrderResponse handlePaymentSucess(HttpServletRequest request){
+    public OrderResponse handlePaymentSuccess(HttpServletRequest request){
         String fullName = request.getParameter("fullName");
         String phone = request.getParameter("phone");
         String email = request.getParameter("email");
