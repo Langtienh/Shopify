@@ -31,7 +31,7 @@ public class PaymentController {
     public ResponseEntity<?> createPayment(HttpServletRequest request,
                                            @RequestParam("amount") Long amount,
                                            @RequestParam("bankCode") String bankCode,
-                                           @Valid @RequestBody OrderDTO orderDTO) throws UnsupportedEncodingException {
+                                           @Valid @RequestBody OrderDTO orderDTO){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
                         .status(HttpStatus.OK.value())
                         .message("Create payment success")
@@ -43,16 +43,19 @@ public class PaymentController {
     @GetMapping("/vn-pay-callback")
     public ResponseEntity<?> payCallbackHandler(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String status = request.getParameter("vnp_ResponseCode");
+        long orderId = Long.parseLong(request.getParameter("orderId"));
         if (status.equals("00")) {
-            OrderResponse orderResponse = paymentService.handlePaymentSuccess(request);
-            response.sendRedirect("http://localhost:3000/cart/checkout?vnp_ResponseCode="+status);
+            response.sendRedirect(String.format("http://localhost:3000" +
+                    "/cart/checkout?vnp_ResponseCode=%s&orderId=%d",status,orderId));
             return ResponseEntity.ok(ResponseSuccess.builder()
                     .status(HttpStatus.OK.value())
                     .message("Success")
                     .data(new PaymentResponse(status))
                     .build());
         } else {
-            response.sendRedirect("http://localhost:3000/cart/checkout?vnp_ResponseCode="+status);
+            paymentService.handlePaymentFailed(request);
+            response.sendRedirect(String.format("http://localhost:3000" +
+                    "/cart/checkout?vnp_ResponseCode=%s&orderId=%d",status,orderId));
             return ResponseEntity.ok(ResponseSuccess.builder()
                     .status(HttpStatus.BAD_REQUEST.value())
                     .message("Failed")

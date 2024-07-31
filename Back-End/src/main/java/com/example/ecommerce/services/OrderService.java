@@ -15,4 +15,5 @@ public interface OrderService {
     PageResponse getOrderByUser(long uid, int page, int limit);
     OrderResponse updateOrderStatus(long id, OrderStatus orderStatus);
     void deleteOrder(long id);
+    Order save(Order order);
 }

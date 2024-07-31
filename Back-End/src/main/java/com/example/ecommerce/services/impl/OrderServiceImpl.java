@@ -127,6 +127,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderResponse updateOrderStatus(long id, OrderStatus orderStatus) {
         Order order = findById(id);
         order.setOrderStatus(orderStatus);
@@ -135,9 +136,16 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public void deleteOrder(long id) {
         Order order = findById(id);
         order.setActive(false);
         orderRepository.save(order);
+    }
+
+    @Override
+    @Transactional
+    public Order save(Order order) {
+        return orderRepository.save(order);
     }
 }
