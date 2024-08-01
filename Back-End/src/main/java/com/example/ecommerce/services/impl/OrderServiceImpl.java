@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -95,7 +96,9 @@ public class OrderServiceImpl implements OrderService {
                 .limit(limit)
                 .totalPage(orderPage.getTotalPages())
                 .totalItem((int)orderPage.getTotalElements())
-                .result(orderPage.stream().map(OrderResponse::fromOrder).toList())
+                .result(orderPage.stream().map(OrderResponse::fromOrder)
+                        .sorted(Comparator.comparing(OrderResponse::getId).reversed())
+                        .toList())
                 .build();
     }
 
@@ -122,7 +125,9 @@ public class OrderServiceImpl implements OrderService {
                 .limit(limit)
                 .totalPage(orderPage.getTotalPages())
                 .totalItem((int)orderPage.getTotalElements())
-                .result(orderPage.stream().map(OrderResponse::fromOrder).toList())
+                .result(orderPage.stream().map(OrderResponse::fromOrder)
+                        .sorted(Comparator.comparing(OrderResponse::getId).reversed())
+                        .toList())
                 .build();
     }
 

@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,6 +41,7 @@ public class CartServiceImpl implements CartService {
         List<CartItemResponse> cartItems = cartItemRepository.findAllByCart(cart)
                 .stream()
                 .map(CartItemResponse::fromCartItem)
+                .sorted(Comparator.comparing(CartItemResponse::getId).reversed())
                 .toList();
         return CartResponse.fromCart(cart, cartItems);
     }
