@@ -91,7 +91,11 @@ export const AddressInfo = ({ info }: { info: AddressInfoType }) => {
     </>
   );
 };
-export const CartInfo = ({ cart }: { cart: OrderDetailType[] }) => {
+export const CartInfo = ({
+  cart,
+}: {
+  cart: OrderDetailType[] | CartItemType[];
+}) => {
   return (
     <>
       <h2 className="uppercase mb-[10px]">Danh sách sản phẩm</h2>

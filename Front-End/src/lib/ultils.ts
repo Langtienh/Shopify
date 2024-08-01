@@ -56,3 +56,24 @@ export const limitProductByCategory = (id: number) => {
   if (index !== -1) return categories[index].limit;
   return 10;
 };
+
+export const formatDate = (isoString: string) => {
+  const date = new Date(isoString);
+
+  // Lấy các thành phần ngày, tháng, năm, giờ và phút
+  const day = date.getDate();
+  const month = date.getMonth() + 1; // Tháng trong JavaScript tính từ 0-11, nên cần +1
+  const year = date.getFullYear();
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+
+  // Định dạng các thành phần thành chuỗi có hai chữ số
+  const formattedDay = day.toString().padStart(2, "0");
+  const formattedMonth = month.toString().padStart(2, "0");
+  const formattedYear = year.toString();
+  const formattedHours = hours.toString().padStart(2, "0");
+  const formattedMinutes = minutes.toString().padStart(2, "0");
+
+  // Ghép các thành phần lại thành chuỗi định dạng mong muốn
+  return `${formattedDay}/${formattedMonth}/${formattedYear} ${formattedHours}:${formattedMinutes}`;
+};

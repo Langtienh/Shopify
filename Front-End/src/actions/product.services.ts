@@ -241,7 +241,6 @@ export const VNPay = async (data: {}, totalPrice: number) => {
     );
     return res.data.paymentUrl;
   } catch (error) {
-    // console.log(error);
     throw error;
   }
 };
@@ -259,7 +258,6 @@ export const getOrderById = async (id: string | number) => {
     const address = await getAddressDetail(res.data.address);
     return { ...res.data, address };
   } catch (error) {
-    // console.log(error);
     throw error;
   }
 };
@@ -276,7 +274,32 @@ export const getOrderDetailById = async (id: string | number) => {
     });
     return res.data;
   } catch (error) {
-    // console.log(error);
+    throw error;
+  }
+};
+
+export const getAllOrderByUserId = async () => {
+  try {
+    await checkToken();
+    let { userId, token } = getToken();
+
+    const res = await get<PageResponse<OrderResponse>>(
+      `/orders/user/${userId}?limit=100`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const data = res.data.result;
+    // Sử dụng map để tạo ra một mảng các Promise
+    const promises = data.map((item) => getOrderDetailById(item.id));
+
+    // Sử dụng Promise.all để đợi tất cả các Promise hoàn thành
+    const orderDetails = await Promise.all(promises);
+    const firstItem = orderDetails.map((item) => item[0]);
+    return { totalItem: res.data.totalItem, data, firstItem };
+  } catch (error) {
     throw error;
   }
 };
