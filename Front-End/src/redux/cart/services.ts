@@ -82,16 +82,6 @@ export const cartApi = createApi({
       },
       invalidatesTags: () => [{ type: "Cart" as const, id: "ListCart" }],
     }),
-    addOrderByVNPay: builder.mutation<unknown, {}>({
-      query: (data) => {
-        return {
-          url: "/vnpay",
-          method: "POST",
-          body: data,
-        };
-      },
-      invalidatesTags: () => [{ type: "Cart" as const, id: "ListCart" }],
-    }),
   }),
 });
 
@@ -104,5 +94,4 @@ export const {
   useSubQuantityMutation,
   useDeleteListItemMutation,
   useAddOrderMutation,
-  useAddOrderByVNPayMutation,
 } = cartApi;

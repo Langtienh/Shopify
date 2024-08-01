@@ -3,6 +3,8 @@ import { get, post } from "@/actions/axios.helper";
 import checkToken from "@/app/api/v1/_lib/check-token";
 import getToken from "@/app/api/v1/_lib/getToken";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { getAddressDetail } from "./vnAPI.services";
 export const getAllCategory = async (): Promise<CategoryResponse[]> => {
   const res = await get<CategoryResponse[]>("/categories");
   const categories = res.data.sort((a, b) => a.id - b.id);
@@ -220,5 +222,61 @@ export const postOrder = async (data: {}) => {
     return res;
   } catch {
     return "error";
+  }
+};
+
+export const VNPay = async (data: {}, totalPrice: number) => {
+  try {
+    await checkToken();
+    let { userId, token } = getToken();
+
+    const res = await post<{ code: string; paymentUrl: string }>(
+      `/payments/create-payment?amount=${totalPrice}&bankCode=NCB`,
+      { ...data, userId: userId, paymentMethodId: 1 },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return res.data.paymentUrl;
+  } catch (error) {
+    // console.log(error);
+    throw error;
+  }
+};
+
+export const getOrderById = async (id: string | number) => {
+  try {
+    await checkToken();
+    let { userId, token } = getToken();
+
+    const res = await get<OrderType>(`/orders/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const address = await getAddressDetail(res.data.address);
+    return { ...res.data, address };
+  } catch (error) {
+    // console.log(error);
+    throw error;
+  }
+};
+
+export const getOrderDetailById = async (id: string | number) => {
+  try {
+    await checkToken();
+    let { userId, token } = getToken();
+
+    const res = await get<OrderDetailType[]>(`/order-details/order/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return res.data;
+  } catch (error) {
+    // console.log(error);
+    throw error;
   }
 };

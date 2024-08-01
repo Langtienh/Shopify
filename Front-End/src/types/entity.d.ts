@@ -60,6 +60,7 @@ type OrderDetailType = {
   image: string;
   price: number;
   quantity: number;
+  discount: number;
 };
 
 type OrderType = {
@@ -68,12 +69,14 @@ type OrderType = {
   phone: string;
   email: string;
   address: string;
-  orderDate: LocalDateTime;
+  orderDate: string;
   totalPrice: number;
-  orderStatus: OrderStatus;
+  orderStatus: string;
   active: boolean;
+  paymentMethod: string;
   userId: number;
 };
+
 type OrderStatus =
   | "PENDING"
   | "PROCESSING"

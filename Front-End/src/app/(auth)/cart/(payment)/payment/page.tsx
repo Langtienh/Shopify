@@ -1,20 +1,20 @@
 "use client";
 
-import { postOrder } from "@/actions/product.services";
+import { VNPay } from "@/actions/product.services";
 import { Button } from "@/components/ui/button";
 import { openNotification } from "@/lib/nofication";
 import { priceThrough } from "@/lib/ultils";
-import {
-  useAddOrderByVNPayMutation,
-  useAddOrderMutation,
-} from "@/redux/cart/services";
+import { useAddOrderMutation } from "@/redux/cart/services";
 import { useAppSelector } from "@/redux/store";
 import { Checkbox, Form } from "antd";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { MdNavigateNext } from "react-icons/md";
+import { getAddressDetail } from "@/actions/vnAPI.services";
+import Link from "next/link";
+import { AddressInfo } from "../_components/info";
 
 export default function Page() {
   const userInfo = useAppSelector((state) => state.cart.paymentInfo);
@@ -22,8 +22,15 @@ export default function Page() {
   const quantity = useAppSelector((state) => state.cart.payment.length);
   const cartItemIds = useAppSelector((state) => state.cart.checked);
   const [postOrder] = useAddOrderMutation();
-  const [postVnpay] = useAddOrderByVNPayMutation();
   const [voucher, setVoucher] = useState<string>("");
+  const [path, setPath] = useState<string>("");
+  useEffect(() => {
+    const getPath = async () => {
+      const path = await getAddressDetail(userInfo.address);
+      setPath(path);
+    };
+    getPath();
+  }, [userInfo]);
   const onClick = () => {
     openNotification({
       notificationType: "success",
@@ -40,8 +47,10 @@ export default function Page() {
         description: "",
       });
     else if (paymentId === 1) {
-      const data = { ...userInfo, paymentMethodId: 2, cartItemIds };
-      postVnpay(data);
+      const data = { ...userInfo, paymentMethodId: 1, cartItemIds };
+      const res = await VNPay(data, totalPrice);
+      console.log(res);
+      router.push(res);
     } else if (paymentId === 2) {
       const data = { ...userInfo, paymentMethodId: 2, cartItemIds };
       postOrder(data);
@@ -49,11 +58,11 @@ export default function Page() {
         notificationType: "success",
         message: "Đặt hàng thành công",
         description:
-          "Vui lòng chú ý điện thoại, nhân viên sẽ liên hệ lại trong 2h",
+          "Thông tin chi tiết sẽ được gửi đến gmail của bạn, Vui lòng chú ý điện thoại, nhân viên sẽ liên hệ lại trong 2h",
       });
       setTimeout(() => {
         router.push("/");
-      }, 2000);
+      }, 1000);
     } else
       openNotification({
         notificationType: "error",
@@ -103,7 +112,7 @@ export default function Page() {
           <span className="font-bold">{priceThrough(totalPrice)}</span>
         </div>
       </div>
-      <p className="text-lg">Thông tin thanh toán</p>
+      <p className="uppercase mb-[10px]">Thông tin thanh toán</p>
       <div className="p-4 border rounded-lg shadow-md bg-white mb-7">
         <div
           onClick={() => setShow(true)}
@@ -111,7 +120,7 @@ export default function Page() {
         >
           <Image
             src={paymentMethods[paymentId].image}
-            alt={paymentMethods[paymentId].label}
+            alt={paymentMethods[paymentId].image}
             width={50}
             height={50}
             className="basis-[50px] h-[50px] w-[50px] object-contain"
@@ -154,7 +163,7 @@ export default function Page() {
                         src={item.image}
                         width={50}
                         height={50}
-                        alt={item.label}
+                        alt={item.image}
                         className="basis-[50px] h-[50px] w-[50px] object-contain"
                       />
                       <span className="font-bold text-sm pl-3">
@@ -174,57 +183,39 @@ export default function Page() {
             </div>
           </div>
         )}
-
-        <Form onFinish={onFinish}>
-          <button
-            id="submitPaymentInfo"
-            type="submit"
-            className="w-full hidden"
-          />
-        </Form>
       </div>
-      <p className="text-lg">Thông tin nhận hàng</p>
-      <ul className="p-4 border rounded-lg shadow-md bg-white mb-7 flex flex-col gap-3">
-        <li className="flex justify-between">
-          <span className="text-gray-400 basis-[100px] flex-shrink-0">
-            Khách hàng
-          </span>
-          <span className="capitalize">{userInfo.fullName}</span>
-        </li>
-        <li className="flex justify-between">
-          <span className="text-gray-400 basis-[100px] flex-shrink-0">
-            Số điện thoại
-          </span>
-          <span>{userInfo.phone}</span>
-        </li>
-        <li className="flex justify-between">
-          <span className="text-gray-400 basis-[100px] flex-shrink-0">
-            Email
-          </span>
-          <span>{userInfo.email}</span>
-        </li>
-        <li className="flex justify-between gap-10">
-          <span className="text-gray-400 basis-[100px] flex-shrink-0">
-            Nhận hàng tại
-          </span>
-          <span className="text-end">{userInfo.address}</span>
-        </li>
-        <li className="flex justify-between">
-          <span className="text-gray-400 basis-[100px] flex-shrink-0 ">
-            Người nhận
-          </span>
-          <span className="capitalize">{`${userInfo.fullName} - ${userInfo.phone}`}</span>
-        </li>
-      </ul>
-      <Checkbox>
-        <span className="text-base">
-          Bằng việc Đặt hàng, bạn đồng ý với
-          <span className="text-blue-500 font-bold hover:underline px-1">
-            Điều khoản sử dụng
-          </span>
-          của Shopify
-        </span>
-      </Checkbox>
+      <AddressInfo info={{ ...userInfo, address: path }} />
+      <Form scrollToFirstError onFinish={onFinish}>
+        <button
+          id="submitPaymentInfo"
+          type="submit"
+          className="w-full hidden"
+        />
+        <Form.Item
+          name="agreement"
+          valuePropName="checked"
+          rules={[
+            {
+              validator: (_, value) =>
+                value
+                  ? Promise.resolve()
+                  : Promise.reject(
+                      new Error("Vui lòng đọc và chấp nhận điều khoản")
+                    ),
+            },
+          ]}
+        >
+          <Checkbox>
+            <span className="text-base">
+              Bằng việc Đặt hàng, bạn đồng ý với
+              <span className="text-blue-500 font-bold hover:underline px-1">
+                Điều khoản sử dụng
+              </span>
+              của Shopify
+            </span>
+          </Checkbox>
+        </Form.Item>
+      </Form>
     </>
   );
 }
@@ -238,7 +229,19 @@ const paymentMethods = [
   {
     id: 1,
     image: "https://cdn2.cellphones.com.vn/x/media/logo/gw2/vnpay.png",
-    label: "VNPAY",
+    label: (
+      <>
+        VNPAY (Demo){" "}
+        <Link
+          className="hover:underline"
+          target="_blank"
+          passHref
+          href="https://sandbox.vnpayment.vn/apis/vnpay-demo/"
+        >
+          Xem tài khoản demo
+        </Link>
+      </>
+    ),
   },
   {
     id: 2,

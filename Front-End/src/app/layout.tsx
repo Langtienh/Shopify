@@ -18,11 +18,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={roboto.className}>
+    <html lang="en">
       <head>
         <link rel="icon" href="/images/logo/shopifyy.ico" />
       </head>
-      <body className="relative">
+      <body>
         <AntdRegistry>
           <NextAuthWrapper>
             <ReduxWrapper>

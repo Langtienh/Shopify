@@ -108,8 +108,12 @@ export const getWardByParentCode = async (
   }
 };
 
-export const getAddressDetail = async (code: string) => {
-  const wards = await getWardtByCode(code);
-  if (wards) return wards.pathWithType;
-  else return "Lỗi không tìm thấy địa chỉ";
+export const getAddressDetail = async (address?: string) => {
+  if (address) {
+    const strs = address.split(", ");
+    const code = strs[1];
+    const wards = await getWardtByCode(code);
+    if (wards) return strs[0] + ", " + wards.pathWithType;
+    else return "Lỗi không tìm thấy địa chỉ";
+  } else return "Lỗi không tìm thấy địa chỉ";
 };

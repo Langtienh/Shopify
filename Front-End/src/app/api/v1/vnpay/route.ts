@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     try {
       await checkToken();
       const { userId, token } = getToken();
-      const res = await post(
+      const res = await post<{ code: string; paymentUrl: string }>(
         `/payments/create-payment?amount=1000000&bankCode=NCB`,
         { ...data, userId, paymentMethodId: 1 },
         {
@@ -20,8 +20,8 @@ export async function POST(req: NextRequest) {
           },
         }
       );
-      console.log(data, res);
-      return NextResponse.json(res, { status: 200 });
+      // console.log(data, res);
+      return NextResponse.redirect(res.data.paymentUrl);
     } catch {
       return NextResponse.json({ message: "error" }, { status: 500 });
     }
