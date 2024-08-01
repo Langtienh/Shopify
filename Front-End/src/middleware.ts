@@ -3,8 +3,6 @@ import { auth } from "@/auth/auth";
 // hard coding
 const loginPage = ["/login", "/register"];
 const firstLoginPage = "/first-login";
-const userPage = ["/smember/:path*", "/cart"];
-const adminPage = [];
 export default auth((req) => {
   // input var
   const path = req.nextUrl.pathname;
@@ -12,7 +10,8 @@ export default auth((req) => {
   const newUrl = new URL(callbackUrl || "/", req.nextUrl.origin);
   const isLogin = req.auth;
   const isFirstLogin = !req?.auth?.refreshToken;
-  const isUserPage = userPage.includes(path);
+  const isUserPage = path.startsWith("/cart") || path.startsWith("/smember");
+  const isAdminPage = path.startsWith("/admin");
   const isLoginPage = loginPage.includes(path);
   const isFirstLoginPage = path === firstLoginPage;
 
@@ -52,11 +51,15 @@ export default auth((req) => {
       );
       return Response.redirect(newUrl);
     }
+  } else if (isAdminPage) {
+    const isAdmin = req.auth?.user?.roles?.includes("admin") || false;
+    if (!isAdmin) return Response.redirect(newUrl);
   }
 });
 
 export const config = {
   matcher: [
+    "/admin/:path*",
     "/smember/:path*",
     "/cart/:path*",
     "/login",

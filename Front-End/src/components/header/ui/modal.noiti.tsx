@@ -1,4 +1,5 @@
 "use client";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { MdNavigateNext } from "react-icons/md";
@@ -9,6 +10,7 @@ type PropsType = {
 };
 
 export default function Noiti({ hiddenNoiti, show }: PropsType) {
+  const isAdmin = useSession().data?.user?.roles?.includes("admin");
   if (show) {
     return (
       <div className="fixed z-50 top-14 w-full left-1/2 -translate-x-1/2 bottom-0">
@@ -19,25 +21,8 @@ export default function Noiti({ hiddenNoiti, show }: PropsType) {
         <div className="absolute w-full max-w-[1200px] left-1/2 -translate-x-1/2">
           <div className="absolute h-[440px] right-[10px] top-[10px] w-[350px] bg-white rounded-2xl flex flex-col">
             <div className="absolute top-0 right-6 -translate-y-full w-0 h-0 border-l-8 border-r-8 border-b-[16px] border-l-transparent border-r-transparent border-b-white"></div>
-            <div className="p-[10px]">
-              <Link
-                href="/smember"
-                className="w-full h-[50px] border border-red-600 rounded-lg px-2 flex items-center"
-              >
-                <Image
-                  width={35}
-                  height={35}
-                  src="/images/header/hello.noiti.svg"
-                  alt="hello"
-                />
-                <p className="text-red-600 font-bold ms-5">Truy cập Smember</p>
-                <MdNavigateNext
-                  size={24}
-                  className="text-red-600 font-bold ms-auto"
-                />
-              </Link>
-            </div>
-            <p className="p-[10px] font-bold">Thông báo</p>
+            <div className="p-[10px]">{isAdmin ? <IsAdmin /> : <IsUser />}</div>
+            <p className="p-[10px] font-bold text-black">Thông báo</p>
 
             <div className="h-[1px] w-full bg-gray-300" />
             <div className="flex flex-1 flex-col items-center justify-center gap-3">
@@ -71,9 +56,44 @@ export default function Noiti({ hiddenNoiti, show }: PropsType) {
   return <></>;
 }
 
-// <div className="fixed z-50 top-14 left-0 right-0 bottom-0">
-//     <div className="absolute z-50 w-full h-full bg-black opacity-50"> </div>
-//     <div className="absolute right-0 z-[51] bg-white rounded-2xl">
-//       <div className="p-[10px] m-[10px]">xxxxxx</div>
-//     </div>
-//   </div>
+const IsUser = () => (
+  <Link
+    href="/smember"
+    className="w-full h-[50px] border border-red-600 rounded-lg px-2 flex items-center"
+  >
+    <Image
+      width={35}
+      height={35}
+      src="/images/header/hello.noiti.svg"
+      alt="hello"
+    />
+    <p className="text-red-600 font-bold ms-5">Truy cập Smember</p>
+    <MdNavigateNext size={24} className="text-red-600 font-bold ms-auto" />
+  </Link>
+);
+const IsAdmin = () => (
+  <>
+    <Link
+      href="/dashboard"
+      className="w-full h-[50px] border border-red-600 rounded-lg px-2 flex items-center"
+    >
+      <Image
+        width={35}
+        height={35}
+        src="/images/header/hello.noiti.svg"
+        alt="hello"
+      />
+      <p className="text-red-600 font-bold ms-5">Truy cập dashboard</p>
+      <MdNavigateNext size={24} className="text-red-600 font-bold ms-auto" />
+    </Link>
+    <p className="text-black text-center mt-2 -mb-5">
+      Hoặc{" "}
+      <Link
+        href="/smember"
+        className="text-blue-600 hover:text-blue-500 font-bold"
+      >
+        trang người dùng
+      </Link>
+    </p>
+  </>
+);
