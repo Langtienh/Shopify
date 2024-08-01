@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -89,7 +90,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public PageResponse getAllOrders(int page, int limit) {
         page = page > 0 ? page - 1 : page;
-        Pageable pageable = PageRequest.of(page, limit);
+        Pageable pageable = PageRequest.of(page, limit, Sort.by("id").descending());
         Page<Order> orderPage = orderRepository.findAll(pageable);
         return PageResponse.builder()
                 .page(page + 1)
@@ -97,7 +98,6 @@ public class OrderServiceImpl implements OrderService {
                 .totalPage(orderPage.getTotalPages())
                 .totalItem((int)orderPage.getTotalElements())
                 .result(orderPage.stream().map(OrderResponse::fromOrder)
-                        .sorted(Comparator.comparing(OrderResponse::getId).reversed())
                         .toList())
                 .build();
     }
@@ -118,7 +118,7 @@ public class OrderServiceImpl implements OrderService {
     public PageResponse getOrderByUser(long uid, int page, int limit) {
         User user = userService.findById(uid);
         page = page > 0 ? page - 1 : page;
-        Pageable pageable = PageRequest.of(page, limit);
+        Pageable pageable = PageRequest.of(page, limit, Sort.by("id").descending());
         Page<Order> orderPage = orderRepository.findAllByUser(user, pageable);
         return PageResponse.builder()
                 .page(page + 1)
@@ -126,7 +126,6 @@ public class OrderServiceImpl implements OrderService {
                 .totalPage(orderPage.getTotalPages())
                 .totalItem((int)orderPage.getTotalElements())
                 .result(orderPage.stream().map(OrderResponse::fromOrder)
-                        .sorted(Comparator.comparing(OrderResponse::getId).reversed())
                         .toList())
                 .build();
     }
