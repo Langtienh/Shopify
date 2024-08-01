@@ -16,6 +16,7 @@ public class OrderDetailResponse {
     private String name;
     private String image;
     private Double price;
+    private Long discount;
     private Long quantity;
 
     public static OrderDetailResponse fromOrderDetail(OrderDetail orderDetail){
@@ -26,7 +27,8 @@ public class OrderDetailResponse {
                 .productId(product.getId())
                 .name(product.getName())
                 .image(product.getImage())
-                .price(product.getPrice() * (1 - (double)product.getDiscount()/100))
+                .price(product.getPrice())
+                .discount(product.getDiscount())
                 .quantity(orderDetail.getQuantity())
                 .build();
     }
