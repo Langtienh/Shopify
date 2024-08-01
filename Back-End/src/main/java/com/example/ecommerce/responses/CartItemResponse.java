@@ -19,6 +19,7 @@ public class CartItemResponse {
     private Long discount;
     private Double discountForMember;
     private Long quantity;
+    private Long stock;
 
     public static CartItemResponse fromCartItem(CartItem cartItem){
         Product product = cartItem.getProduct();
@@ -31,6 +32,7 @@ public class CartItemResponse {
                 .discount(product.getDiscount())
                 .discountForMember(product.getDiscountForMember())
                 .quantity(cartItem.getQuantity())
+                .stock(product.getStock())
                 .build();
     }
 }
