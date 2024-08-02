@@ -2,10 +2,11 @@
 
 import checkToken from "@/app/api/v1/_lib/check-token";
 import getToken from "@/app/api/v1/_lib/getToken";
-import { get } from "./axios.helper";
-import { converPriceToVN } from "@/lib/ultils";
+import { get, put } from "./axios.helper";
+import { converPriceToVN, formatDate } from "@/lib/ultils";
+import { getAddressDetail } from "./vnAPI.services";
 
-const getInvoice = async (limit: number = 5, page: number = 1) => {
+export const fetchInvoice = async (limit: number = 5, page: number = 1) => {
   await checkToken();
   const { token } = getToken();
   const res = await get<PageResponse<OrderResponse>>(
@@ -16,9 +17,57 @@ const getInvoice = async (limit: number = 5, page: number = 1) => {
       },
     }
   );
-  return res.data;
+  const data = res.data.result.map((item) => {
+    const totalPrice = converPriceToVN(item.totalPrice, "đ");
+    const id = `INV0${item.id}`;
+    return { ...item, totalPrice, id };
+  });
+
+  return { totalItem: res.data.totalItem, invoices: data };
 };
-const getUser = async (limit: number = 5, page: number = 1) => {
+
+export const changeInvoiceStatus = async (
+  invoice: OrderResponse,
+  status: OrderStatus
+) => {
+  let id = `${invoice.id}`;
+  id = id.replace("INV0", "");
+  await checkToken();
+  const { token } = getToken();
+  const res = await put<PageResponse<OrderResponse>>(`/orders/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const fetchInvoiceDetail = async (id: string | number) => {
+  let _id = `${id}`;
+  _id = _id.replace("INV0", "");
+  await checkToken();
+  const { token } = getToken();
+  const order = await get<OrderResponse>(`/orders/${_id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const orderDetail = await get<OrderDetailType[]>(
+    `/order-details/order/${_id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  const address = await getAddressDetail(order.data.address);
+  const orderDate = formatDate(order.data.orderDate);
+  return {
+    order: { ...order.data, address, orderDate },
+    orderDetail: orderDetail.data,
+  };
+};
+
+export const fetchUser = async (limit: number = 5, page: number = 1) => {
   await checkToken();
   const { token } = getToken();
   const res = await get<PageResponse<UserResponse>>(
@@ -33,8 +82,8 @@ const getUser = async (limit: number = 5, page: number = 1) => {
 };
 
 export const fetchCardData = async () => {
-  const users = await getUser(1);
-  const invoices = await getInvoice(1);
+  const users = await fetchUser(1);
+  const invoices = await fetchInvoice(1);
 
   return {
     numberOfCustomers: users.totalItem,
@@ -45,9 +94,6 @@ export const fetchCardData = async () => {
 };
 
 export const fetchLatestInvoices = async () => {
-  const invoicesData = await getInvoice();
-  return invoicesData.result.map((item) => {
-    const totalPrice = converPriceToVN(item.totalPrice, "đ");
-    return { ...item, totalPrice };
-  });
+  const res = await fetchInvoice();
+  return res.invoices;
 };

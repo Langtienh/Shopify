@@ -34,7 +34,10 @@ const chartConfig = {
 
 export function InvoiceChart() {
   return (
-    <ChartContainer config={chartConfig} className="min-h-[380px] w-full">
+    <ChartContainer
+      config={chartConfig}
+      className="min-h-[380px] w-full bg-white"
+    >
       <BarChart accessibilityLayer data={chartData}>
         <CartesianGrid vertical={false} />
         <XAxis

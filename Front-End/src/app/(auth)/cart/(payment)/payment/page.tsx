@@ -49,7 +49,6 @@ export default function Page() {
     else if (paymentId === 1) {
       const data = { ...userInfo, paymentMethodId: 1, cartItemIds };
       const res = await VNPay(data, totalPrice);
-      console.log(res);
       router.push(res);
     } else if (paymentId === 2) {
       const data = { ...userInfo, paymentMethodId: 2, cartItemIds };

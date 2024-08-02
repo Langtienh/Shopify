@@ -26,6 +26,10 @@ const links = [
 
 export default function NavLinks() {
   const pathname = usePathname();
+  const isActive = (link: string) => {
+    if (link === "/dashboard") return pathname === "/dashboard";
+    return pathname.startsWith(link);
+  };
   return (
     <>
       {links.map((link) => {
@@ -37,7 +41,7 @@ export default function NavLinks() {
             className={clsx(
               "flex grow items-center justify-center gap-2 rounded-md bg-gray-50 hover:bg-sky-100 hover:text-blue-600 lg:flex-none lg:justify-start py-2 px-3",
               {
-                "bg-sky-100 text-blue-600": pathname === link.href,
+                "bg-sky-100 text-blue-600": isActive(link.href),
               }
             )}
           >

@@ -71,7 +71,7 @@ type OrderType = {
   address: string;
   orderDate: string;
   totalPrice: number;
-  orderStatus: string;
+  orderStatus: OrderStatus;
   active: boolean;
   paymentMethod: string;
   userId: number;

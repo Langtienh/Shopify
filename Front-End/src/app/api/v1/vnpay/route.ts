@@ -20,7 +20,6 @@ export async function POST(req: NextRequest) {
           },
         }
       );
-      // console.log(data, res);
       return NextResponse.redirect(res.data.paymentUrl);
     } catch {
       return NextResponse.json({ message: "error" }, { status: 500 });
