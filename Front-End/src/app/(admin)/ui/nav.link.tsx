@@ -12,13 +12,13 @@ import { signOut } from "next-auth/react";
 import { MdPowerSettingsNew } from "react-icons/md";
 const links = [
   { name: "Home", href: "/dashboard", icon: FaHome },
-  { name: "Product", href: "/dashboard/products", icon: AiFillProduct },
+  { name: "Products", href: "/dashboard/products", icon: AiFillProduct },
   {
     name: "Invoices",
     href: "/dashboard/invoices",
     icon: HiDocumentDuplicate,
   },
-  { name: "User", href: "/dashboard/users", icon: FaUser },
+  { name: "Users", href: "/dashboard/users", icon: FaUser },
   { name: "Comments", href: "/dashboard/comments", icon: FaComments },
   { name: "Categories", href: "/dashboard/categories", icon: TbCategoryFilled },
   { name: "Brands", href: "/dashboard/brands", icon: FaRegHandshake },

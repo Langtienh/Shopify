@@ -78,7 +78,11 @@ export const fetchUser = async (limit: number = 5, page: number = 1) => {
       },
     }
   );
-  return res.data;
+  const result = res.data.result.map((user) => ({
+    ...user,
+    id: `USER0${user.id}`,
+  }));
+  return { ...res.data, result };
 };
 
 export const fetchCardData = async () => {

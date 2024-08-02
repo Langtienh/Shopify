@@ -98,6 +98,7 @@ type CategoryBrandType = {
   brand: string;
   category: string;
 };
+type UserTypeCustom = Omit<UserType, "id"> & { id: string };
 
 type UserType = {
   id: number;
