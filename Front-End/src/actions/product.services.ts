@@ -60,7 +60,7 @@ export const getProductOption = async (
 ): Promise<[ProductResponse[], number]> => {
   try {
     const res = await get<PageResponse<ProductResponse>>(
-      `/products/search-product?category=${category}${
+      `/products/search-product?${category ? `&category=${category}` : ""}${
         brand ? `&brand=${brand}` : ""
       }&page=${page}&limit=${limit}&sort=${sort}${
         filter ? `&search=${filter}` : ""

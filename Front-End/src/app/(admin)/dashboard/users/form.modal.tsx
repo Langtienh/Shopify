@@ -42,7 +42,6 @@ export default function UserForm({
     setLoading(false);
   };
   // const x = user?.address.split("-");
-  console.log(user?.address);
   const initialValues = {
     fullName: user?.fullName,
     isAdmin: user?.roles.includes("admin"),
@@ -152,18 +151,6 @@ export default function UserForm({
                   />
                 </Form.Item>
                 <Address />
-                <Form.Item
-                  name="password"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Vui lòng điền mật khẩu!",
-                    },
-                  ]}
-                  hasFeedback
-                >
-                  <Input.Password placeholder="Nhập mật khẩu" allowClear />
-                </Form.Item>
 
                 <Form.Item>
                   <Button type="submit" className="w-full text-base">

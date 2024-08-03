@@ -5,11 +5,10 @@ import UserForm from "./form.modal";
 import { useState } from "react";
 
 export const DelUser = ({ user }: { user: UserTypeCustom }) => {
-  return (
-    <Button className="bg-red-600 hover:bg-red-500" size="sm">
-      Xóa
-    </Button>
-  );
+  return <Button size="sm">Xóa</Button>;
+};
+export const ChangePassword = ({ user }: { user: UserTypeCustom }) => {
+  return <Button size="sm">Đổi mật khẩu</Button>;
 };
 export const EditUser = ({ user }: { user: UserTypeCustom }) => {
   const [show, setShow] = useState<boolean>(false);

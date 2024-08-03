@@ -18,9 +18,13 @@ export default async function CardWrapper() {
   } = await fetchCardData();
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
-      <Card title="Collected" value={totalPaidInvoices} type="collected" />
-      <Card title="Pending" value={totalPendingInvoices} type="pending" />
-      <Card title="Total Invoices" value={numberOfInvoices} type="invoices" />
+      <Card title="Tổng thu nhập" value={totalPaidInvoices} type="collected" />
+      <Card
+        title="Hóa đơn chưa xử lý"
+        value={totalPendingInvoices}
+        type="pending"
+      />
+      <Card title="Tổng số hóa đơn" value={numberOfInvoices} type="invoices" />
       <Card
         title="Total Customers"
         value={numberOfCustomers}

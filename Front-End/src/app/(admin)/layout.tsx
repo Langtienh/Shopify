@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import Sider from "./ui/sider";
+import Sider from "./_ui/sider";
 
 export const metadata: Metadata = {
   title: "Bảng điều khiển",

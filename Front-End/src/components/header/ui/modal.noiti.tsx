@@ -83,7 +83,7 @@ const IsAdmin = () => (
         src="/images/header/hello.noiti.svg"
         alt="hello"
       />
-      <p className="text-red-600 font-bold ms-5">Truy cập dashboard</p>
+      <p className="text-red-600 font-bold ms-5">Truy cập bảng điều khiển</p>
       <MdNavigateNext size={24} className="text-red-600 font-bold ms-auto" />
     </Link>
     <p className="text-black text-center mt-2 -mb-5">

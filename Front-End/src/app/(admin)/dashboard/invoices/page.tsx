@@ -8,7 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { EditStatus, View } from "./button";
-import { OptionPageSize } from "../../ui/pagination";
+import { OptionPageSize } from "../../_ui/pagination";
 import MyPagination from "@/components/pagination/pagination";
 import { Input } from "antd";
 import { IoSearch } from "react-icons/io5";

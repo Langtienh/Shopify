@@ -7,12 +7,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { AddUser, DelUser, EditUser } from "./button";
+import { AddUser, ChangePassword, DelUser, EditUser } from "./button";
 import MyPagination from "@/components/pagination/pagination";
 import { Input } from "antd";
 import { IoSearch } from "react-icons/io5";
-import { MdLaptopChromebook } from "react-icons/md";
-import { OptionPageSize } from "../../ui/pagination";
+import { OptionPageSize } from "../../_ui/pagination";
 import { FaUser } from "react-icons/fa";
 type PropsType = {
   searchParams: {
@@ -66,6 +65,7 @@ export default async function Page({
               <TableCell className="flex gap-3 justify-center">
                 <EditUser user={user} />
                 <DelUser user={user} />
+                <ChangePassword user={user} />
               </TableCell>
             </TableRow>
           ))}
