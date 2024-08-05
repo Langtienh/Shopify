@@ -1,10 +1,7 @@
 import { MenuDropdown } from "@/components/header/ui/ui.memu.dropdown";
 import NavCategoryMobile from "@/components/header/ui/ui.category.nav";
-import {
-  getAllCategory,
-  getbrandsByCategory,
-} from "@/actions/product.services";
-
+import { getbrandsByCategory } from "@/services/brand";
+import { getAllCategory } from "@/services/category";
 const CategoryDropDown = async ({
   category,
 }: {

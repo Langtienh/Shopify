@@ -1,4 +1,4 @@
-import { getOrderById, getOrderDetailById } from "@/actions/product.services";
+import { getOrderById, getOrderDetailById } from "@/services/invoice";
 import BackBtn from "@/app/(auth)/_components/btn.back";
 import { formatDate, priceThrough, productToSlug } from "@/lib/ultils";
 import Image from "next/image";

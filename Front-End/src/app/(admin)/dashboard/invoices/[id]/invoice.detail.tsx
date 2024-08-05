@@ -23,7 +23,7 @@ export default function Detail({
         <ul className="bg-white rounded-xl shadow-xl p-3">
           <Table>
             <TableHeader>
-              <TableRow>
+              <TableRow className="hover:bg-gray-50">
                 <TableHead className="w-[100px]">Product</TableHead>
                 <TableHead>Tên</TableHead>
                 <TableHead className="text-center">Giá</TableHead>

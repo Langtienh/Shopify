@@ -1,4 +1,4 @@
-import { fetchUser } from "@/actions/admin.services";
+import { getUser } from "@/services/user";
 import {
   Table,
   TableBody,
@@ -8,10 +8,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { AddUser, ChangePassword, DelUser, EditUser } from "./button";
-import MyPagination from "@/components/pagination/pagination";
+import MyPagination, {
+  OptionPageSize,
+} from "@/components/pagination/pagination";
 import { Input } from "antd";
 import { IoSearch } from "react-icons/io5";
-import { OptionPageSize } from "../../_ui/pagination";
 import { FaUser } from "react-icons/fa";
 type PropsType = {
   searchParams: {
@@ -24,7 +25,7 @@ export default async function Page({
 }: PropsType) {
   const PAGE = page || 1;
   const LIMIT = limit || 5;
-  const data = await fetchUser(LIMIT, PAGE);
+  const data = await getUser(LIMIT, PAGE);
   const users = data.result;
   return (
     <>
@@ -41,8 +42,8 @@ export default async function Page({
       </div>
       <Table className="bg-white">
         <TableHeader>
-          <TableRow className="*:font-bold">
-            <TableHead className="w-[100px]">User</TableHead>
+          <TableRow className="*:font-bold hover:bg-gray-50">
+            <TableHead>User</TableHead>
             <TableHead>Tên</TableHead>
             <TableHead>SĐT</TableHead>
             <TableHead>Email</TableHead>
@@ -62,7 +63,7 @@ export default async function Page({
               <TableCell>{user.email}</TableCell>
               <TableCell>{user.address}</TableCell>
               <TableCell>{user.roles.toString()}</TableCell>
-              <TableCell className="flex gap-3 justify-center">
+              <TableCell className="flex">
                 <EditUser user={user} />
                 <DelUser user={user} />
                 <ChangePassword user={user} />

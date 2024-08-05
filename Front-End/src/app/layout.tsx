@@ -7,9 +7,8 @@ import LoginModal from "@/components/loginModal/loginModal";
 import CacheListLove from "@/redux/love/cache";
 
 const roboto = Roboto({
-  weight: "400",
-  subsets: ["vietnamese", "latin"],
-  display: "swap",
+  weight: ["100", "300", "400", "500", "700", "900"],
+  subsets: ["vietnamese"],
 });
 
 export default function RootLayout({
@@ -22,7 +21,7 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/images/logo/shopifyy.ico" />
       </head>
-      <body>
+      <body className={roboto.className}>
         <AntdRegistry>
           <NextAuthWrapper>
             <ReduxWrapper>

@@ -14,7 +14,7 @@ import {
 } from "@/app/(guiest)/(product-detail)/product/[slug]/_components/button";
 import Slider2 from "@/app/(guiest)/(product-detail)/product/[slug]/_components/slider2";
 
-export default function Gallery({ product }: { product: ProductResponse }) {
+export default function Gallery({ product }: { product: Product }) {
   return (
     <div className="flex flex-col lg:flex-row gap-5 items-start">
       <div className="flex-1 lg:top-[154px] lg:sticky ">

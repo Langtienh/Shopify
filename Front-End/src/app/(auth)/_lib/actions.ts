@@ -1,6 +1,6 @@
 "use server";
 
-import { get, post } from "@/actions/axios.helper";
+import { get, post } from "@/services/axios.helper";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 

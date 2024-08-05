@@ -1,4 +1,4 @@
-import { getAllComments } from "@/actions/product.services";
+import { getAllComments } from "@/services/comment";
 import { StarFilledIcon } from "@radix-ui/react-icons";
 import { Image, Progress, Rate } from "antd";
 import { CommentModal } from "./comment.modal";

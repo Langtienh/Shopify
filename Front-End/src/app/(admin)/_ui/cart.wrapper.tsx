@@ -1,6 +1,6 @@
 import { FaMoneyBillWave, FaRegUser, FaRegClock } from "react-icons/fa";
 import { IoDocumentsOutline } from "react-icons/io5";
-import { fetchCardData } from "@/actions/admin.services";
+import { getCardData } from "@/services/dashboard";
 
 const iconMap = {
   collected: FaMoneyBillWave,
@@ -15,7 +15,7 @@ export default async function CardWrapper() {
     numberOfInvoices,
     totalPendingInvoices,
     totalPaidInvoices,
-  } = await fetchCardData();
+  } = await getCardData();
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
       <Card title="Tổng thu nhập" value={totalPaidInvoices} type="collected" />

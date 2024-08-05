@@ -1,6 +1,6 @@
 "use client";
 
-import { postComment } from "@/actions/product.services";
+import { createComment } from "@/services/comment";
 import { Button } from "@/components/ui/button";
 import { showLoginModal } from "@/redux/login/slice";
 import { useAppDispatch } from "@/redux/store";
@@ -28,7 +28,7 @@ export const CommentModal = ({
   const handlesubmit = async () => {
     const input = { rate, productId, content };
     setLoading(true);
-    await postComment(input, path);
+    await createComment(input);
     setLoading(false);
     setShow(false);
   };

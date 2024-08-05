@@ -28,7 +28,7 @@ type LogoutDTO = {
   token: string;
 };
 
-type ProductDTO = Omit<ProductType, ["id", "viewCount, active"]>;
+type ProductDTO = Omit<Product, ["id", "viewCount, active"]>;
 
 type OrderDTO = {
   fullName: string;

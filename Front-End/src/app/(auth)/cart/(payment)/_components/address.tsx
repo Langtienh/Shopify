@@ -5,7 +5,7 @@ import {
   getDistrictByParentCode,
   getWardByParentCode,
   getProvinceAll,
-} from "@/actions/vnAPI.services";
+} from "@/services/vnAPI.services";
 
 const { Option } = Select;
 

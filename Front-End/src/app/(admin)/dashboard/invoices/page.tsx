@@ -1,4 +1,4 @@
-import { fetchInvoice } from "@/actions/admin.services";
+import { getInvoice } from "@/services/invoice";
 import {
   Table,
   TableBody,
@@ -8,8 +8,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { EditStatus, View } from "./button";
-import { OptionPageSize } from "../../_ui/pagination";
-import MyPagination from "@/components/pagination/pagination";
+import MyPagination, {
+  OptionPageSize,
+} from "@/components/pagination/pagination";
 import { Input } from "antd";
 import { IoSearch } from "react-icons/io5";
 import { MdLaptopChromebook } from "react-icons/md";
@@ -25,7 +26,7 @@ export default async function Page({
 }: PropsType) {
   const PAGE = page || 1;
   const LIMIT = limit || 5;
-  const { invoices, totalItem } = await fetchInvoice(LIMIT, PAGE);
+  const { invoices, totalItem } = await getInvoice(LIMIT, PAGE);
   return (
     <>
       <div className="bg-white py-3 border-y flex justify-between items-center px-3 border-t rounded-t-xl">
@@ -40,10 +41,10 @@ export default async function Page({
       <Table className="bg-white">
         <TableHeader>
           <TableRow className="*:font-bold">
-            <TableHead className="w-[100px]">Invoice</TableHead>
+            <TableHead>Invoice</TableHead>
             <TableHead>Amount</TableHead>
             <TableHead>Method</TableHead>
-            <TableHead className="w-[300px] text-center">Status</TableHead>
+            <TableHead className="w-[220px] text-center">Status</TableHead>
             <TableHead className="w-[100px] text-center">Action</TableHead>
           </TableRow>
         </TableHeader>
@@ -55,7 +56,7 @@ export default async function Page({
                 {invoice.totalPrice}
               </TableCell>
               <TableCell>{invoice.paymentMethod}</TableCell>
-              <TableCell className="flex gap-3 items-center">
+              <TableCell className="flex items-center">
                 <EditStatus status={invoice.orderStatus} id={invoice.id} />
               </TableCell>
               <TableCell>

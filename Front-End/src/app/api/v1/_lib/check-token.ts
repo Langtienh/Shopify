@@ -1,4 +1,4 @@
-import { post, get } from "@/actions/axios.helper";
+import { post } from "@/services/axios.helper";
 import { auth } from "@/auth/auth";
 import { cookies } from "next/headers";
 

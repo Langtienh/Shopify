@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import checkToken from "../_lib/check-token";
-import { get, post } from "@/actions/axios.helper";
+import { get, post } from "@/services/axios.helper";
 
 export async function GET() {
   await checkToken();
