@@ -41,10 +41,12 @@ public class SecurityConfig {
                             .requestMatchers(HttpMethod.GET, "/api/v1/attributes/**").permitAll()
                             .requestMatchers(HttpMethod.GET, "/api/v1/brands/**").permitAll()
                             .requestMatchers(HttpMethod.GET, "/api/v1/comments/**").permitAll()
-                            .requestMatchers(HttpMethod.GET, "/api/v1/roles/**").permitAll()
                             .requestMatchers(HttpMethod.GET, "/api/v1/category-brands/**").permitAll()
                             .requestMatchers(HttpMethod.GET, "/api/v1/payment_methods/**").permitAll()
                             .requestMatchers(HttpMethod.GET, "/api/v1/payments/vn-pay-callback").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/api/v1/users/verify-mail/**").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/api/v1/users/verify-otp/**").permitAll()
+                            .requestMatchers(HttpMethod.PUT, "/api/v1/users/reset-password/**").permitAll()
                             .anyRequest().authenticated(); // Các api khác chỉ cần đăng nhập là call được
                 })
                 // Không lưu token ở session phía server

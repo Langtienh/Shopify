@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -49,6 +50,26 @@ public class CommentController {
                 .message("Get comment information successfully")
                 .status(HttpStatus.OK.value())
                 .data(commentResponse)
+                .build());
+    }
+    @GetMapping("")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<ResponseSuccess> getAllComments(@RequestParam(defaultValue = "1") int page,
+                                                          @RequestParam(defaultValue = "10") int limit){
+        return ResponseEntity.ok().body(ResponseSuccess.builder()
+                .message("Get all comment information successfully")
+                .status(HttpStatus.OK.value())
+                .data(commentService.getAllComments(page, limit))
+                .build());
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<ResponseSuccess> deleteComment(@PathVariable long id){
+        commentService.deleteComment(id);
+        return ResponseEntity.ok().body(ResponseSuccess.builder()
+                .message("Delete comment successfully")
+                .status(HttpStatus.NO_CONTENT.value())
                 .build());
     }
 }

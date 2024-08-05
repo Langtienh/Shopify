@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -71,10 +72,40 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentResponse getCommentById(long id) {
-        Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Comment not found with id = " + id));
+        Comment comment = findById(id);
         return CommentResponse.fromComment(comment,
                 ProductResponse.fromProduct(comment.getProduct(), 0,null),
                 UserResponse.fromUser(comment.getUser()));
+    }
+
+    @Override
+    public Comment findById(long id) {
+        return commentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Comment not found with id = " + id));
+    }
+
+    @Override
+    public PageResponse getAllComments(int page, int limit) {
+        page = page > 0 ? page - 1 : page;
+        Pageable pageable = PageRequest.of(page, limit, Sort.by("id").descending());
+        Page<Comment> commentPage = commentRepository.findAll(pageable);
+        return PageResponse.builder()
+                .page(page + 1)
+                .limit(limit)
+                .totalPage(commentPage.getTotalPages())
+                .totalItem((int)commentPage.getTotalElements())
+                .result(commentPage.stream().map(comment ->
+                        CommentResponse.fromComment(comment,
+                                ProductResponse.fromProduct(comment.getProduct(), 0,null),
+                                UserResponse.fromUser(comment.getUser()))
+                ).toList())
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public void deleteComment(long id) {
+        Comment comment = findById(id);
+        commentRepository.delete(comment);
     }
 }

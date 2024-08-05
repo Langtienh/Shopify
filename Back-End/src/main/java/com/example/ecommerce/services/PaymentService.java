@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -58,11 +59,13 @@ public class PaymentService {
         return vnpParamsMap;
     }
 
+    @Transactional
     public PaymentResponse createVnPayPayment(long price, String bankCode,
                                               HttpServletRequest request, OrderDTO orderDTO) {
         long amount = price * 100L;
         Map<String, String> vnpParamsMap = getVNPayConfig();
         OrderResponse orderResponse = orderService.createOrder(orderDTO);
+        orderService.updateOrderStatus(orderResponse.getId(), OrderStatus.PROCESSING);
         vnpParamsMap.put("vnp_ReturnUrl", this.vnp_ReturnUrl + "?orderId=" + orderResponse.getId());
         vnpParamsMap.put("vnp_Amount", String.valueOf(amount));
         if (bankCode != null && !bankCode.isEmpty()) {
@@ -99,6 +102,7 @@ public class PaymentService {
 //        return queryString.toString();
 //    }
 
+    @Transactional
     public void handlePaymentFailed(HttpServletRequest request){
         long orderId = Long.parseLong(request.getParameter("orderId"));
         Order order = orderService.findById(orderId);

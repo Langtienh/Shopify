@@ -16,6 +16,7 @@ public class OrderResponse {
     private String phone;
     private String email;
     private String address;
+    private String avatar;
     private LocalDateTime orderDate;
     private Double totalPrice;
     private String orderStatus;
@@ -30,6 +31,7 @@ public class OrderResponse {
                 .phone(order.getPhone())
                 .email(order.getEmail())
                 .address(order.getAddress())
+                .avatar(order.getUser().getAvatar())
                 .orderDate(order.getOrderDate())
                 .totalPrice(order.getTotalPrice())
                 .orderStatus(order.getOrderStatus().toString())

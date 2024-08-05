@@ -1,6 +1,7 @@
 package com.example.ecommerce.controllers;
 
 import com.example.ecommerce.dtos.OrderDTO;
+import com.example.ecommerce.enums.OrderStatus;
 import com.example.ecommerce.responses.CommentResponse;
 import com.example.ecommerce.responses.OrderResponse;
 import com.example.ecommerce.responses.PageResponse;
@@ -74,5 +75,18 @@ public class OrderController {
                 .message("Delete order successfully")
                 .status(HttpStatus.NO_CONTENT.value())
                 .build());
+    }
+
+
+    @PutMapping("/update-status/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<ResponseSuccess> updateOrderStatus(@PathVariable long id,
+                                                             @RequestParam String status){
+        return ResponseEntity.ok().body(ResponseSuccess.builder()
+                .message("Update order status successfully")
+                .status(HttpStatus.OK.value())
+                .data(orderService.updateOrderStatus(id, OrderStatus.valueOf(status.toUpperCase())))
+                .build());
+
     }
 }

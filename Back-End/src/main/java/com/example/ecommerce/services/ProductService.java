@@ -15,5 +15,6 @@ public interface ProductService {
             int page, int limit, String brand,String category, String[] search, String... sort);
     List<ProductResponse> getAllProducts();
     Product findById(long id);
+    ProductResponse updateProductStatus(long id, boolean active);
 
 }

@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -104,11 +105,12 @@ public class UserController{
     @GetMapping("")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseSuccess> getAllUsers(@RequestParam(defaultValue = "1") int page,
-                                                       @RequestParam(defaultValue = "10") int limit){
+                                                       @RequestParam(defaultValue = "10") int limit,
+                                                       @RequestParam(value = "name", required = false) String name){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
                 .message("Get all user information successfully")
                 .status(HttpStatus.OK.value())
-                .data(userService.getAllUsers(page, limit))
+                .data(userService.getAllUsers(page, limit, name))
                 .build());
     }
 
@@ -120,6 +122,57 @@ public class UserController{
                 .message("Update user successfully")
                 .status(HttpStatus.ACCEPTED.value())
                 .data(userService.updateUser(id, userDTO))
+                .build());
+    }
+
+    @PutMapping("/update-status/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<ResponseSuccess> updateUserStatus(@PathVariable long id,
+                                                            @RequestParam("active") boolean active){
+        return ResponseEntity.ok().body(ResponseSuccess.builder()
+                .message("Update user status successfully")
+                .status(HttpStatus.ACCEPTED.value())
+                .data(userService.updateUserStatus(id, active))
+                .build());
+    }
+
+    @PutMapping("/change-password/{id}")
+    @PreAuthorize("#id == authentication.principal.id")
+    public ResponseEntity<ResponseSuccess> changePassword(@PathVariable long id,
+           @Valid @RequestBody ChangePasswordDTO changePasswordDTO){
+        return ResponseEntity.ok().body(ResponseSuccess.builder()
+                .message("Update change password successfully")
+                .status(HttpStatus.ACCEPTED.value())
+                .data(userService.changePassword(id, changePasswordDTO))
+                .build());
+    }
+
+    @PostMapping("/verify-mail/{email}")
+    public ResponseEntity<ResponseSuccess> sendMailForgotPassword(@PathVariable String email){
+        userService.sendMailForgotPassword(email);
+        return ResponseEntity.ok().body(ResponseSuccess.builder()
+                .message("Send mail forgot password successfully")
+                .status(HttpStatus.OK.value())
+                .build());
+    }
+
+    @PostMapping("/verify-otp/{otp}/{email}")
+    public ResponseEntity<ResponseSuccess> verifyOtp(@PathVariable("otp") String otp,
+                                                     @PathVariable("email") String email){
+        return ResponseEntity.ok().body(ResponseSuccess.builder()
+                .message("Verify otp code successfully")
+                .status(HttpStatus.OK.value())
+                .data(userService.verifyOtp(otp, email))
+                .build());
+    }
+
+    @PutMapping("/reset-password/{id}")
+    public ResponseEntity<ResponseSuccess> resetPassword(@PathVariable long id,
+                                                         @Valid @RequestBody ResetPasswordDTO resetPasswordDTO){
+        userService.resetPassword(id, resetPasswordDTO);
+        return ResponseEntity.ok().body(ResponseSuccess.builder()
+                .message("Reset password successfully")
+                .status(HttpStatus.OK.value())
                 .build());
     }
 }

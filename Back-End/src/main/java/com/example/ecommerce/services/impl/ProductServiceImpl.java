@@ -49,6 +49,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
+    public ProductResponse updateProductStatus(long id, boolean active) {
+        Product product = findById(id);
+        product.setActive(active);
+        productRepository.save(product);
+        return ProductResponse.fromProduct(product, 0,
+                productAttributeRepository.findAllByProduct(product));
+    }
+
+    @Override
     public ProductResponse getProductById(Long id) {
         Product p = findById(id);
         return ProductResponse.fromProduct(p,

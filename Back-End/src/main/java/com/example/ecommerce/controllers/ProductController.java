@@ -78,4 +78,15 @@ public class ProductController {
                 .data(productResponse)
                 .build());
     }
+
+    @PutMapping("/update-status/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<ResponseSuccess> updateProductStatus(@PathVariable long id,
+                                                               @RequestParam("active") boolean active){
+        return ResponseEntity.ok().body(ResponseSuccess.builder()
+                .message("Update product status successfully")
+                .status(HttpStatus.OK.value())
+                .data(productService.updateProductStatus(id, active))
+                .build());
+    }
 }
