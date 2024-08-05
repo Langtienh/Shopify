@@ -7,7 +7,7 @@ import { FaHome, FaUser, FaRegHandshake, FaComments } from "react-icons/fa";
 import { HiDocumentDuplicate } from "react-icons/hi";
 import { AiFillProduct } from "react-icons/ai";
 import { TbCategoryFilled } from "react-icons/tb";
-import httpCustom from "@/actions/customAPI";
+import httpCustom from "@/services/customAPI";
 import { signOut } from "next-auth/react";
 import { MdPowerSettingsNew } from "react-icons/md";
 const links = [
@@ -20,8 +20,8 @@ const links = [
   },
   { name: "Users", href: "/dashboard/users", icon: FaUser },
   { name: "Comments", href: "/dashboard/comments", icon: FaComments },
-  { name: "Categories", href: "/dashboard/categories", icon: TbCategoryFilled },
-  { name: "Brands", href: "/dashboard/brands", icon: FaRegHandshake },
+  // { name: "Categories", href: "/dashboard/categories", icon: TbCategoryFilled },
+  // { name: "Brands", href: "/dashboard/brands", icon: FaRegHandshake },
 ];
 
 export default function NavLinks() {

@@ -6,7 +6,7 @@ import {
   CartInfo,
   OrderInfo,
 } from "../(payment)/_components/info";
-import { getOrderById, getOrderDetailById } from "@/actions/product.services";
+import { getOrderById, getOrderDetailById } from "@/services/invoice";
 import Link from "next/link";
 
 export default async function Page({

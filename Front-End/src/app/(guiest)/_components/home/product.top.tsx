@@ -1,5 +1,5 @@
 import { limitProductByCategory } from "@/lib/ultils";
-import { getTopProduct } from "@/actions/product.services";
+import { getProductByCategorySortByViewCounter } from "@/services/product";
 import {
   Carousel,
   CarouselContent,
@@ -16,7 +16,10 @@ export default async function ProductTop({
   category: CategoryResponse;
 }) {
   const LIMIT = limitProductByCategory(category.id);
-  const products = await getTopProduct(category.name, LIMIT);
+  const products = await getProductByCategorySortByViewCounter(
+    category.name,
+    LIMIT
+  );
   const isDouble = LIMIT > 20;
   if (isDouble) {
     const products1 = products.filter((_, i) => i < LIMIT / 2);

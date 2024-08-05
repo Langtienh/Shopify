@@ -40,24 +40,37 @@ export const EditStatus = ({
   };
   return (
     <>
-      <Badge
-        status={statusColor[_status]}
-        text={
-          <Select
-            disabled={!edit}
-            value={_status}
-            style={{ width: 120 }}
-            onChange={handleChange}
-            options={options}
+      <span className="basis-[135px]">
+        {edit ? (
+          <Badge
+            status={statusColor[_status]}
+            text={
+              <Select
+                disabled={!edit}
+                value={_status}
+                style={{ width: 120 }}
+                onChange={handleChange}
+                options={options}
+              />
+            }
           />
-        }
-      />
+        ) : (
+          <Badge status={statusColor[_status]} text={_status} />
+        )}
+      </span>
+
       {edit ? (
-        <Button disabled={loading} onClick={submit}>
-          Submit
+        <Button size="sm" className="ml-3" disabled={loading} onClick={submit}>
+          Gửi
         </Button>
       ) : (
-        <Button onClick={() => setEdit(true)}>Change</Button>
+        <Button
+          className="text-red-600 hover:text-red-500 font-bold"
+          variant="link"
+          onClick={() => setEdit(true)}
+        >
+          Thay đổi
+        </Button>
       )}
     </>
   );
@@ -67,8 +80,8 @@ export const View = ({ id }: { id: string | number }) => {
   return (
     <Link href={`/dashboard/invoices/${id}`}>
       <Button
-        // onClick={}
-        className="bg-blue-600 hover:bg-blue-500"
+        className="text-blue-600 hover:text-blue-500 font-bold"
+        variant="link"
       >
         Xem chi tiết
       </Button>

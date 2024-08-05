@@ -1,4 +1,4 @@
-import { fetchInvoiceDetail } from "@/actions/admin.services";
+import { getInvoiceDetailById } from "@/services/invoice";
 import UseInfo from "./user.info";
 import Detail from "./invoice.detail";
 
@@ -7,7 +7,7 @@ export default async function Page({
 }: {
   params: { id: string | number };
 }) {
-  const { order, orderDetail } = await fetchInvoiceDetail(params.id);
+  const { order, orderDetail } = await getInvoiceDetailById(params.id);
   return (
     <>
       <UseInfo order={order} />

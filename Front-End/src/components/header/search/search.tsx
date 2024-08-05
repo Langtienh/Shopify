@@ -1,13 +1,13 @@
 "use client";
 import debounce from "lodash.debounce";
 import { Input } from "antd";
-import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import {
   EmpytyProduct,
   SearchOutput,
 } from "@/components/header/search/search.output";
-import { SearchProductAction } from "@/actions/product.services";
+import { searchProductByName } from "@/services/product";
 import { usePathname } from "next/navigation";
 
 export default function SearchInput() {
@@ -21,7 +21,7 @@ export default function SearchInput() {
   );
   useEffect(() => {
     const fetchProduct = async () => {
-      const data = await SearchProductAction(searchQuery);
+      const data = await searchProductByName(searchQuery);
       setProducts(data);
     };
     if (searchQuery) fetchProduct();

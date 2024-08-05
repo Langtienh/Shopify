@@ -1,6 +1,6 @@
 "use client";
 
-import { VNPay } from "@/actions/product.services";
+import { createInvoiceByVNPay } from "@/services/invoice";
 import { Button } from "@/components/ui/button";
 import { openNotification } from "@/lib/nofication";
 import { priceThrough } from "@/lib/ultils";
@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { MdNavigateNext } from "react-icons/md";
-import { getAddressDetail } from "@/actions/vnAPI.services";
+import { getAddressDetail } from "@/services/vnAPI.services";
 import Link from "next/link";
 import { AddressInfo } from "../_components/info";
 
@@ -48,7 +48,7 @@ export default function Page() {
       });
     else if (paymentId === 1) {
       const data = { ...userInfo, paymentMethodId: 1, cartItemIds };
-      const res = await VNPay(data, totalPrice);
+      const res = await createInvoiceByVNPay(data, totalPrice);
       router.push(res);
     } else if (paymentId === 2) {
       const data = { ...userInfo, paymentMethodId: 2, cartItemIds };

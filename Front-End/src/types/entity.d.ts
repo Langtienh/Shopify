@@ -1,4 +1,4 @@
-type ProductType = {
+type Product = {
   id: number;
   name: string;
   price: number;
@@ -11,6 +11,8 @@ type ProductType = {
   active: boolean;
   brand: string;
   category: string;
+  avgRat: number;
+  attributes: {};
 };
 
 type CartItemType = {
@@ -48,7 +50,7 @@ type CommentType = {
   content: string;
   rate: number;
   user: UserType;
-  product: ProductType;
+  product: Product;
   productId: number;
 };
 

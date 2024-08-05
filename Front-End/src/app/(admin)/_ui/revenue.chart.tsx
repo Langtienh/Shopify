@@ -10,7 +10,7 @@ export default async function RevenueChart() {
   // }
 
   return (
-    <div className="w-full md:col-span-4">
+    <div className="w-full">
       <h2 className={`mb-4 text-xl md:text-2xl`}>Số lượng khách hàng tăng</h2>
       <div className="rounded-t-xl p-4 bg-gray-50">
         <InvoiceChart />

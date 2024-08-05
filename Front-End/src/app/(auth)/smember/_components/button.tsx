@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import httpCustom from "@/actions/customAPI";
+import httpCustom from "@/services/customAPI";
 import { signOut } from "next-auth/react";
 import { Tooltip } from "antd";
 

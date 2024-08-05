@@ -295,7 +295,7 @@ export function ViewCountProduct() {
   );
 
   return (
-    <Card className="shadow-xl">
+    <Card className="shadow-xl xl:col-span-2">
       <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
           <CardTitle>Thống kê lượt xem</CardTitle>

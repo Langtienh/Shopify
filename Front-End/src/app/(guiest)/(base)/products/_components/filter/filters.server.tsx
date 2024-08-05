@@ -1,4 +1,4 @@
-import { getAttributesByCategory } from "@/actions/product.services";
+import { getAttributesByCategory } from "@/services/product";
 import ProductFilterClient from "@/app/(guiest)/(base)/products/_components/filter/filters.client";
 
 export default async function ProductFilter({

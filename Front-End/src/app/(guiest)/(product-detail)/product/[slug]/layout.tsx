@@ -1,8 +1,7 @@
-import { getProductById } from "@/actions/product.services";
+import { getProductById } from "@/services/product";
 import ProductHeader from "@/app/(guiest)/(product-detail)/product/[slug]/_components/header/product.header";
 import { productSlugToId } from "@/lib/ultils";
 import { Metadata } from "next";
-import { Suspense } from "react";
 
 type TParams = {
   params: { slug: string };
@@ -28,7 +27,6 @@ export default async function RootLayout({
   params: { slug: string };
 }) {
   const productId = productSlugToId(params.slug);
-  const product = await getProductById(productId);
   return (
     <div className="relative">
       <ProductHeader productId={productId} />

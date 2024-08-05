@@ -1,4 +1,4 @@
-import { getAllProduct, getProductById } from "@/actions/product.services";
+import { getAllProduct, getProductById } from "@/services/product";
 import { productSlugToId, productToSlug } from "@/lib/ultils";
 import Title from "@/app/(guiest)/(product-detail)/product/[slug]/_components/title";
 import Gallery from "@/app/(guiest)/(product-detail)/product/[slug]/_components/box-gallery";

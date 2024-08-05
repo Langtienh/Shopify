@@ -3,7 +3,7 @@ type TResponse = {
   status: number;
   message: string;
 };
-type PageResponse<T> = {
+type Page<T> = {
   page: number;
   limit: number;
   totalPage: number;
@@ -39,7 +39,7 @@ type BrandResponse = BrandType;
 
 type CategoryBrandResponse = CategoryBrandType;
 
-type ProductResponse = ProductType;
+type ProductResponse = Product;
 
 type UserResponse = UserType;
 

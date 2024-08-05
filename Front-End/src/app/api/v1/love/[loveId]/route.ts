@@ -1,4 +1,4 @@
-import { del } from "@/actions/axios.helper";
+import { del } from "@/services/axios.helper";
 import { NextRequest, NextResponse } from "next/server";
 import getToken from "@/app/api/v1/_lib/getToken";
 import checkToken from "@/app/api/v1/_lib/check-token";

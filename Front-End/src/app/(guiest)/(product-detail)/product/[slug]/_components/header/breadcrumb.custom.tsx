@@ -1,4 +1,4 @@
-import { getProductById } from "@/actions/product.services";
+import { getProductById } from "@/services/product";
 import { productToSlug } from "@/lib/ultils";
 import Link from "next/link";
 import { AiFillHome } from "react-icons/ai";

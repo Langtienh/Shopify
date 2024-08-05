@@ -1,14 +1,14 @@
 import { HiArrowPath } from "react-icons/hi2";
 import clsx from "clsx";
 import Image from "next/image";
-import { fetchLatestInvoices } from "@/actions/admin.services";
+import { getLatestInvoices } from "@/services/invoice";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default async function LatestInvoices() {
-  const latestInvoices = await fetchLatestInvoices();
+  const latestInvoices = await getLatestInvoices();
 
   return (
-    <div className="flex flex-col md:col-span-4">
+    <div className="flex flex-col">
       <h2 className="mb-4 text-xl md:text-2xl">Hóa đơn mới nhất</h2>
       <div className="flex grow flex-col justify-between rounded-xl bg-gray-50 p-4">
         <div className="bg-white px-6">

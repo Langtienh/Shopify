@@ -1,5 +1,5 @@
 import { limitProductByCategory } from "@/lib/ultils";
-import { getTopProduct } from "@/actions/product.services";
+import { getProductByCategorySortByViewCounter } from "@/services/product";
 import {
   Carousel,
   CarouselContent,
@@ -11,7 +11,7 @@ import {
 import ProductItem from "@/components/product/item/product.item";
 
 export default async function Similar({ category }: { category: string }) {
-  const products = await getTopProduct(category, 10);
+  const products = await getProductByCategorySortByViewCounter(category, 10);
   return (
     <div className="w-full max-w-[1200px] mx-auto">
       <h2 className="font-bold text-lg pt-4">SẢN PHẨM TƯƠNG TỰ</h2>
