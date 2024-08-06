@@ -8,11 +8,14 @@ import com.example.ecommerce.services.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("${api.prefix}/products")
@@ -57,9 +60,10 @@ public class ProductController {
                 .build());
     }
 
-    @PostMapping("")
+    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<ResponseSuccess> createProduct(@RequestBody @Valid ProductDTO productDTO){
+    public ResponseEntity<ResponseSuccess> createProduct(@ModelAttribute @Valid ProductDTO productDTO){
+
         ProductResponse productResponse = productService.createProduct(productDTO);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
                 .message("Create product successfully")
@@ -67,10 +71,10 @@ public class ProductController {
                 .data(productResponse)
                 .build());
     }
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseSuccess> updateProduct(@PathVariable("id") long id,
-                                                         @RequestBody @Valid ProductDTO productDTO){
+                                                         @ModelAttribute @Valid ProductDTO productDTO){
         ProductResponse productResponse = productService.updateProduct(id,productDTO);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
                 .message("Update product successfully")
@@ -89,4 +93,5 @@ public class ProductController {
                 .data(productService.updateProductStatus(id, active))
                 .build());
     }
+
 }

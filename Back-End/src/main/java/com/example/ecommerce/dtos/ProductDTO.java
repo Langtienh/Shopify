@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -35,8 +36,7 @@ public class ProductDTO {
     @NotBlank(message = "Mô tả không được để trống")
     private String description;
 
-    @NotBlank(message = "Ảnh sản phẩm không được trống")
-    private String image;
+    private MultipartFile image;
 
     @NotNull(message = "Giảm giá cho học sinh/sinh viên không được rỗng")
     @Min(value = 1, message="Giảm giá cho học sinh/sinh viên phải lớn hơn hoặc bằng 1")

@@ -10,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
@@ -134,6 +135,28 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(403).body(
                 ResponseError.builder()
                         .status(HttpStatus.FORBIDDEN.value())
+                        .message(e.getMessage())
+                        .build()
+        );
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ResponseError> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException e){
+        return ResponseEntity.badRequest().body(
+                ResponseError.builder()
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .message("File too large!")
+                        .build()
+        );
+    }
+
+    @ExceptionHandler(InvalidFileTypeException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ResponseError> handleInvalidFileTypeException(InvalidFileTypeException e){
+        return ResponseEntity.badRequest().body(
+                ResponseError.builder()
+                        .status(HttpStatus.BAD_REQUEST.value())
                         .message(e.getMessage())
                         .build()
         );

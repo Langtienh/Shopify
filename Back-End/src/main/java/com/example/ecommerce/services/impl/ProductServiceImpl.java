@@ -1,6 +1,7 @@
 package com.example.ecommerce.services.impl;
 
 import com.example.ecommerce.dtos.ProductDTO;
+import com.example.ecommerce.exceptions.InvalidFileTypeException;
 import com.example.ecommerce.exceptions.ResourceNotFoundException;
 import com.example.ecommerce.models.*;
 import com.example.ecommerce.repositories.*;
@@ -8,11 +9,14 @@ import com.example.ecommerce.responses.PageResponse;
 import com.example.ecommerce.responses.ProductResponse;
 import com.example.ecommerce.services.BrandService;
 import com.example.ecommerce.services.CategoryService;
+import com.example.ecommerce.services.CloudinaryService;
 import com.example.ecommerce.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +31,7 @@ public class ProductServiceImpl implements ProductService {
     private final SearchRepository searchRepository;
     private final CategoryService categoryService;
     private final CommentRepository commentRepository;
+    private final CloudinaryService cloudinaryService;
     @Override
     public PageResponse searchProduct(
             int page, int limit, String brand,String category, String[] search, String... sort) {
@@ -71,6 +76,17 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse createProduct(ProductDTO productDTO) {
         Brand brand = brandService.getBrandById(productDTO.getBrandId());
         Category category = categoryService.getCategoryById(productDTO.getCategoryId());
+        String contentType = productDTO.getImage().getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            throw new InvalidFileTypeException("File is not a valid image.");
+        }
+        String image = "";
+        try{
+            image = cloudinaryService.uploadFile(productDTO.getImage());
+        }
+        catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
         Product product = productRepository.save(Product.builder()
                 .name(productDTO.getName())
                 .price(productDTO.getPrice())
@@ -78,7 +94,7 @@ public class ProductServiceImpl implements ProductService {
                 .stock(productDTO.getStock())
                 .viewCount(0L)
                 .description(productDTO.getDescription())
-                .image(productDTO.getImage())
+                .image(image)
                 .discountForMember(productDTO.getDiscountForMember())
                 .active(productDTO.isActive())
                 .brand(brand)
@@ -105,19 +121,42 @@ public class ProductServiceImpl implements ProductService {
         Product product = findById(id);
         Brand brand = brandService.getBrandById(productDTO.getBrandId());
         Category category = categoryService.getCategoryById(productDTO.getCategoryId());
+        if(productDTO.getImage() != null){
+            String contentType = productDTO.getImage().getContentType();
+            if (contentType == null || !contentType.startsWith("image/")) {
+                throw new InvalidFileTypeException("File is not a valid image.");
+            }
+            String image = "";
+            try{
+                image = cloudinaryService.uploadFile(productDTO.getImage());
+            }
+            catch (Exception e){
+                throw new RuntimeException(e.getMessage());
+            }
+            product.setImage(image);
+        }
         product.setName(productDTO.getName());
         product.setPrice(productDTO.getPrice());
         product.setDiscount(productDTO.getDiscount());
         product.setStock(productDTO.getStock());
         product.setDescription(productDTO.getDescription());
-        product.setImage(productDTO.getImage());
         product.setDiscountForMember(productDTO.getDiscountForMember());
         product.setActive(productDTO.isActive());
         product.setBrand(brand);
         product.setCategory(category);
         productRepository.save(product);
+        List<ProductAttribute> productAttributes = new ArrayList<>();
+        productDTO.getAttributes().forEach((key, value) -> {
+            Attribute attribute = attributeRepository.findByName(key);
+            ProductAttribute productAttribute =
+                    productAttributeRepository.findByProductAndAttribute(product, attribute);
+            if(!value.isEmpty()){
+                productAttribute.setValue(value);
+            }
+            productAttributes.add(productAttributeRepository.save(productAttribute));
+        });
         return ProductResponse.fromProduct(product,
-                calcAvgRate(commentRepository.findAllByProduct(product)), null);
+                calcAvgRate(commentRepository.findAllByProduct(product)), productAttributes);
     }
 
     private Double calcAvgRate(List<Comment> comments){
