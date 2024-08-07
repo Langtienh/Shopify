@@ -159,6 +159,14 @@ public class ProductServiceImpl implements ProductService {
                 calcAvgRate(commentRepository.findAllByProduct(product)), productAttributes);
     }
 
+    @Override
+    @Transactional
+    public void updateViewCount(long id) {
+        Product product = findById(id);
+        product.setViewCount(product.getViewCount() + 1);
+        productRepository.save(product);
+    }
+
     private Double calcAvgRate(List<Comment> comments){
         return comments.stream()
                 .collect(Collectors.averagingDouble(Comment::getRate));

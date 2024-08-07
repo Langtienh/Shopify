@@ -94,4 +94,12 @@ public class ProductController {
                 .build());
     }
 
+    @PutMapping("/view-count/{id}")
+    public ResponseEntity<ResponseSuccess> updateViewCount(@PathVariable long id){
+        productService.updateViewCount(id);
+        return ResponseEntity.ok().body(ResponseSuccess.builder()
+                .message("Update product view count successfully")
+                .status(HttpStatus.OK.value())
+                .build());
+    }
 }

@@ -47,6 +47,7 @@ public class SecurityConfig {
                             .requestMatchers(HttpMethod.POST, "/api/v1/users/verify-mail/**").permitAll()
                             .requestMatchers(HttpMethod.POST, "/api/v1/users/verify-otp/**").permitAll()
                             .requestMatchers(HttpMethod.PUT, "/api/v1/users/reset-password/**").permitAll()
+                            .requestMatchers(HttpMethod.PUT, "/api/v1/products/view-count/**").permitAll()
                             .anyRequest().authenticated(); // Các api khác chỉ cần đăng nhập là call được
                 })
                 // Không lưu token ở session phía server
