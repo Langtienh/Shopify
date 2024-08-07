@@ -12,4 +12,5 @@ import java.util.List;
 public interface ProductAttributeRepository extends JpaRepository<ProductAttribute, Long> {
     List<ProductAttribute> findAllByProduct(Product product);
     List<ProductAttribute> findAllByAttribute(Attribute attribute);
+    ProductAttribute findByProductAndAttribute(Product product, Attribute attribute);
 }

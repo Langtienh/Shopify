@@ -30,6 +30,12 @@ spring:
           starttls:
             enable: true
 
+  # file
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
 api:
   prefix: /api/v1
 
@@ -47,6 +53,7 @@ jwt:
   refreshExpiration: 7200000 # 5 phút 300000
   secretKey: XeKCntPJuk/iJoaxpv9ifO4aj+6TXWpL123R9b47aqH0=
 
+# payment
 payment:
   vnPay:
     url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
@@ -56,3 +63,9 @@ payment:
     version: 2.1.0
     command: pay
     orderType: other
+
+# cloudinary
+cloudinary:
+  cloudName: dj7ivh0ph
+  apiKey: 564415429986211
+  apiSecret: rn6qr-yP0LHhDd79QBo__Pm6UPs
