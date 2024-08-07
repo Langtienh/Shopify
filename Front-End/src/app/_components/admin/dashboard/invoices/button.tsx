@@ -1,8 +1,13 @@
 "use client";
+import RenderIf from "@/components/renderif";
 import { Button } from "@/components/ui/button";
+import { openNotification } from "@/lib/nofication";
+import { updateInvoiceStatus } from "@/services/invoice";
 import { Badge, Select } from "antd";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { AiOutlineLoading } from "react-icons/ai";
+import { CiEdit } from "react-icons/ci";
 
 const options = [
   { value: "PENDING" },
@@ -23,7 +28,9 @@ const statusColor: Record<OrderStatus, badgeStatus> = {
 export const EditStatus = ({
   status,
   id,
+  isDemo,
 }: {
+  isDemo: boolean;
   status: OrderStatus;
   id: string;
 }) => {
@@ -33,13 +40,21 @@ export const EditStatus = ({
   useEffect(() => setStatus(status), [status]);
   const handleChange = (values: OrderStatus) => setStatus(values);
   const submit = async () => {
-    // setLoading(true)
-    // await
-    // setLoading(false)
-    setEdit(false);
+    if (isDemo) {
+      openNotification({
+        notificationType: "error",
+        description: "Chỉ được phép xem",
+        message: "",
+      });
+    } else {
+      setLoading(true);
+      await updateInvoiceStatus(id, _status);
+      setLoading(false);
+      setEdit(false);
+    }
   };
   return (
-    <>
+    <div className="flex items-center">
       <span className="basis-[135px]">
         {edit ? (
           <Badge
@@ -60,31 +75,33 @@ export const EditStatus = ({
       </span>
 
       {edit ? (
-        <Button size="sm" className="ml-3" disabled={loading} onClick={submit}>
+        <Button size="sm" className="ml-3" onClick={submit}>
+          <RenderIf renderIf={loading}>
+            <AiOutlineLoading className="mr-2 size-[14px] animate-spin" />
+          </RenderIf>
           Gửi
         </Button>
       ) : (
         <Button
-          className="text-red-600 hover:text-red-500 font-bold"
-          variant="link"
+          className="text-red-600 hover:text-red-500 size-6"
+          variant="ghost"
+          size="icon"
           onClick={() => setEdit(true)}
         >
-          Thay đổi
+          <CiEdit size={18} />
         </Button>
       )}
-    </>
+    </div>
   );
 };
 
 export const View = ({ id }: { id: string | number }) => {
   return (
-    <Link href={`/dashboard/invoices/${id}`}>
-      <Button
-        className="text-blue-600 hover:text-blue-500 font-bold"
-        variant="link"
-      >
-        Xem chi tiết
-      </Button>
+    <Link
+      href={`/dashboard/invoices/${id}`}
+      className="text-blue-600 hover:text-blue-500 font-bold py-0"
+    >
+      Xem chi tiết
     </Link>
   );
 };

@@ -1,7 +1,7 @@
 import { priceShow, priceThrough, productToSlug } from "@/lib/ultils";
 import Link from "next/link";
 import Image from "next/image";
-export default function ProductItem({ product }: { product: Love }) {
+export default function ProductItem({ product }: { product: WishList }) {
   return (
     <Link
       className="group"

@@ -1,15 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 type LoveStateType = {
-  listLove: Love[];
+  listLove: WishList[];
 };
 const initialState: LoveStateType = {
   listLove: [],
 };
 const LoveSlice = createSlice({
-  name: "Love",
+  name: "WishList",
   initialState,
   reducers: {
-    cloneLoveList: (state, action: PayloadAction<Love[]>) => {
+    cloneLoveList: (state, action: PayloadAction<WishList[]>) => {
       state.listLove = action.payload;
     },
   },

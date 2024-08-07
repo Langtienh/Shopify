@@ -1,6 +1,6 @@
 // import { fetchRevenue } from "@/app/lib/data";
 import { FaRegCalendar } from "react-icons/fa";
-import { InvoiceChart } from "./invoice.chart";
+import InvoiceChart from "./invoice.chart";
 
 export default async function RevenueChart() {
   // const revenue = await fetchRevenue();

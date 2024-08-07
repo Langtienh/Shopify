@@ -11,7 +11,7 @@ type Product = {
   active: boolean;
   brand: string;
   category: string;
-  avgRat: number;
+  avgRate: number;
   attributes: {};
 };
 
@@ -34,7 +34,7 @@ type CartType = {
   cartItems: CartItemType[];
 };
 
-type Love = {
+type WishList = {
   id: number;
   userId: number;
   productId: number;
@@ -67,6 +67,7 @@ type OrderDetailType = {
 
 type OrderType = {
   id: number;
+  avatar: string;
   fullName: string;
   phone: string;
   email: string;

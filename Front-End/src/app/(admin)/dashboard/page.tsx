@@ -1,9 +1,12 @@
 import { Suspense } from "react";
-import CardWrapper from "../_ui/cart.wrapper";
-import LatestInvoices from "../_ui/latest.invoices";
-import { LatestInvoicesSkeleton, RevenueChartSkeleton } from "../_ui/skeleton";
-import RevenueChart from "../_ui/revenue.chart";
-import { ViewCountProduct } from "./products/_ui/chart";
+import {
+  CardWrapper,
+  LatestInvoices,
+  RevenueChart,
+  LatestInvoicesSkeleton,
+  RevenueChartSkeleton,
+  ViewCountProduct,
+} from "@/app/_components/admin/dashboard";
 
 export default async function Page() {
   return (

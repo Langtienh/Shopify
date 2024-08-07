@@ -32,7 +32,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function InvoiceChart() {
+export default function InvoiceChart() {
   return (
     <ChartContainer
       config={chartConfig}

@@ -26,7 +26,7 @@ type LocalDateTime = string;
 type List<T> = T[];
 type CartItemResponse = CartItemType;
 type CartResponse = CartType;
-type LoveReponse = Love;
+type LoveReponse = WishList;
 type CommentResponse = CommentType;
 
 type OrderDetailResponse = OrderDetailType;

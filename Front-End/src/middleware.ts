@@ -52,8 +52,16 @@ export default auth((req) => {
       return Response.redirect(newUrl);
     }
   } else if (isAdminPage) {
+    console.log(isLogin);
+    if (!isLogin) {
+      const newUrl = new URL(
+        `/login?callbackUrl=${callbackUrl}`,
+        req.nextUrl.origin
+      );
+      return Response.redirect(newUrl);
+    }
     const isAdmin = req.auth?.user?.roles?.includes("admin") || false;
-    if (!isAdmin) return Response.redirect(newUrl);
+    if (!isAdmin) return Response.redirect("/");
   }
 });
 

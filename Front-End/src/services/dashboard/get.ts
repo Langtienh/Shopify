@@ -1,7 +1,7 @@
 "use server";
 import { get } from "../axios.helper";
 import { getInvoice } from "../invoice";
-import { getUser } from "../user/get";
+import { getUser } from "../user";
 
 export const getCrud = async (query: string) => {
   const res = await get<Page<OrderResponse>>(`/enpoint?query=${query}`);
@@ -9,9 +9,7 @@ export const getCrud = async (query: string) => {
   return res;
 };
 export const getCardData = async () => {
-  const users = await getUser(1);
-  const invoices = await getInvoice(1);
-
+  const [users, invoices] = await Promise.all([getUser(1), getInvoice(1)]);
   return {
     numberOfCustomers: users.totalItem,
     numberOfInvoices: invoices.totalItem,

@@ -25,7 +25,7 @@ export default async function LatestInvoices() {
               >
                 <div className="flex items-center">
                   <Avatar className="mr-4">
-                    <AvatarImage src={"/images/default/avatar.jpg"} />
+                    <AvatarImage src={invoice.avatar} />
                     <AvatarFallback>
                       <Image
                         src="/images/default/avatar.jpg"

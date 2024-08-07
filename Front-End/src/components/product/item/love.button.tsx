@@ -19,7 +19,7 @@ export default function LoveButton({ productId }: { productId: number }) {
 }
 const IsLogin = ({ productId }: { productId: number }) => {
   const loveList = useAppSelector((state) => state.listLove.listLove);
-  const [item, setItem] = useState<Love | undefined>(undefined);
+  const [item, setItem] = useState<WishList | undefined>(undefined);
   useEffect(() => {
     const _item = loveList.find((item) => item.productId === productId);
     if (_item) setItem(_item);

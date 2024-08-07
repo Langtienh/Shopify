@@ -4,7 +4,7 @@ export const loveApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: "/api/v1" }),
   tagTypes: ["love"],
   endpoints: (builder) => ({
-    getLove: builder.query<Love[], void>({
+    getLove: builder.query<WishList[], void>({
       query: () => "/love",
       providesTags: [{ type: "love" as const, id: "ListLove" }],
     }),

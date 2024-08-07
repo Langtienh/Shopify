@@ -1,6 +1,6 @@
 import { getInvoiceDetailById } from "@/services/invoice";
-import UseInfo from "./user.info";
-import Detail from "./invoice.detail";
+import UseInfo from "@/app/_components/admin/dashboard/invoices/user.info";
+import Detail from "@/app/_components/admin/dashboard/invoices/invoice.detail";
 
 export default async function Page({
   params,
