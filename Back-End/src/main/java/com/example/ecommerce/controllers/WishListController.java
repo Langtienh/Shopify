@@ -36,10 +36,10 @@ public class WishListController {
                 .build());
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{productId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ResponseSuccess> deleteOne(@PathVariable long id){
-        wishListService.deleteOne(id);
+    public ResponseEntity<ResponseSuccess> deleteOne(@PathVariable long productId){
+        wishListService.deleteOne(productId);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
                 .message("Delete wish-list successfully")
                 .status(HttpStatus.NO_CONTENT.value())

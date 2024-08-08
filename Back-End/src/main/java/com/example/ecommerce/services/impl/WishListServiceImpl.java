@@ -6,8 +6,6 @@ import com.example.ecommerce.exceptions.ResourceNotFoundException;
 import com.example.ecommerce.models.Product;
 import com.example.ecommerce.models.User;
 import com.example.ecommerce.models.WishList;
-import com.example.ecommerce.repositories.ProductRepository;
-import com.example.ecommerce.repositories.UserRepository;
 import com.example.ecommerce.repositories.WishListRepository;
 import com.example.ecommerce.responses.WishListResponse;
 import com.example.ecommerce.services.AuthService;
@@ -15,6 +13,7 @@ import com.example.ecommerce.services.ProductService;
 import com.example.ecommerce.services.UserService;
 import com.example.ecommerce.services.WishListService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,8 +53,11 @@ public class WishListServiceImpl implements WishListService {
 
     @Override
     @Transactional
-    public void deleteOne(long id) {
-        WishList wishList = wishListRepository.findById(id)
+    public void deleteOne(long productId) {
+        Product product = productService.findById(productId);
+        User user = (User) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+        WishList wishList = wishListRepository.findByProductAndUser(product,user)
                 .orElseThrow(() -> new ResourceNotFoundException("WishList not found"));
         authService.checkAuth(wishList.getUser().getId());
         wishListRepository.delete(wishList);
