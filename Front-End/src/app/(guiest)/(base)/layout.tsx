@@ -1,4 +1,4 @@
-import Header from "@/app/(guiest)/_components/header/guiest.header";
+import { GuiestHeader } from "@/components/app/guiest/header";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -13,7 +13,7 @@ export default function RootLayout({
 }>) {
   return (
     <div className="relative">
-      <Header />
+      <GuiestHeader />
       <main className="text-[#444444] max-w-[1200px] mx-auto w-full pt-[122px]">
         {children}
       </main>

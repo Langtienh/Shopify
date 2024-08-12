@@ -3,8 +3,10 @@ import { Roboto } from "next/font/google";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import NextAuthWrapper from "@/auth/wrapper";
 import ReduxWrapper from "@/redux/wrapper";
-import LoginModal from "@/components/loginModal/loginModal";
-import CacheListLove from "@/redux/love/cache";
+import { LoginModal } from "@/components/global/login-modal";
+import { Toaster } from "@/components/ui/toaster";
+import WishListTrigger from "@/components/trigger/wishList";
+import CartTrigger from "@/components/trigger/cart";
 
 const roboto = Roboto({
   weight: ["100", "300", "400", "500", "700", "900"],
@@ -26,11 +28,13 @@ export default function RootLayout({
           <NextAuthWrapper>
             <ReduxWrapper>
               {children}
+              <CartTrigger />
+              <WishListTrigger />
               <LoginModal />
-              <CacheListLove />
             </ReduxWrapper>
           </NextAuthWrapper>
         </AntdRegistry>
+        <Toaster />
       </body>
     </html>
   );

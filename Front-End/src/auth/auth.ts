@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import Github from "next-auth/providers/github";
 import Credentials from "next-auth/providers/credentials";
-import { checkAccount } from "@/app/(auth)/_lib/actions";
+import { checkAccount } from "@/services/auth";
 const EXP_REFRESH_TOKEN = +process.env.REFRESH_TOKEN! || 604800;
 const EXP_TOKEN = +process.env.TOKEN! || 36000;
 export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({

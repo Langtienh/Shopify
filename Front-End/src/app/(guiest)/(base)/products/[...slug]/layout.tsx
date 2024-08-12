@@ -1,7 +1,6 @@
-import NavBrand from "@/components/navbrand/nav.brand";
-import ProductFilter from "@/app/(guiest)/(base)/products/_components/filter/filters.server";
-import ProductSort from "@/app/(guiest)/(base)/products/_components/sort/product.sort";
-import { translateCategory } from "@/lib/ultils";
+import { NavBrand } from "@/components/global/navbrand";
+import { ProductFilter, ProductSort } from "@/components/app/guiest/products";
+import { translateCategory } from "@/lib/utils2";
 import { Metadata } from "next";
 
 export type SlugParams = {

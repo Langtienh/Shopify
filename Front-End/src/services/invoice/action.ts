@@ -1,7 +1,6 @@
 "use server";
 
-import checkToken from "@/app/api/v1/_lib/check-token";
-import getToken from "@/app/api/v1/_lib/getToken";
+import { checkToken, getToken } from "../cookies";
 import { post, put } from "../axios.helper";
 
 export const updateInvoiceStatus = async (id: string, status: OrderStatus) => {
@@ -23,6 +22,7 @@ export const createInvoice = async (data: {}) => {
   try {
     await checkToken();
     const { userId, token } = getToken();
+    console.log({ ...data, userId });
     await post(
       "/orders",
       { ...data, userId },

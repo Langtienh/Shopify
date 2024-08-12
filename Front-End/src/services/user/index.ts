@@ -1,4 +1,4 @@
-import { getUser } from "./get";
+import { getUser } from "./query";
 import {
   updatePassword,
   updateUser,

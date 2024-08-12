@@ -5,7 +5,7 @@ import {
   getAttributesByCategory,
   // searchProductByName,
   getProductByCategorySortByViewCounter,
-} from "./get";
+} from "./query";
 import { searchProductByName } from "./bug";
 export {
   getProduct,

@@ -1,3 +1,3 @@
-import { getWishList } from "./get";
-import { delWishList, createWishList } from "./action";
-export { getWishList, delWishList, createWishList };
+import { getWishList } from "./query";
+import { delWishListItem, createWishListItem } from "./action";
+export { getWishList, delWishListItem, createWishListItem };

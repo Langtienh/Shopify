@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import ProductListSkeleton from "@/components/product/item/skeleton";
-import ProductsListPage from "@/app/(guiest)/(base)/products/_components/product/product.list.page";
+import ProductListSkeleton from "@/components/global/product/item/skeleton";
+import ProductsListPage from "@/components/app/guiest/products/product/product.list.page";
 import { SlugParams } from "@/app/(guiest)/(base)/products/[...slug]/layout";
 
 type TSearchParams = {

@@ -8,10 +8,11 @@ export default auth((req) => {
   const path = req.nextUrl.pathname;
   const callbackUrl = req.nextUrl.searchParams.get("callbackUrl") || "/";
   const newUrl = new URL(callbackUrl || "/", req.nextUrl.origin);
+
   const isLogin = req.auth;
   const isFirstLogin = !req?.auth?.refreshToken;
   const isUserPage = path.startsWith("/cart") || path.startsWith("/smember");
-  const isAdminPage = path.startsWith("/admin");
+  const isAdminPage = path.startsWith("/dashboard");
   const isLoginPage = loginPage.includes(path);
   const isFirstLoginPage = path === firstLoginPage;
 
@@ -36,7 +37,7 @@ export default auth((req) => {
     // + đã đăng nhập => đá về trang home hoặc callback
     if (isLogin) return Response.redirect(newUrl);
   }
-  // Trang user, trang admin (cần đăng nhập)
+  // Trang user, trang dashboard (cần đăng nhập)
   else if (isUserPage) {
     // + Chưa đăng nhập => bắt đăng nhập
     if (!isLogin) {
@@ -52,12 +53,8 @@ export default auth((req) => {
       return Response.redirect(newUrl);
     }
   } else if (isAdminPage) {
-    console.log(isLogin);
     if (!isLogin) {
-      const newUrl = new URL(
-        `/login?callbackUrl=${callbackUrl}`,
-        req.nextUrl.origin
-      );
+      const newUrl = new URL(`/login?callbackUrl=${path}`, req.nextUrl.origin);
       return Response.redirect(newUrl);
     }
     const isAdmin = req.auth?.user?.roles?.includes("admin") || false;
@@ -67,7 +64,7 @@ export default auth((req) => {
 
 export const config = {
   matcher: [
-    "/admin/:path*",
+    "/dashboard/:path*",
     "/smember/:path*",
     "/cart/:path*",
     "/login",

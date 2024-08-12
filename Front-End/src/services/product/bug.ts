@@ -1,6 +1,6 @@
 "use server";
 
-import { getProduct } from "./get";
+import { getProduct } from "./query";
 
 export const searchProductByName = async (value: string) => {
   const query = `name:${value}`;

@@ -5,7 +5,7 @@ import {
   getOrderDetailById,
   getOrderById,
   getAllOrderByUserId,
-} from "./get";
+} from "./query";
 import {
   updateInvoiceStatus,
   createInvoice,
