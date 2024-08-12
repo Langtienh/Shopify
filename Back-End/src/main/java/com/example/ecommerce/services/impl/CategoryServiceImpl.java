@@ -21,6 +21,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = Category
                 .builder()
                 .name(categoryDTO.getName())
+                .label(categoryDTO.getLabel())
                 .build();
         return categoryRepository.save(category);
     }
@@ -41,6 +42,7 @@ public class CategoryServiceImpl implements CategoryService {
     public Category updateCategory(long id, CategoryDTO categoryDTO) {
         Category category = getCategoryById(id);
         category.setName(categoryDTO.getName());
+        category.setLabel(categoryDTO.getLabel());
         return categoryRepository.save(category);
     }
 }

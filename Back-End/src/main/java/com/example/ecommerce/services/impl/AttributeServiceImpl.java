@@ -14,7 +14,6 @@ import com.example.ecommerce.responses.AttributeResponse;
 import com.example.ecommerce.services.AttributeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +29,8 @@ public class AttributeServiceImpl implements AttributeService {
     public Attribute createAttribute(AttributeDTO attributeDTO) {
         Attribute attribute = Attribute.builder()
                 .name(attributeDTO.getName())
+                .label(attributeDTO.getLabel())
+                .slug(attributeDTO.getSlug())
                 .build();
         return attributeRepository.save(attribute);
     }
@@ -55,8 +56,7 @@ public class AttributeServiceImpl implements AttributeService {
                             .filter(pa -> {
                                 boolean checkCategory =
                                         pa.getProduct().getCategory().getName().equalsIgnoreCase(cname);
-                                boolean checkBrand = bname == null ? true :
-                                        pa.getProduct().getBrand().getName().equalsIgnoreCase(bname);
+                                boolean checkBrand = bname == null || pa.getProduct().getBrand().getName().equalsIgnoreCase(bname);
                                 return checkCategory && checkBrand;
                                     })
                             .toList();
@@ -69,6 +69,8 @@ public class AttributeServiceImpl implements AttributeService {
     public Attribute updateAttribute(long id, AttributeDTO attributeDTO) {
         Attribute attribute = getAttributeById(id);
         attribute.setName(attributeDTO.getName());
+        attribute.setLabel(attribute.getLabel());
+        attribute.setSlug(attribute.getSlug());
         return attributeRepository.save(attribute);
     }
 

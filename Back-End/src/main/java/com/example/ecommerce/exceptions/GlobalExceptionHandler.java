@@ -1,6 +1,7 @@
 package com.example.ecommerce.exceptions;
 
 import com.example.ecommerce.responses.ResponseError;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -66,6 +67,24 @@ public class GlobalExceptionHandler {
         String error = "";
         if(matcher.find()){
             error = "Duplicate entry: " + matcher.group(1);
+        }
+        return ResponseEntity.badRequest().body(
+                ResponseError.builder()
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .message(error)
+                        .build()
+        );
+    }
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ResponseError> handleDataIntegrityViolationException(
+            DataIntegrityViolationException e){
+        String regex = "Duplicate entry '(.*)' for key";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(e.getMessage());
+        String error = "";
+        if(matcher.find()){
+            error = matcher.group(1) + " đã tồn tại";
         }
         return ResponseEntity.badRequest().body(
                 ResponseError.builder()

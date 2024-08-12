@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -28,6 +29,5 @@ public class RegisterDTO {
     @NotBlank(message = "Địa chỉ không được để trống")
     private String address;
 
-    @NotBlank(message = "Ảnh đại diện không được rỗng")
-    private String avatar;
+    private MultipartFile avatar;
 }

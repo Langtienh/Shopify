@@ -11,6 +11,7 @@ import com.example.ecommerce.services.BrandService;
 import com.example.ecommerce.services.CategoryService;
 import com.example.ecommerce.services.CloudinaryService;
 import com.example.ecommerce.services.ProductService;
+import com.example.ecommerce.utils.FileUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,11 +32,12 @@ public class ProductServiceImpl implements ProductService {
     private final SearchRepository searchRepository;
     private final CategoryService categoryService;
     private final CommentRepository commentRepository;
-    private final CloudinaryService cloudinaryService;
+    private final FileUtil fileUtil;
     @Override
     public PageResponse searchProduct(
-            int page, int limit, String brand,String category, String[] search, String... sort) {
-        return searchRepository.searchProduct(page, limit, brand,category, search, sort);
+            int page, int limit, String brand,String category, String[] search, boolean active,
+            String... sort) {
+        return searchRepository.searchProduct(page, limit, brand,category, search, active, sort);
     }
 
     @Override
@@ -76,17 +78,6 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse createProduct(ProductDTO productDTO) {
         Brand brand = brandService.getBrandById(productDTO.getBrandId());
         Category category = categoryService.getCategoryById(productDTO.getCategoryId());
-        String contentType = productDTO.getImage().getContentType();
-        if (contentType == null || !contentType.startsWith("image/")) {
-            throw new InvalidFileTypeException("File is not a valid image.");
-        }
-        String image = "";
-        try{
-            image = cloudinaryService.uploadFile(productDTO.getImage());
-        }
-        catch (Exception e){
-            throw new RuntimeException(e.getMessage());
-        }
         Product product = productRepository.save(Product.builder()
                 .name(productDTO.getName())
                 .price(productDTO.getPrice())
@@ -94,12 +85,15 @@ public class ProductServiceImpl implements ProductService {
                 .stock(productDTO.getStock())
                 .viewCount(0L)
                 .description(productDTO.getDescription())
-                .image(image)
                 .discountForMember(productDTO.getDiscountForMember())
                 .active(productDTO.isActive())
                 .brand(brand)
                 .category(category)
                 .build());
+        String image = fileUtil.uploadFile(productDTO.getImage());
+        if(!image.isEmpty()){
+            product.setImage(image);
+        }
         List<ProductAttribute> productAttributes = new ArrayList<>();
         productDTO.getAttributes().forEach((key, value) -> {
             Attribute attribute = attributeRepository.findByName(key);
@@ -121,18 +115,8 @@ public class ProductServiceImpl implements ProductService {
         Product product = findById(id);
         Brand brand = brandService.getBrandById(productDTO.getBrandId());
         Category category = categoryService.getCategoryById(productDTO.getCategoryId());
-        if(productDTO.getImage() != null){
-            String contentType = productDTO.getImage().getContentType();
-            if (contentType == null || !contentType.startsWith("image/")) {
-                throw new InvalidFileTypeException("File is not a valid image.");
-            }
-            String image = "";
-            try{
-                image = cloudinaryService.uploadFile(productDTO.getImage());
-            }
-            catch (Exception e){
-                throw new RuntimeException(e.getMessage());
-            }
+        String image = fileUtil.uploadFile(productDTO.getImage());
+        if(!image.isEmpty()){
             product.setImage(image);
         }
         product.setName(productDTO.getName());

@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,8 +22,8 @@ import org.springframework.web.bind.annotation.*;
 public class UserController{
     private final UserService userService;
 
-    @PostMapping("/register")
-    public ResponseEntity<ResponseSuccess> createUser(@Valid @RequestBody RegisterDTO registerDTO){
+    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ResponseSuccess> createUser(@Valid @ModelAttribute RegisterDTO registerDTO){
         userService.createUser(registerDTO);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
                 .message("Create user successfully")
@@ -114,10 +115,10 @@ public class UserController{
                 .build());
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseSuccess> updateUser(@PathVariable("id") long id,
-                                                      @Valid @RequestBody UserDTO userDTO){
+                                                      @Valid @ModelAttribute UserDTO userDTO){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
                 .message("Update user successfully")
                 .status(HttpStatus.ACCEPTED.value())

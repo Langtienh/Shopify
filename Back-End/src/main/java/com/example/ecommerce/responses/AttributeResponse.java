@@ -13,13 +13,17 @@ import java.util.List;
 @Builder
 public class AttributeResponse {
     private String name;
-    private List<String> values;
+    private String label;
+    private String slug;
+    private List<ProductAttributeResponse> values;
 
     public static AttributeResponse fromAttribute(Attribute attribute, List<ProductAttribute> productAttributes){
         return AttributeResponse.builder()
                 .name(attribute.getName())
+                .label(attribute.getLabel())
+                .slug(attribute.getSlug())
                 .values(productAttributes.stream()
-                        .map(ProductAttribute::getValue)
+                        .map(ProductAttributeResponse::fromProductAttribute)
                         .distinct()
                         .toList())
                 .build();

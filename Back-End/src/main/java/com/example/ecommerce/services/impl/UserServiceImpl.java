@@ -1,21 +1,16 @@
 package com.example.ecommerce.services.impl;
 
 import com.example.ecommerce.dtos.*;
-import com.example.ecommerce.exceptions.InvalidParamException;
-import com.example.ecommerce.exceptions.LoginWithGoogleException;
-import com.example.ecommerce.exceptions.ResourceNotFoundException;
-import com.example.ecommerce.exceptions.UnauthorizedException;
+import com.example.ecommerce.exceptions.*;
 import com.example.ecommerce.models.*;
-import com.example.ecommerce.repositories.ForgotPasswordRepository;
-import com.example.ecommerce.repositories.RoleRepository;
-import com.example.ecommerce.repositories.UserRepository;
-import com.example.ecommerce.repositories.UserRoleRepository;
+import com.example.ecommerce.repositories.*;
 import com.example.ecommerce.responses.*;
 import com.example.ecommerce.services.EmailService;
 import com.example.ecommerce.services.JwtService;
 import com.example.ecommerce.services.TokenService;
 import com.example.ecommerce.services.UserService;
 import com.example.ecommerce.utils.EmailTemplate;
+import com.example.ecommerce.utils.FileUtil;
 import com.example.ecommerce.utils.SendOtpTemplate;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +41,8 @@ public class UserServiceImpl implements UserService {
     private final TokenService tokenService;
     private final ForgotPasswordRepository forgotPasswordRepository;
     private final EmailService emailService;
+    private final CartRepository cartRepository;
+    private final FileUtil fileUtil;
     @Value("${jwt.refreshExpiration}")
     private int refreshExpiration;
     @Override
@@ -58,10 +55,18 @@ public class UserServiceImpl implements UserService {
                 .password(passwordEncoder.encode(registerDTO.getPassword()))
                 .email(registerDTO.getEmail())
                 .address(registerDTO.getAddress())
-                .avatar(registerDTO.getAvatar())
                 .active(true)
                 .build();
         userRepository.save(user);
+        String avatar = fileUtil.uploadFile(registerDTO.getAvatar());
+        if(!avatar.isEmpty()){
+            user.setAvatar(avatar);
+        }
+        userRepository.save(user);
+        Cart cart = Cart.builder()
+                .user(user)
+                .build();
+        cartRepository.save(cart);
         UserRole userRole = UserRole.builder()
                 .user(user)
                 .role(role)
@@ -93,12 +98,16 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserResponse updateUser(long id, UserDTO userDTO) {
         User user = findById(id);
+        String avatar = fileUtil.uploadFile(userDTO.getAvatar());
         user.setFullName(userDTO.getFullName());
         user.setPhone(userDTO.getPhone());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setEmail(userDTO.getEmail());
         user.setAddress(userDTO.getAddress());
-        user.setAvatar(userDTO.getAvatar());
+        userRepository.save(user);
+        if(!avatar.isEmpty()){
+            user.setAvatar(avatar);
+        }
         userRepository.save(user);
         return UserResponse.fromUser(user);
     }
@@ -161,6 +170,10 @@ public class UserServiceImpl implements UserService {
                 .providerId(loginWithGoogle.getProviderId())
                 .build();
         userRepository.save(user);
+        Cart cart = Cart.builder()
+                .user(user)
+                .build();
+        cartRepository.save(cart);
         UserRole userRole = UserRole.builder()
                 .user(user)
                 .role(role)
