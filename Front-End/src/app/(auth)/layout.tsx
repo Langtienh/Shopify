@@ -1,7 +1,14 @@
 import BackBtn from "@/components/app/auth/btn.back";
 import HeaderAuth from "@/components/app/auth/header";
 
-export default function RootLayout({
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Smember | Tri ân khách hàng thân thiết - tích điểm đổi quà",
+  description: "Smember | Tri ân khách hàng thân thiết - tích điểm đổi quà",
+};
+
+export default function AuthLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

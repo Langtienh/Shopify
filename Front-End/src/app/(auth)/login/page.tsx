@@ -1,8 +1,10 @@
 import { LoginForm } from "@/components/app/auth/login";
 import AuthTitle from "@/components/app/auth/title";
+import LogoutTrigger from "@/components/trigger/logout";
 export default async function Page() {
   return (
     <>
+      <LogoutTrigger />
       <AuthTitle title="Đăng nhập với" />
       <LoginForm />
       <div className=" text-center">

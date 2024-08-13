@@ -1,8 +1,10 @@
 import { auth } from "@/auth/auth";
+import { cookies } from "next/headers";
 
 // hard coding
 const loginPage = ["/login", "/register"];
 const firstLoginPage = "/first-login";
+const restorePasswordPage = ["/restore-password-method", "/restore-password"];
 export default auth((req) => {
   // input var
   const path = req.nextUrl.pathname;
@@ -15,7 +17,7 @@ export default auth((req) => {
   const isAdminPage = path.startsWith("/dashboard");
   const isLoginPage = loginPage.includes(path);
   const isFirstLoginPage = path === firstLoginPage;
-
+  const isRestorePasswordPage = restorePasswordPage.includes(path);
   // logic
   // Trang đăng nhập bằng provider lần đầu
   if (isFirstLoginPage) {
@@ -29,12 +31,14 @@ export default auth((req) => {
     }
     //  đã đăng nhập, không phải đăng nhập lần đầu => không cho vào
     if (isLogin && !isFirstLogin) {
+      const newUrl = new URL(`/smember`, req.nextUrl.origin);
       return Response.redirect(newUrl);
     }
   }
   // Trang đăng nhập đăng kí
   else if (isLoginPage) {
-    // + đã đăng nhập => đá về trang home hoặc callback
+    // + đã đăng nhập => đá về trang smember
+    const newUrl = new URL(`/smember`, req.nextUrl.origin);
     if (isLogin) return Response.redirect(newUrl);
   }
   // Trang user, trang dashboard (cần đăng nhập)
@@ -59,6 +63,16 @@ export default auth((req) => {
     }
     const isAdmin = req.auth?.user?.roles?.includes("admin") || false;
     if (!isAdmin) return Response.redirect("/");
+  } else if (isRestorePasswordPage) {
+    if (isLogin) {
+      const newUrl = new URL(`/smember`, req.nextUrl.origin);
+      if (isLogin) return Response.redirect(newUrl);
+    }
+    const otpToken = cookies().get("otpToken")?.value;
+    if (!otpToken && path === "/restore-password") {
+      const newUrl = new URL(`/login`, req.nextUrl.origin);
+      return Response.redirect(newUrl);
+    }
   }
 });
 
@@ -70,6 +84,8 @@ export const config = {
     "/login",
     "/register",
     "/first-login",
+    "/restore-password",
+    "/restore-password-method",
     // bảo vệ ảnh ??
     // "/((?!api|_next/static|_next/image|favicon.ico).*)",
   ],

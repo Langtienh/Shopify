@@ -45,7 +45,6 @@ const RegesterForm: React.FC = () => {
       >
         <Form.Item
           name="fullName"
-          tooltip="What do you want others to call you?"
           rules={[
             {
               required: true,
@@ -69,11 +68,11 @@ const RegesterForm: React.FC = () => {
           rules={[
             {
               type: "email",
-              message: "Sai định dạnh ví dụ phone@gmail.com",
+              message: "Sai định dạnh ví dụ user@gmail.com",
             },
             {
               required: true,
-              message: "Vui lòng điền email hoặc gmail!",
+              message: "Vui lòng điền email!",
             },
           ]}
         >
@@ -124,7 +123,7 @@ const RegesterForm: React.FC = () => {
                   return Promise.resolve();
                 }
                 return Promise.reject(
-                  new Error("The new password that you entered do not match!")
+                  new Error("Mật khẩu mới mà bạn đã nhập không khớp!")
                 );
               },
             }),

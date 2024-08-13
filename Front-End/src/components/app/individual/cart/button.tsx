@@ -1,5 +1,6 @@
 "use client";
 
+import { openNotification } from "@/lib/nofication";
 import { converPriceToVN } from "@/lib/utils2";
 import { updateTotalPrice } from "@/redux/checkout/slice";
 
@@ -56,6 +57,12 @@ export function DeleteItemBTN({
 export function AddItemBTN({ cartItem }: { cartItem: CartItemResponse }) {
   const [isLoading, setLoading] = useState<boolean>(false);
   const handleAddCartItem = async () => {
+    if (cartItem.stock < cartItem.quantity + 1)
+      openNotification({
+        message: "Hết hàng",
+        description: "Liên hệ với quản trị viên để mua thêm",
+        notificationType: "error",
+      });
     setLoading(true);
     try {
       await addQuantity(cartItem.id, cartItem.quantity);

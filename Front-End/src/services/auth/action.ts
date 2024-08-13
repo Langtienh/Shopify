@@ -1,11 +1,10 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { get, post } from "../axios.helper";
+import { get, post, put } from "../axios.helper";
 import { checkToken, getToken } from "../cookies";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { signOut } from "next-auth/react";
 
 export const login = async (input: LoginDTO) => {
   const res = await post<LoginResponse>("/users/login", input);
@@ -73,7 +72,47 @@ export const register = async (input: RegisterForm) => {
 
 export const refreshToken = async () => {};
 
-export const resetPassword = async () => {};
+// handle resetPassword
+
+export const verifyMail = async (mail: string) => {
+  try {
+    await post(`/users/verify-mail/${mail}`);
+    return true;
+  } catch {
+    return false;
+  }
+};
+type VerifyOTP = {
+  userId: string;
+  otpToken: string;
+};
+export const verifyOTP = async (mail: string, OTP: string) => {
+  try {
+    const res = await post<VerifyOTP>(`/users/verify-otp/${OTP}/${mail}`);
+    cookies().set("otpToken", res.data.otpToken);
+    cookies().set("userId", res.data.userId);
+    return {};
+  } catch {
+    return { message: "OTP Không chính xác. Vui lòng thử lại" };
+  }
+};
+
+export const resetPassword = async (newPassword: string) => {
+  try {
+    const otpToken = cookies().get("otpToken")?.value;
+    const userId = cookies().get("userId")?.value;
+
+    const res = await put(`/users/reset-password/${userId}`, {
+      otpToken,
+      newPassword,
+    });
+    cookies().delete("otpToken");
+    cookies().delete("userId");
+    return { message: res.message, isSucsess: true };
+  } catch {
+    return { message: "Đã xảy ra lỗi", isSucsess: false };
+  }
+};
 
 export const updatePassword = async () => {};
 
