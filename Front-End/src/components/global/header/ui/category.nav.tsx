@@ -32,7 +32,7 @@ export default function NavCategoryMobile({
               className="capitalize py-1"
               key={`category-${category.id}`}
             >
-              {category.name}
+              {category.label}
             </Link>
           ))}
         </div>

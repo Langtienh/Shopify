@@ -91,6 +91,7 @@ type OrderStatus =
 type CategoryType = {
   id: number;
   name: string;
+  label: string;
 };
 
 type BrandType = {
@@ -118,5 +119,7 @@ type UserType = {
 
 type AttibulteType = {
   name: string;
-  values: string[];
+  values: { value: string; slug: string }[];
+  label: string;
+  slug: string;
 };

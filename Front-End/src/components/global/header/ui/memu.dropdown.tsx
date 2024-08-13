@@ -1,4 +1,3 @@
-import { translateCategory } from "@/lib/utils2";
 import { Dropdown, MenuProps } from "antd";
 import Link from "next/link";
 import { CiLaptop } from "react-icons/ci";
@@ -20,8 +19,10 @@ const icons = {
 export const MenuDropdown = ({
   category,
   brands,
+  label,
 }: {
   category: string;
+  label: string;
   brands: BrandResponse[];
 }) => {
   let items: MenuProps["items"] = brands.map((item: BrandResponse) => ({
@@ -52,7 +53,7 @@ export const MenuDropdown = ({
     <Dropdown menu={{ items }} placement="bottom">
       <span className="h-9 flex gap-2 items-center cursor-pointer uppercase text-[12px] lg:text-sm text-white hover:text-white">
         {iconNode}
-        {!!category && translateCategory(category)}
+        {label}
       </span>
     </Dropdown>
   );

@@ -8,7 +8,13 @@ const CategoryDropDown = async ({
   category: CategoryResponse;
 }) => {
   const brands = await getbrandsByCategory(category.name);
-  return <MenuDropdown category={category.name} brands={brands} />;
+  return (
+    <MenuDropdown
+      label={category.label}
+      category={category.name}
+      brands={brands}
+    />
+  );
 };
 
 export default async function Header3() {

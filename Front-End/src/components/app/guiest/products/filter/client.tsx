@@ -5,53 +5,73 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IoIosCloseCircle } from "react-icons/io";
 
+type Filter = {
+  filterName: string;
+  filterSlug: string;
+  filterLabel: string;
+  value: string;
+  valueSlug: string;
+};
 export default function ProductFilterClient({
   filters,
 }: {
   filters: AttibulteResponse[];
 }) {
-  const [filterValues, setFilterValues] = useState<
-    {
-      name: string;
-      value: string;
-    }[]
-  >([]);
-  const onAdd = (name: string, value: string) => {
-    setFilterValues((pre) => [...pre, { name, value }]);
+  const [filterValues, setFilterValues] = useState<Filter[]>([]);
+  const onAdd = (filter: Filter) => {
+    setFilterValues((pre) => [...pre, filter]);
   };
-  const onChange = (newValue: string, index: number) => {
+  const handleChangeValue = (
+    index: number,
+    newValue: string,
+    newValueSlug: string
+  ) => {
     setFilterValues((pre) => {
       let newObj = pre[index];
-      let newState = pre.filter((item) => item.name !== newObj.name);
-      newObj = { name: newObj.name, value: newValue };
+      let newState = pre.filter(
+        (item) => item.filterName !== newObj.filterName
+      );
+      newObj = {
+        ...newObj,
+        value: newValue,
+        valueSlug: newValueSlug,
+      };
       newState = [...newState, newObj];
       return newState;
     });
   };
-  const onDelete = (name: string) => {
-    setFilterValues((pre) => pre.filter((item) => item.name !== name));
+  const handleDeleteOneFilter = (filterName: string) => {
+    setFilterValues((pre) =>
+      pre.filter((item) => item.filterName !== filterName)
+    );
   };
-  const onDeleteAll = () => setFilterValues([]);
-  const checkActive = (name: string) => {
-    const index = filterValues.findIndex((item) => item.name === name);
+  const handleClearFillter = () => setFilterValues([]);
+  const isActive = (filterName: string) => {
+    const index = filterValues.findIndex(
+      (item) => item.filterName === filterName
+    );
     return index !== -1;
   };
-  const onClick = (name: string, value: string) => {
-    const index = filterValues.findIndex((item) => item.name === name);
+  const handleAddFilter = (filter: Filter) => {
+    const index = filterValues.findIndex(
+      (item) => item.filterName === filter.filterName
+    );
     if (index !== -1) {
       const objFilter = filterValues[index];
-      if (objFilter.value === value) onDelete(name);
-      else onChange(value, index);
-    } else onAdd(name, value);
+      if (objFilter.value === filter.filterName)
+        handleDeleteOneFilter(filter.filterName);
+      else handleChangeValue(index, filter.value, filter.valueSlug);
+    } else onAdd(filter);
   };
 
+  // set searchparam
   const { replace } = useRouter();
   const patchName = usePathname();
   const searchParams = useSearchParams();
   useEffect(() => {
     let query = "";
     filterValues.forEach((item) => {
-      query += `${item.name}:${item.value},`;
+      query += `${item.filterSlug}:${item.valueSlug},`;
     });
     query = query.slice(0, -1);
     const params = new URLSearchParams(searchParams);
@@ -65,19 +85,27 @@ export default function ProductFilterClient({
       <div className="w-full overflow-auto no-scrollbar">
         <div className="flex gap-3">
           {!!filters.length &&
-            filters.map((item) => (
+            filters.map((filter) => (
               <Tooltip
-                key={item.name}
+                key={filter.name}
                 title={
                   <div className="flex flex-wrap gap-2 w-[250px]">
-                    {!!item.values.length &&
-                      item.values.map((value) => (
+                    {!!filter.values.length &&
+                      filter.values.map((item) => (
                         <Button
                           className="capitalize"
-                          onClick={() => onClick(item.name, value)}
-                          key={value}
+                          onClick={() =>
+                            handleAddFilter({
+                              filterName: filter.name,
+                              filterSlug: filter.slug,
+                              filterLabel: filter.label,
+                              value: item.value,
+                              valueSlug: item.slug,
+                            })
+                          }
+                          key={item.slug}
                         >
-                          {value}
+                          {item.value}
                         </Button>
                       ))}
                   </div>
@@ -87,10 +115,10 @@ export default function ProductFilterClient({
               >
                 <Button
                   className="capitalize"
-                  danger={checkActive(item.name)}
-                  onClick={() => onDelete(item.name)}
+                  danger={isActive(filter.name)}
+                  onClick={() => handleDeleteOneFilter(filter.name)}
                 >
-                  {item.name}
+                  {filter.label}
                 </Button>
               </Tooltip>
             ))}
@@ -102,16 +130,16 @@ export default function ProductFilterClient({
           <h2 className="text-lg font-bold ">Đang lọc theo</h2>
           <div className="w-full overflow-auto no-scrollbar">
             <div className="flex gap-3">
-              {filterValues.map((item) => (
+              {filterValues.map((filter) => (
                 <Button
                   className="capitalize"
                   danger
                   icon={<IoIosCloseCircle />}
-                  onClick={() => onDelete(item.name)}
-                  key={`${item.name}:${item.value}`}
-                >{`${item.name}: ${item.value}`}</Button>
+                  onClick={() => handleDeleteOneFilter(filter.filterName)}
+                  key={`${filter.filterName}:${filter.value}`}
+                >{`${filter.filterLabel}: ${filter.value}`}</Button>
               ))}
-              <Button danger onClick={onDeleteAll}>
+              <Button danger onClick={handleClearFillter}>
                 Bỏ chọn tất cả
               </Button>
             </div>
