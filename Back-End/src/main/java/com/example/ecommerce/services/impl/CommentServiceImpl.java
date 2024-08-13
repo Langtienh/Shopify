@@ -1,11 +1,13 @@
 package com.example.ecommerce.services.impl;
 
 import com.example.ecommerce.dtos.CommentDTO;
+import com.example.ecommerce.exceptions.InvalidParamException;
 import com.example.ecommerce.exceptions.ResourceNotFoundException;
 import com.example.ecommerce.models.Comment;
 import com.example.ecommerce.models.Product;
 import com.example.ecommerce.models.User;
 import com.example.ecommerce.repositories.CommentRepository;
+import com.example.ecommerce.repositories.OrderRepository;
 import com.example.ecommerce.repositories.ProductRepository;
 import com.example.ecommerce.repositories.UserRepository;
 import com.example.ecommerce.responses.CommentResponse;
@@ -16,6 +18,7 @@ import com.example.ecommerce.services.AuthService;
 import com.example.ecommerce.services.CommentService;
 import com.example.ecommerce.services.ProductService;
 import com.example.ecommerce.services.UserService;
+import com.example.ecommerce.utils.FileUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +28,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,19 +38,29 @@ public class CommentServiceImpl implements CommentService {
     private final UserService userService;
     private final ProductService productService;
     private final AuthService authService;
+    private final OrderRepository orderRepository;
+    private final FileUtil fileUtil;
+
     @Override
     @Transactional
     public CommentResponse createComment(CommentDTO commentDTO) {
         authService.checkAuth(commentDTO.getUserId());
+        if(commentDTO.getRate() > 5)
+            throw new InvalidParamException("Rate phải từ 1 đến 5");
         Product product = productService.findById(commentDTO.getProductId());
         User user = userService.findById(commentDTO.getUserId());
         Comment comment = Comment.builder()
                 .content(commentDTO.getContent())
                 .rate(commentDTO.getRate())
                 .user(user)
+                .isPurchased(orderRepository.existsByUser(user))
                 .product(product)
                 .date(LocalDateTime.now())
                 .build();
+        List<String> images = fileUtil.uploadFile(commentDTO.getImages());
+        if(!images.isEmpty()){
+            comment.setImage(String.join(";", images));
+        }
         return CommentResponse.fromComment(commentRepository.save(comment),
                 ProductResponse.fromProduct(product,0, null),
                 UserResponse.fromUser(user));

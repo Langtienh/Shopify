@@ -9,6 +9,7 @@ import com.example.ecommerce.services.CommentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
@@ -20,9 +21,9 @@ import org.springframework.web.bind.annotation.*;
 public class CommentController {
     private final CommentService commentService;
 
-    @PostMapping("")
+    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-    public ResponseEntity<ResponseSuccess> createComment(@Valid @RequestBody CommentDTO commentDTO){
+    public ResponseEntity<ResponseSuccess> createComment(@Valid @ModelAttribute CommentDTO commentDTO){
         CommentResponse commentResponse = commentService.createComment(commentDTO);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
                 .message("Create comment successfully")

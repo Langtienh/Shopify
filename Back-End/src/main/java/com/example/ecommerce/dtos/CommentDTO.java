@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -24,4 +27,6 @@ public class CommentDTO {
 
     @NotNull(message = "ID sản phẩm không được rỗng")
     private Long productId;
+
+    private List<MultipartFile> images;
 }

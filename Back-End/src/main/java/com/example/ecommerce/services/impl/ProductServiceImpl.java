@@ -90,9 +90,9 @@ public class ProductServiceImpl implements ProductService {
                 .brand(brand)
                 .category(category)
                 .build());
-        String image = fileUtil.uploadFile(productDTO.getImage());
+        List<String> image = fileUtil.uploadFile(List.of(productDTO.getImage()));
         if(!image.isEmpty()){
-            product.setImage(image);
+            product.setImage(image.get(0));
         }
         List<ProductAttribute> productAttributes = new ArrayList<>();
         productDTO.getAttributes().forEach((key, value) -> {
@@ -115,9 +115,9 @@ public class ProductServiceImpl implements ProductService {
         Product product = findById(id);
         Brand brand = brandService.getBrandById(productDTO.getBrandId());
         Category category = categoryService.getCategoryById(productDTO.getCategoryId());
-        String image = fileUtil.uploadFile(productDTO.getImage());
+        List<String> image = fileUtil.uploadFile(List.of(productDTO.getImage()));
         if(!image.isEmpty()){
-            product.setImage(image);
+            product.setImage(image.get(0));
         }
         product.setName(productDTO.getName());
         product.setPrice(productDTO.getPrice());

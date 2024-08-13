@@ -28,6 +28,12 @@ public class Comment {
     @Column(name = "date")
     private LocalDateTime date;
 
+    @Column(name = "image", columnDefinition = "TEXT")
+    private String image;
+
+    @Column(name = "is_purchased")
+    private boolean isPurchased;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

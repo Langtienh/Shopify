@@ -15,6 +15,7 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
     Page<Order> findAllByUser(User user, Pageable pageable);
+    boolean existsByUser(User user);
     long countAllByOrderStatus(OrderStatus orderStatus);
     @Query("select sum(o.totalPrice) from Order o")
     double totalPriceOrder();

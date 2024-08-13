@@ -1,15 +1,15 @@
 server:
-  port: 8080
+  port: ${APP_PORT}
 spring:
   application:
     name: Ecommerce
   datasource:
-    url: jdbc:mysql://localhost:3306/Ecommerce
-    username: springstudent
-    password: springstudent
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
@@ -21,8 +21,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: daocongdanh47@gmail.com
-    password: vheqasktursdcmpv
+    username: ${MAIL_USER}
+    password: ${vheqasktursdcmpv}
     properties:
       mail:
         smtp:
@@ -37,7 +37,7 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 api:
-  prefix: /api/v1
+  prefix: ${API_PREFIX}
 
 # swagger-ui
 springdoc:
@@ -49,23 +49,23 @@ springdoc:
 
 # jwt
 jwt:
-  expiration: 3600000 # (1 * 60 * 1000 mls) 1 phút 60000
-  refreshExpiration: 7200000 # 5 phút 300000
-  secretKey: XeKCntPJuk/iJoaxpv9ifO4aj+6TXWpL123R9b47aqH0=
+  expiration: ${JWT_EXPIRATION}
+  refreshExpiration: ${JWT_REFRESH_EXPIRATION}
+  secretKey: ${JWT_SECRET_KEY}
 
 # payment
 payment:
   vnPay:
-    url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
-    tmnCode: TSFZ2A2L
-    secretKey: SNIHOORBOFJ6USCIPO48W9H6NYPBAKI4
-    returnUrl: http://localhost:8080/api/v1/payments/vn-pay-callback
+    url: ${PAYMENT_URL}
+    tmnCode: ${PAYMENT_TMN_CODE}
+    secretKey: ${PAYMENT_SECRET_KEY}
+    returnUrl: ${PAYMENT_RETURN_URL}
     version: 2.1.0
     command: pay
     orderType: other
 
 # cloudinary
 cloudinary:
-  cloudName: dj7ivh0ph
-  apiKey: 564415429986211
-  apiSecret: rn6qr-yP0LHhDd79QBo__Pm6UPs
+  cloudName: ${CLOUDINARY_NAME}
+  apiKey: ${CLOUDINARY_API_KEY}
+  apiSecret: ${CLOUDINARY_API_SECRET}

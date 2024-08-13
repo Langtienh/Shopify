@@ -5,6 +5,8 @@ import com.example.ecommerce.models.ProductAttribute;
 import lombok.*;
 
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -24,7 +26,13 @@ public class AttributeResponse {
                 .slug(attribute.getSlug())
                 .values(productAttributes.stream()
                         .map(ProductAttributeResponse::fromProductAttribute)
-                        .distinct()
+                        .collect(Collectors.toMap(
+                                ProductAttributeResponse::getValue, // Sử dụng trường value làm khóa
+                                Function.identity(), // Sử dụng chính đối tượng là giá trị
+                                (existing, replacement) -> existing // Giữ lại phần tử đầu tiên nếu có trùng lặp
+                        ))
+                        .values()
+                        .stream()
                         .toList())
                 .build();
     }

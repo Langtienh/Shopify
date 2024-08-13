@@ -58,9 +58,9 @@ public class UserServiceImpl implements UserService {
                 .active(true)
                 .build();
         userRepository.save(user);
-        String avatar = fileUtil.uploadFile(registerDTO.getAvatar());
+        List<String> avatar = fileUtil.uploadFile(List.of(registerDTO.getAvatar()));
         if(!avatar.isEmpty()){
-            user.setAvatar(avatar);
+            user.setAvatar(avatar.get(0));
         }
         userRepository.save(user);
         Cart cart = Cart.builder()
@@ -98,15 +98,15 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserResponse updateUser(long id, UserDTO userDTO) {
         User user = findById(id);
-        String avatar = fileUtil.uploadFile(userDTO.getAvatar());
         user.setFullName(userDTO.getFullName());
         user.setPhone(userDTO.getPhone());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setEmail(userDTO.getEmail());
         user.setAddress(userDTO.getAddress());
         userRepository.save(user);
+        List<String> avatar = fileUtil.uploadFile(List.of(userDTO.getAvatar()));
         if(!avatar.isEmpty()){
-            user.setAvatar(avatar);
+            user.setAvatar(avatar.get(0));
         }
         userRepository.save(user);
         return UserResponse.fromUser(user);
@@ -258,7 +258,7 @@ public class UserServiceImpl implements UserService {
         else{
             ForgotPassword forgotPassword = existsForgotPassword.get();
             forgotPassword.setOtp(otp);
-            forgotPassword.setOtpExpirationDate(LocalDateTime.now().plusMinutes(1));
+            forgotPassword.setOtpExpirationDate(LocalDateTime.now().plusMinutes(5));
             forgotPasswordRepository.save(forgotPassword);
         }
         // Send mail
