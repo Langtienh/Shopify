@@ -20,4 +20,9 @@ public class Attribute {
     @Column(name = "name", unique = true)
     private String name;
 
+    @Column(name = "label")
+    private String label;
+
+    @Column(name = "slug")
+    private String slug;
 }

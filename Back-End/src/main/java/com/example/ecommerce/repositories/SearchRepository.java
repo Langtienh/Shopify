@@ -41,7 +41,8 @@ public class SearchRepository {
      * api/v1/products?brand=iphone&category=smartphone&search=name:iphone,price>25000000&page=1&limit=10&sort=price:desc
      * */
     public PageResponse searchProduct(
-            int page, int limit, String brand,String category, String[] search, String... sort) {
+            int page, int limit, String brand,String category, String[] search, boolean active,
+            String... sort) {
         if(StringUtils.hasLength(brand) && brandRepository.findByName(brand) == null)
             throw new ResourceNotFoundException("Brand not found");
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
@@ -53,7 +54,7 @@ public class SearchRepository {
         List<Order> orders = new ArrayList<>();
         try{
             // Lấy ra các product có active = true
-            predicates.add(builder.equal(pRoot.get("active"), true));
+            predicates.add(builder.equal(pRoot.get("active"), active));
             // Brand
             if(StringUtils.hasLength(brand)){
                 Join<Product, Brand> bJoin = pRoot.join("brand");
@@ -124,8 +125,8 @@ public class SearchRepository {
                     }
                     else{
                         Join<Product, ProductAttribute> paJoin = pRoot.join("productAttributes");
-                        predicates.add(builder.equal(paJoin.get("attribute").get("name"), key));
-                        predicates.add(builder.equal(paJoin.get("value"), value));
+                        predicates.add(builder.equal(paJoin.get("attribute").get("slug"), key));
+                        predicates.add(builder.equal(paJoin.get("slug"), value));
                     }
                 }
             }

@@ -30,10 +30,12 @@ public class ProductController {
             @RequestParam(required = false) String brand,
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String[] search,
+            @RequestParam(defaultValue = "true") boolean active,
             @RequestParam(required = false) String... sort
+
     ){
         PageResponse pageResponse
-                = productService.searchProduct(page, limit, brand,category, search, sort);
+                = productService.searchProduct(page, limit, brand,category, search, active, sort);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
                 .message("Get all product information successfully")
                 .status(HttpStatus.OK.value())

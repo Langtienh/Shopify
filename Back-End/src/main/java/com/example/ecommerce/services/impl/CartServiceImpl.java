@@ -51,12 +51,7 @@ public class CartServiceImpl implements CartService {
     public CartResponse createCart(CartDTO cartDTO) {
         authService.checkAuth(cartDTO.getUserId());
         User user = userService.findById(cartDTO.getUserId());
-        Optional<Cart> existsCart = cartRepository.findByUser(user);
-
-        // User chưa có giỏ hàng => Tạo mới
-        Cart cart = existsCart.orElseGet(() -> cartRepository.save(Cart.builder()
-                .user(user)
-                .build()));
+        Cart cart = cartRepository.findByUser(user).get();
 
         Product product = productService.findById(cartDTO.getProductId());
         Optional<CartItem> cartItem = cartItemRepository.findByProductAndCart(product, cart);

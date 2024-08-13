@@ -11,4 +11,6 @@ public class CategoryDTO {
 
     @NotBlank(message = "Tên danh mục không được để trống")
     private String name;
+    @NotBlank(message = "Label không được để trống")
+    private String label;
 }

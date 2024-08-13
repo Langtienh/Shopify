@@ -19,4 +19,7 @@ public class Category {
 
     @Column(name = "name", unique = true)
     private String name;
+
+    @Column(name = "label")
+    private String label;
 }

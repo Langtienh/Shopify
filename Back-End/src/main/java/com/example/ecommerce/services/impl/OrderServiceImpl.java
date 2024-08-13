@@ -2,11 +2,11 @@ package com.example.ecommerce.services.impl;
 
 import com.example.ecommerce.dtos.OrderDTO;
 import com.example.ecommerce.enums.OrderStatus;
+import com.example.ecommerce.exceptions.InvalidParamException;
 import com.example.ecommerce.exceptions.ResourceNotFoundException;
 import com.example.ecommerce.models.*;
 import com.example.ecommerce.repositories.*;
-import com.example.ecommerce.responses.OrderResponse;
-import com.example.ecommerce.responses.PageResponse;
+import com.example.ecommerce.responses.*;
 import com.example.ecommerce.services.*;
 import com.example.ecommerce.utils.EmailTemplate;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.time.YearMonth;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +32,8 @@ public class OrderServiceImpl implements OrderService {
     private final EmailService emailService;
     private final PaymentMethodService paymentMethodService;
     private final AuthService authService;
+    private final ProductRepository productRepository;
+    private final CategoryService categoryService;
 
     @Override
     @Transactional
@@ -75,6 +77,14 @@ public class OrderServiceImpl implements OrderService {
                             * (1 - (double)cartItem.getProduct().getDiscount()/100))
                     .build();
             orderDetails.add(orderDetailRepository.save(orderDetail));
+
+            // Giảm số lượng tồn kho
+            Product p = cartItem.getProduct();
+            long newStock = p.getStock() - cartItem.getQuantity();
+            if(newStock < 0)
+                throw new InvalidParamException("Số lượng tồn phải lớn hơn 0");
+            p.setStock(newStock);
+            productRepository.save(p);
         }
         cartItemRepository.deleteAll(cartItems);
 
@@ -83,7 +93,7 @@ public class OrderServiceImpl implements OrderService {
         String subject = "Cellphones Thông báo xác nhận quý khách đã đặt hàng thành công #" + order.getId();
         EmailTemplate emailTemplate = new EmailTemplate(order, orderDetails);
         String body = emailTemplate.body();
-        emailService.sendEmail(toMail,subject,body);
+//        emailService.sendEmail(toMail,subject,body);
         return OrderResponse.fromOrder(order);
     }
 
@@ -136,6 +146,15 @@ public class OrderServiceImpl implements OrderService {
         Order order = findById(id);
         order.setOrderStatus(orderStatus);
         orderRepository.save(order);
+        // Nếu hủy => trả lại số lượng tồn kho
+        if(orderStatus.equals(OrderStatus.CANCELLED)){
+            List<OrderDetail> orderDetails = orderDetailRepository.findAllByOrder(order);
+            for(OrderDetail od : orderDetails){
+                Product p = od.getProduct();
+                p.setStock(p.getStock() + od.getQuantity());
+                productRepository.save(p);
+            }
+        }
         return OrderResponse.fromOrder(order);
     }
 
@@ -151,5 +170,173 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public Order save(Order order) {
         return orderRepository.save(order);
+    }
+
+    @Override
+    public long countOrderByStatus(OrderStatus orderStatus) {
+        return orderRepository.countAllByOrderStatus(orderStatus);
+    }
+
+    @Override
+    public double totalPriceOrder() {
+        return orderRepository.totalPriceOrder();
+    }
+
+    @Override
+    public List<RevenueStatistic> getOrderByMonthInYear(int year) {
+        List<Object[]> results = orderRepository.getOrderByMonthInYear(year);
+        Map<Integer, Double> map = new HashMap<>();
+        for (Object[] result : results) {
+            Integer month = (Integer) result[0];
+            Double totalPrice = (Double) result[1];
+            map.put(month, totalPrice);
+        }
+        List<RevenueStatistic> list = new ArrayList<>();
+        for(int month = 1 ; month <= 12 ; month++){
+            Double totalPrice = map.getOrDefault(month, 0.0);
+            list.add(new RevenueStatistic(month, totalPrice));
+        }
+        return list;
+    }
+
+    @Override
+    public List<RevenueStatistic> getOrderByDayInMonth(int month, int year) {
+        List<Object[]> results = orderRepository.getOrderByDayInMonth(month, year);
+        YearMonth yearMonth = YearMonth.of(year, month);
+        int dayInMonth = yearMonth.lengthOfMonth();
+        Map<Integer, Double> map = new HashMap<>();
+        for (Object[] result : results) {
+            Integer day = (Integer) result[0];
+            Double totalPrice = (Double) result[1];
+            map.put(day, totalPrice);
+        }
+        List<RevenueStatistic> list = new ArrayList<>();
+        for(int day = 1 ; day <= dayInMonth ; day++){
+            Double totalPrice = map.getOrDefault(day, 0.0);
+            list.add(new RevenueStatistic(day, totalPrice));
+        }
+        return list;
+    }
+
+    @Override
+    public List<QuantityStatistic> findMonthlyProductQuantityByCategory(int year) {
+        List<Object[]> result = orderRepository.findMonthlyProductQuantityByCategory(year);
+        List<Category> categories = categoryService.getAllCategories();
+        Map<Integer, List<QuantityCategory>> map = new HashMap<>();
+        for(Object[] ob : result){
+            Integer month = (Integer) ob[0];
+            Long value = (Long) ob[1];
+            String key = (String) ob[2];
+            if (map.containsKey(month)) {
+                List<QuantityCategory> quantityCategories = map.get(month);
+                quantityCategories.add(new QuantityCategory(key, value));
+            } else {
+                List<QuantityCategory> newList = new ArrayList<>();
+                newList.add(new QuantityCategory(key, value));
+                map.put(month, newList);
+            }
+        }
+
+        map.forEach((key, value) -> {
+            List<QuantityCategory> quantityCategories = map.get(key);
+            for(Category category : categories){
+                if(!quantityCategories
+                        .stream()
+                        .map(QuantityCategory::getKey)
+                        .toList()
+                        .contains(category.getName())){
+                    quantityCategories.add(new QuantityCategory(category.getName(), 0L));
+                }
+            }
+            map.put(key, quantityCategories);
+        });
+
+
+        for(int month = 1 ; month <= 12 ; month++){
+            if(!map.containsKey(month)){
+                List<QuantityCategory> quantityCategories = new ArrayList<>();
+                for(Category category : categories){
+                    quantityCategories.add(new QuantityCategory(category.getName(), 0L));
+                }
+                map.put(month, quantityCategories);
+            }
+        }
+
+        List<QuantityStatistic> quantityStatistics = new ArrayList<>();
+        map.forEach((key, value) -> {
+            List<QuantityCategory> quantityCategories = map.get(key);
+            quantityCategories = quantityCategories.stream()
+                    .sorted(Comparator.comparing(QuantityCategory::getKey))
+                    .toList();
+            long total = quantityCategories.stream().mapToLong(QuantityCategory::getValue).sum();
+            quantityStatistics.add(QuantityStatistic.builder()
+                            .date(key)
+                            .total(total)
+                            .list(quantityCategories)
+                    .build());
+        });
+        return quantityStatistics;
+    }
+
+    @Override
+    public List<QuantityStatistic> findDailyProductQuantityByCategory(int month, int year) {
+        List<Object[]> result = orderRepository.findDailyProductQuantityByCategory(month, year);
+        List<Category> categories = categoryService.getAllCategories();
+        Map<Integer, List<QuantityCategory>> map = new HashMap<>();
+        YearMonth yearMonth = YearMonth.of(year, month);
+        int dayInMonth = yearMonth.lengthOfMonth();
+
+        for(Object[] ob : result){
+            Integer day = (Integer) ob[0];
+            Long value = (Long) ob[1];
+            String key = (String) ob[2];
+            if (map.containsKey(day)) {
+                List<QuantityCategory> quantityCategories = map.get(day);
+                quantityCategories.add(new QuantityCategory(key, value));
+            } else {
+                List<QuantityCategory> newList = new ArrayList<>();
+                newList.add(new QuantityCategory(key, value));
+                map.put(day, newList);
+            }
+        }
+
+        map.forEach((key, value) -> {
+            List<QuantityCategory> quantityCategories = map.get(key);
+            for(Category category : categories){
+                if(!quantityCategories
+                        .stream()
+                        .map(QuantityCategory::getKey)
+                        .toList()
+                        .contains(category.getName())){
+                    quantityCategories.add(new QuantityCategory(category.getName(), 0L));
+                }
+            }
+            map.put(key, quantityCategories);
+        });
+
+        for(int day = 1 ; day <= dayInMonth ; day++){
+            if(!map.containsKey(day)){
+                List<QuantityCategory> quantityCategories = new ArrayList<>();
+                for(Category category : categories){
+                    quantityCategories.add(new QuantityCategory(category.getName(), 0L));
+                }
+                map.put(day, quantityCategories);
+            }
+        }
+
+        List<QuantityStatistic> quantityStatistics = new ArrayList<>();
+        map.forEach((key, value) -> {
+            List<QuantityCategory> quantityCategories = map.get(key);
+            quantityCategories = quantityCategories.stream()
+                    .sorted(Comparator.comparing(QuantityCategory::getKey))
+                    .toList();
+            long total = quantityCategories.stream().mapToLong(QuantityCategory::getValue).sum();
+            quantityStatistics.add(QuantityStatistic.builder()
+                    .date(key)
+                    .total(total)
+                    .list(quantityCategories)
+                    .build());
+        });
+        return quantityStatistics;
     }
 }
