@@ -114,7 +114,27 @@ export const resetPassword = async (newPassword: string) => {
   }
 };
 
-export const updatePassword = async () => {};
+export const updatePassword = async (
+  oldPassword: string,
+  newPassword: string
+) => {
+  try {
+    await checkToken();
+    const { userId, token } = getToken();
+    await put(
+      `users/change-password/${userId}`,
+      { oldPassword, newPassword },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return { message: "Đổi mật khẩu thành công", isSucsess: true };
+  } catch {
+    return { message: "Mật khẩu không đúng", isSucsess: false };
+  }
+};
 
 export const revalidatePathTo = (path: string) => {
   revalidatePath(path);

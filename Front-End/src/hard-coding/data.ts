@@ -229,8 +229,8 @@ export const NavSmemverData = [
 
   {
     icon: "/images/smember/user-info.svg",
-    label: "Tài khoản của bạn",
-    link: "/user-info",
+    label: "Đổi mật khẩu",
+    link: "/change-password",
     isNew: true,
   },
 
