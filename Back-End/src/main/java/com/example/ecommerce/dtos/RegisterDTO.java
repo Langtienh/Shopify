@@ -28,6 +28,4 @@ public class RegisterDTO {
 
     @NotBlank(message = "Địa chỉ không được để trống")
     private String address;
-
-    private MultipartFile avatar;
 }

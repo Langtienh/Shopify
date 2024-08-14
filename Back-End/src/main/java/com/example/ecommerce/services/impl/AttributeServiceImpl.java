@@ -30,7 +30,6 @@ public class AttributeServiceImpl implements AttributeService {
         Attribute attribute = Attribute.builder()
                 .name(attributeDTO.getName())
                 .label(attributeDTO.getLabel())
-                .slug(attributeDTO.getSlug())
                 .build();
         return attributeRepository.save(attribute);
     }
@@ -70,7 +69,6 @@ public class AttributeServiceImpl implements AttributeService {
         Attribute attribute = getAttributeById(id);
         attribute.setName(attributeDTO.getName());
         attribute.setLabel(attribute.getLabel());
-        attribute.setSlug(attribute.getSlug());
         return attributeRepository.save(attribute);
     }
 

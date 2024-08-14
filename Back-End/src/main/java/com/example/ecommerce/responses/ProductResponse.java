@@ -1,5 +1,8 @@
 package com.example.ecommerce.responses;
 
+import com.example.ecommerce.dtos.ProductAttributeDTO;
+import com.example.ecommerce.models.Brand;
+import com.example.ecommerce.models.Category;
 import com.example.ecommerce.models.Product;
 import com.example.ecommerce.models.ProductAttribute;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -10,6 +13,7 @@ import lombok.*;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -28,14 +32,14 @@ public class ProductResponse {
     private String image;
     private Double discountForMember;
     private boolean active;
-    private String brand;
-    private String category;
+    private Brand brand;
+    private Category category;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Map<String, String> attributes;
+    private List<ProductAttributeDTO> attributes;
 
     public static ProductResponse fromProduct(Product p, double avgRate,
                                               List<ProductAttribute> productAttributes){
-        ProductResponse productResponse = ProductResponse.builder()
+        return ProductResponse.builder()
                 .id(p.getId())
                 .name(p.getName())
                 .price(p.getPrice())
@@ -47,16 +51,14 @@ public class ProductResponse {
                 .image(p.getImage())
                 .discountForMember(p.getDiscountForMember())
                 .active(p.isActive())
-                .brand(p.getBrand().getName())
-                .category(p.getCategory().getName())
+                .brand(p.getBrand())
+                .category(p.getCategory())
+                .attributes(productAttributes.stream()
+                        .map(pa -> ProductAttributeDTO.builder()
+                                .attribute(pa.getAttribute().getName())
+                                .value(pa.getValue())
+                                .build())
+                        .toList())
                 .build();
-        if(productAttributes != null){
-            Map<String,String> attributes = new LinkedHashMap<>();
-            for(ProductAttribute pa : productAttributes){
-                attributes.put(pa.getAttribute().getName(), pa.getValue());
-            }
-            productResponse.setAttributes(attributes);
-        }
-        return productResponse;
     }
 }

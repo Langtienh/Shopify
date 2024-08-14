@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.*;
 public class UserController{
     private final UserService userService;
 
-    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ResponseSuccess> createUser(@Valid @ModelAttribute RegisterDTO registerDTO){
+    @PostMapping(value = "/register")
+    public ResponseEntity<ResponseSuccess> createUser(@Valid @RequestBody RegisterDTO registerDTO){
         userService.createUser(registerDTO);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
                 .message("Create user successfully")
@@ -115,10 +115,10 @@ public class UserController{
                 .build());
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseSuccess> updateUser(@PathVariable("id") long id,
-                                                      @Valid @ModelAttribute UserDTO userDTO){
+                                                      @Valid @RequestBody UserDTO userDTO){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
                 .message("Update user successfully")
                 .status(HttpStatus.ACCEPTED.value())

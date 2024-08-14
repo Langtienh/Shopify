@@ -20,9 +20,6 @@ public class ProductAttribute {
     @Column(name = "value")
     private String value;
 
-    @Column(name = "slug")
-    private String slug;
-
     @ManyToOne
     @JoinColumn(name = "attribute_id")
     private Attribute attribute;

@@ -60,9 +60,9 @@ public class FileUtil {
         }
         for(MultipartFile file : files){
             if(file != null){
-                String contentType = file.getContentType();
-                if (contentType == null || !contentType.startsWith("image/")) {
-                    throw new InvalidFileTypeException("File is not a valid image.");
+                String originalFilename = file.getOriginalFilename();
+                if (originalFilename == null || !(originalFilename.endsWith(".jpg") || originalFilename.endsWith(".png"))) {
+                    throw new InvalidFileTypeException("Chỉ được phép sử dụng file ảnh có đuôi .jpg và .png");
                 }
             }
         }

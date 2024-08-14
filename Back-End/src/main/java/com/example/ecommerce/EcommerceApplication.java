@@ -4,6 +4,7 @@ import com.example.ecommerce.models.Product;
 import com.example.ecommerce.repositories.OrderRepository;
 import com.example.ecommerce.services.OrderService;
 import io.github.cdimascio.dotenv.Dotenv;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -70,6 +71,12 @@ public class EcommerceApplication {
 //            }
 //            List<?> result = orderService.findMonthlyProductQuantityByCategory(2024);
 //            System.out.println("ok");
+//            String a = "màn hình";
+//            // Chuyển đổi các ký tự có dấu thành không có dấu
+//            a = StringUtils.stripAccents(a);
+//            // Thay thế khoảng trắng bằng dấu gạch nối
+//            a = a.replace(" ", "-");
+//            System.out.println(a);  // Kết quả: "man-hinh"
         };
     }
 }

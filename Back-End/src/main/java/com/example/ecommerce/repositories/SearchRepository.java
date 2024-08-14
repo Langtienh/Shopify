@@ -7,6 +7,7 @@ import com.example.ecommerce.repositories.custom.ProductCustom;
 import com.example.ecommerce.repositories.custom.SearchProduct;
 import com.example.ecommerce.responses.PageResponse;
 import com.example.ecommerce.responses.ProductResponse;
+import com.example.ecommerce.utils.StringUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.*;
@@ -125,8 +126,9 @@ public class SearchRepository {
                     }
                     else{
                         Join<Product, ProductAttribute> paJoin = pRoot.join("productAttributes");
-                        predicates.add(builder.equal(paJoin.get("attribute").get("slug"), key));
-                        predicates.add(builder.equal(paJoin.get("slug"), value));
+//                        Expression<String> exp1 = builder.function("LOWER")
+                        predicates.add(builder.equal(paJoin.get("attribute").get("label"), key));
+                        predicates.add(builder.equal(paJoin.get("value"), value));
                     }
                 }
             }

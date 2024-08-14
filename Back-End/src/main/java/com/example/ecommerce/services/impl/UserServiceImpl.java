@@ -42,7 +42,6 @@ public class UserServiceImpl implements UserService {
     private final ForgotPasswordRepository forgotPasswordRepository;
     private final EmailService emailService;
     private final CartRepository cartRepository;
-    private final FileUtil fileUtil;
     @Value("${jwt.refreshExpiration}")
     private int refreshExpiration;
     @Override
@@ -57,11 +56,6 @@ public class UserServiceImpl implements UserService {
                 .address(registerDTO.getAddress())
                 .active(true)
                 .build();
-        userRepository.save(user);
-        List<String> avatar = fileUtil.uploadFile(List.of(registerDTO.getAvatar()));
-        if(!avatar.isEmpty()){
-            user.setAvatar(avatar.get(0));
-        }
         userRepository.save(user);
         Cart cart = Cart.builder()
                 .user(user)
@@ -103,11 +97,6 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setEmail(userDTO.getEmail());
         user.setAddress(userDTO.getAddress());
-        userRepository.save(user);
-        List<String> avatar = fileUtil.uploadFile(List.of(userDTO.getAvatar()));
-        if(!avatar.isEmpty()){
-            user.setAvatar(avatar.get(0));
-        }
         userRepository.save(user);
         return UserResponse.fromUser(user);
     }

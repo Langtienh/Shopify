@@ -62,9 +62,9 @@ public class ProductController {
                 .build());
     }
 
-    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<ResponseSuccess> createProduct(@ModelAttribute @Valid ProductDTO productDTO){
+    public ResponseEntity<ResponseSuccess> createProduct(@RequestBody @Valid ProductDTO productDTO){
 
         ProductResponse productResponse = productService.createProduct(productDTO);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
@@ -73,10 +73,10 @@ public class ProductController {
                 .data(productResponse)
                 .build());
     }
-    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseSuccess> updateProduct(@PathVariable("id") long id,
-                                                         @ModelAttribute @Valid ProductDTO productDTO){
+                                                         @RequestBody @Valid ProductDTO productDTO){
         ProductResponse productResponse = productService.updateProduct(id,productDTO);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
                 .message("Update product successfully")

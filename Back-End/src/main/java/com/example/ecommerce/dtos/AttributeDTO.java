@@ -16,6 +16,4 @@ public class AttributeDTO {
     private String name;
     @NotBlank(message = "Label không được để trống")
     private String label;
-    @NotBlank(message = "Slug không được để trống")
-    private String slug;
 }

@@ -16,14 +16,12 @@ import java.util.stream.Collectors;
 public class AttributeResponse {
     private String name;
     private String label;
-    private String slug;
     private List<ProductAttributeResponse> values;
 
     public static AttributeResponse fromAttribute(Attribute attribute, List<ProductAttribute> productAttributes){
         return AttributeResponse.builder()
                 .name(attribute.getName())
                 .label(attribute.getLabel())
-                .slug(attribute.getSlug())
                 .values(productAttributes.stream()
                         .map(ProductAttributeResponse::fromProductAttribute)
                         .collect(Collectors.toMap(

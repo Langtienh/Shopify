@@ -1,5 +1,6 @@
 package com.example.ecommerce.services.impl;
 
+import com.example.ecommerce.dtos.ProductAttributeDTO;
 import com.example.ecommerce.dtos.ProductDTO;
 import com.example.ecommerce.exceptions.InvalidFileTypeException;
 import com.example.ecommerce.exceptions.ResourceNotFoundException;
@@ -32,7 +33,6 @@ public class ProductServiceImpl implements ProductService {
     private final SearchRepository searchRepository;
     private final CategoryService categoryService;
     private final CommentRepository commentRepository;
-    private final FileUtil fileUtil;
     @Override
     public PageResponse searchProduct(
             int page, int limit, String brand,String category, String[] search, boolean active,
@@ -90,20 +90,18 @@ public class ProductServiceImpl implements ProductService {
                 .brand(brand)
                 .category(category)
                 .build());
-        List<String> image = fileUtil.uploadFile(List.of(productDTO.getImage()));
-        if(!image.isEmpty()){
-            product.setImage(image.get(0));
-        }
         List<ProductAttribute> productAttributes = new ArrayList<>();
-        productDTO.getAttributes().forEach((key, value) -> {
-            Attribute attribute = attributeRepository.findByName(key);
-            ProductAttribute productAttribute = ProductAttribute.builder()
-                    .attribute(attribute)
-                    .product(product)
-                    .value(value)
-                    .build();
-            productAttributes.add(productAttributeRepository.save(productAttribute));
-        });
+        if(productDTO.getAttributes() != null){
+            for(ProductAttributeDTO pad : productDTO.getAttributes()){
+                Attribute attribute = attributeRepository.findByName(pad.getAttribute());
+                ProductAttribute productAttribute = ProductAttribute.builder()
+                        .attribute(attribute)
+                        .product(product)
+                        .value(pad.getValue())
+                        .build();
+                productAttributes.add(productAttributeRepository.save(productAttribute));
+            }
+        }
         return ProductResponse.fromProduct(product,
                 calcAvgRate(commentRepository.findAllByProduct(product)),
                 productAttributes);
@@ -115,10 +113,6 @@ public class ProductServiceImpl implements ProductService {
         Product product = findById(id);
         Brand brand = brandService.getBrandById(productDTO.getBrandId());
         Category category = categoryService.getCategoryById(productDTO.getCategoryId());
-        List<String> image = fileUtil.uploadFile(List.of(productDTO.getImage()));
-        if(!image.isEmpty()){
-            product.setImage(image.get(0));
-        }
         product.setName(productDTO.getName());
         product.setPrice(productDTO.getPrice());
         product.setDiscount(productDTO.getDiscount());
@@ -130,15 +124,15 @@ public class ProductServiceImpl implements ProductService {
         product.setCategory(category);
         productRepository.save(product);
         List<ProductAttribute> productAttributes = new ArrayList<>();
-        productDTO.getAttributes().forEach((key, value) -> {
-            Attribute attribute = attributeRepository.findByName(key);
-            ProductAttribute productAttribute =
-                    productAttributeRepository.findByProductAndAttribute(product, attribute);
-            if(!value.isEmpty()){
-                productAttribute.setValue(value);
+        if(productDTO.getAttributes() != null){
+            for(ProductAttributeDTO pad : productDTO.getAttributes()){
+                Attribute attribute = attributeRepository.findByName(pad.getAttribute());
+                ProductAttribute productAttribute =
+                        productAttributeRepository.findByProductAndAttribute(product, attribute);
+                productAttribute.setValue(pad.getValue());
+                productAttributes.add(productAttributeRepository.save(productAttribute));
             }
-            productAttributes.add(productAttributeRepository.save(productAttribute));
-        });
+        }
         return ProductResponse.fromProduct(product,
                 calcAvgRate(commentRepository.findAllByProduct(product)), productAttributes);
     }
