@@ -13,6 +13,7 @@ import com.example.ecommerce.services.CategoryService;
 import com.example.ecommerce.services.CloudinaryService;
 import com.example.ecommerce.services.ProductService;
 import com.example.ecommerce.utils.FileUtil;
+import com.example.ecommerce.utils.StringUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -98,6 +99,7 @@ public class ProductServiceImpl implements ProductService {
                         .attribute(attribute)
                         .product(product)
                         .value(pad.getValue())
+                        .slug(StringUtil.normalizeString(pad.getValue()))
                         .build();
                 productAttributes.add(productAttributeRepository.save(productAttribute));
             }
@@ -130,6 +132,7 @@ public class ProductServiceImpl implements ProductService {
                 ProductAttribute productAttribute =
                         productAttributeRepository.findByProductAndAttribute(product, attribute);
                 productAttribute.setValue(pad.getValue());
+                productAttribute.setSlug(StringUtil.normalizeString(pad.getValue()));
                 productAttributes.add(productAttributeRepository.save(productAttribute));
             }
         }

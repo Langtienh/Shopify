@@ -22,4 +22,7 @@ public class Attribute {
 
     @Column(name = "label")
     private String label;
+
+    @Column(name = "slug")
+    private String slug;
 }

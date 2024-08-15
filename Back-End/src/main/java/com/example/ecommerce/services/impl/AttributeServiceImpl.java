@@ -12,6 +12,7 @@ import com.example.ecommerce.repositories.CategoryRepository;
 import com.example.ecommerce.repositories.ProductAttributeRepository;
 import com.example.ecommerce.responses.AttributeResponse;
 import com.example.ecommerce.services.AttributeService;
+import com.example.ecommerce.utils.StringUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,7 @@ public class AttributeServiceImpl implements AttributeService {
         Attribute attribute = Attribute.builder()
                 .name(attributeDTO.getName())
                 .label(attributeDTO.getLabel())
+                .slug(StringUtil.normalizeString(attributeDTO.getLabel()))
                 .build();
         return attributeRepository.save(attribute);
     }
@@ -69,6 +71,7 @@ public class AttributeServiceImpl implements AttributeService {
         Attribute attribute = getAttributeById(id);
         attribute.setName(attributeDTO.getName());
         attribute.setLabel(attribute.getLabel());
+        attribute.setSlug(StringUtil.normalizeString(attributeDTO.getLabel()));
         return attributeRepository.save(attribute);
     }
 
