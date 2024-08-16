@@ -57,6 +57,7 @@ public class ProductResponse {
                         .map(pa -> ProductAttributeDTO.builder()
                                 .attribute(pa.getAttribute().getName())
                                 .value(pa.getValue())
+                                .label(pa.getAttribute().getLabel())
                                 .build())
                         .toList())
                 .build();

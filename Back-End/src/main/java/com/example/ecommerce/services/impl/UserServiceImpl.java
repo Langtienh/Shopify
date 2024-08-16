@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -108,6 +109,8 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new BadCredentialsException("Invalid Username or Password"));
         if(!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword()))
             throw new BadCredentialsException("Invalid Username or Password");
+        if(!user.isEnabled())
+            throw new DisabledException("User account is disabled");
         String token = jwtService.generateToken(user);
         boolean isMobile = request.getHeader("User-Agent").equals("mobile");
         Token newToken =tokenService.addToken(user, token, isMobile);

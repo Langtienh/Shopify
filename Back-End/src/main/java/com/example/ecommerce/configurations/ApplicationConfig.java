@@ -1,12 +1,14 @@
 package com.example.ecommerce.configurations;
 
 import com.example.ecommerce.exceptions.ResourceNotFoundException;
+import com.example.ecommerce.models.User;
 import com.example.ecommerce.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -22,8 +24,16 @@ public class ApplicationConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> userRepository.findByPhone(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        return username -> {
+            User user = userRepository.findByPhone(username)
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+            if (!user.isEnabled()) {
+                throw new DisabledException("User account is disabled");
+            }
+
+            return user;
+        };
     }
     @Bean
     public PasswordEncoder passwordEncoder(){

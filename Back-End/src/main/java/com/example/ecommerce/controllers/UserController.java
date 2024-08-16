@@ -116,7 +116,7 @@ public class UserController{
     }
 
     @PutMapping(value = "/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("#id == authentication.principal.id or hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseSuccess> updateUser(@PathVariable("id") long id,
                                                       @Valid @RequestBody UserDTO userDTO){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
@@ -138,7 +138,7 @@ public class UserController{
     }
 
     @PutMapping("/change-password/{id}")
-    @PreAuthorize("#id == authentication.principal.id")
+    @PreAuthorize("#id == authentication.principal.id or hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseSuccess> changePassword(@PathVariable long id,
            @Valid @RequestBody ChangePasswordDTO changePasswordDTO){
         return ResponseEntity.ok().body(ResponseSuccess.builder()

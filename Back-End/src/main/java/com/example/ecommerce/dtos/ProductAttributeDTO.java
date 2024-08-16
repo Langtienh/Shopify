@@ -13,4 +13,5 @@ public class ProductAttributeDTO {
     private String attribute;
     @NotBlank(message = "Value không được để trống")
     private String value;
+    private String label;
 }

@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -176,6 +177,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(
                 ResponseError.builder()
                         .status(HttpStatus.BAD_REQUEST.value())
+                        .message(e.getMessage())
+                        .build()
+        );
+    }
+    @ExceptionHandler(DisabledException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<ResponseError> handleDisabledException(DisabledException e){
+        return ResponseEntity.status(401).body(
+                ResponseError.builder()
+                        .status(HttpStatus.UNAUTHORIZED.value())
                         .message(e.getMessage())
                         .build()
         );

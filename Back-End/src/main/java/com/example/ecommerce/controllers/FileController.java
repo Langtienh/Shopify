@@ -17,7 +17,7 @@ public class FileController {
     private final FileService fileService;
 
     @PostMapping(value = "/upload/user/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("#id == authentication.principal.id")
+    @PreAuthorize("#id == authentication.principal.id or hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseSuccess> uploadUserFile(@PathVariable("id") long id,
                                                       @ModelAttribute FileDTO fileDTO){
         fileService.uploadUserFile(fileDTO, id);

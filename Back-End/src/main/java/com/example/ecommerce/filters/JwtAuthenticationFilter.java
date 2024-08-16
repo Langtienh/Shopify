@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,8 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 String token = authHeader.substring(7); // Lấy ra token
                 if (!tokenRepository.existsByToken(token)) {
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    response.getWriter().write("Invalid token");
+                    sendErrorResponse(response, "Invalid token");
                     return;
                 }
                 String username = jwtService.extractUsername(token); // Lấy username từ token
@@ -58,12 +58,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
             filterChain.doFilter(request, response);
         } catch (ExpiredJwtException e) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Token expired");
+            sendErrorResponse(response, "Token expired");
+        } catch (DisabledException e){
+            sendErrorResponse(response,"User account is disabled");
         } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Authentication failed");
+            sendErrorResponse(response, "Authentication failed");
         }
+    }
+
+    private void sendErrorResponse(HttpServletResponse response, String mess) throws IOException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        String jsonError = String.format("{\"status\": %d, \"message\": \"%s\"}", HttpServletResponse.SC_UNAUTHORIZED, mess);
+        response.getWriter().write(jsonError);;
     }
 
 }
