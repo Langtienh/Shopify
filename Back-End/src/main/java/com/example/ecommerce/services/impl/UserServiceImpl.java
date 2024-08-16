@@ -54,7 +54,6 @@ public class UserServiceImpl implements UserService {
                 .phone(registerDTO.getPhone())
                 .password(passwordEncoder.encode(registerDTO.getPassword()))
                 .email(registerDTO.getEmail())
-                .address(registerDTO.getAddress())
                 .active(true)
                 .build();
         userRepository.save(user);
@@ -95,9 +94,7 @@ public class UserServiceImpl implements UserService {
         User user = findById(id);
         user.setFullName(userDTO.getFullName());
         user.setPhone(userDTO.getPhone());
-        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setEmail(userDTO.getEmail());
-        user.setAddress(userDTO.getAddress());
         userRepository.save(user);
         return UserResponse.fromUser(user);
     }

@@ -36,9 +36,6 @@ public class User implements UserDetails {
     @Column(name = "email", unique = true)
     private String email;
 
-    @Column(name = "address")
-    private String address;
-
     @Column(name = "avatar")
     private String avatar;
 
@@ -50,6 +47,9 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<UserRole> userRoles;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Address> addresses;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return userRoles

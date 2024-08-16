@@ -26,6 +26,4 @@ public class RegisterDTO {
     @NotBlank(message = "Email không được để trống")
     private String email;
 
-    @NotBlank(message = "Địa chỉ không được để trống")
-    private String address;
 }
