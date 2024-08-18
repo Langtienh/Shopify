@@ -13,6 +13,9 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AddressDTO {
 
+    @NotBlank(message = "Tên gợi nhớ không được để trống")
+    private String name;
+
     @NotBlank(message = "Số nhà, tên đường không được để trống")
     private String detail;
 

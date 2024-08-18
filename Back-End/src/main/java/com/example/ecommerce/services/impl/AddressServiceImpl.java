@@ -29,6 +29,7 @@ public class AddressServiceImpl implements AddressService {
         User user = userService.findById(addressDTO.getUserId());
         authService.checkAuth(user.getId());
         Address address = Address.builder()
+                .name(addressDTO.getName())
                 .detail(addressDTO.getDetail())
                 .code(addressDTO.getCode())
                 .isDefault(addressDTO.isDefault())
@@ -52,6 +53,7 @@ public class AddressServiceImpl implements AddressService {
                 .orElseThrow(() -> new ResourceNotFoundException("Address not found with id = " + id));
         User user = address.getUser();
         authService.checkAuth(user.getId());
+        address.setName(addressUpdateDTO.getName());
         address.setDetail(addressUpdateDTO.getDetail());
         address.setCode(addressUpdateDTO.getCode());
         address.setDefault(addressUpdateDTO.isDefault());
