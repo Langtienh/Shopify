@@ -11,11 +11,13 @@ import {
 } from "@/components/ui/table";
 import MyPagination from "@/components/global/pagination";
 import { AddProduct } from "./button";
-
+import { shimmer } from "@/components/global/skeleton";
 export default function ProductTableSkeleton() {
   return (
     <>
-      <div className="bg-white py-3 border-y flex justify-between items-center px-3 border-t rounded-t-xl">
+      <div
+        className={`${shimmer} bg-white py-3 border-y flex justify-between items-center px-3 border-t rounded-t-xl`}
+      >
         <div className="flex">
           <AiFillProduct size={24} />
           <span className="pl-3 text-xl font-bold">Product Table</span>

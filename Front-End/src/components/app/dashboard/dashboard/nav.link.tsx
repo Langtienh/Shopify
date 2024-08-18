@@ -9,6 +9,9 @@ import { AiFillProduct } from "react-icons/ai";
 import { MdPowerSettingsNew } from "react-icons/md";
 import { signOut } from "next-auth/react";
 import { logout } from "@/services/auth";
+import { setTotalQuantity } from "@/redux/cart/slice";
+import { setWishList } from "@/redux/wish-list/slice";
+import { useAppDispatch } from "@/redux/store";
 const links = [
   { name: "Home", href: "/dashboard", icon: FaHome },
   { name: "Products", href: "/dashboard/products", icon: AiFillProduct },
@@ -54,7 +57,10 @@ export default function NavLinks() {
 }
 
 export const LogoutBtn = () => {
+  const dispatch = useAppDispatch();
   const handleLogout = async () => {
+    dispatch(setTotalQuantity(0));
+    dispatch(setWishList([]));
     await logout();
   };
   return (

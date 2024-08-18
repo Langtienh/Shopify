@@ -2,9 +2,15 @@
 import Image from "next/image";
 import { Tooltip } from "antd";
 import { logout } from "@/services/auth";
+import { useAppDispatch } from "@/redux/store";
+import { setTotalQuantity } from "@/redux/cart/slice";
+import { setWishList } from "@/redux/wish-list/slice";
 
 export const LogoutBtn = () => {
+  const dispatch = useAppDispatch();
   const handleLogout = async () => {
+    dispatch(setTotalQuantity(0));
+    dispatch(setWishList([]));
     await logout();
   };
   return (

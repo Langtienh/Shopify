@@ -56,8 +56,8 @@ export default function Page() {
       </div>
       <div className="mb-10 p-[10px]">
         <p className="text-[#777] text-[13px] text-center mb-5">
-          Hãy nhập số điện thoại/email của bạn vào bên dưới để bắt đầu quá trình
-          khôi phục mật khẩu.
+          Hãy nhập email của bạn vào bên dưới để bắt đầu quá trình khôi phục mật
+          khẩu.
         </p>
         <Form
           name="email"

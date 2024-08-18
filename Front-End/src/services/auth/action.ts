@@ -5,6 +5,7 @@ import { get, post, put } from "../axios.helper";
 import { checkToken, getToken } from "../cookies";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { signOut } from "@/auth/auth";
 
 export const login = async (input: LoginDTO) => {
   const res = await post<LoginResponse>("/users/login", input);
@@ -53,12 +54,10 @@ export const logout = async () => {
   const token = cookies().get("TOKEN")?.value;
   cookies().delete("TOKEN");
   cookies().delete("REFRESH_TOKEN");
-  cookies().delete("authjs.csrf-token");
-  cookies().delete("authjs.session-token");
   await post(`/users/logout`, {
     token,
   });
-  redirect("/login");
+  await signOut({ redirectTo: "/login" });
 };
 export const register = async (input: RegisterForm) => {
   const registerDTO: RegisterDTO = {

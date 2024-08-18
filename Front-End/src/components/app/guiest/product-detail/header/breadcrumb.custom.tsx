@@ -12,12 +12,12 @@ export default async function BreadcrumbCustom({
   const product = await getProductById(productId);
   const breadcrumb: { name: string; link: string }[] = [];
   breadcrumb.push({
-    name: product.category,
-    link: `/products/${product.category}.html`,
+    name: product.category.name,
+    link: `/products/${product.category.name}.html`,
   });
   breadcrumb.push({
-    name: product.brand,
-    link: `/products/${product.category}/${product.brand}.html`,
+    name: product.brand.name,
+    link: `/products/${product.category.name}/${product.brand.name}.html`,
   });
   breadcrumb.push({
     name: product.name,

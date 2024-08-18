@@ -1,54 +1,76 @@
 "use client";
 
 import { IUser } from "@/auth/next-auth";
-import { Checkbox } from "antd";
-import { Address } from "./address";
-import React from "react";
+import { Button, Checkbox, FormProps, Radio, Tag } from "antd";
+import React, { useEffect, useState } from "react";
 import { Form, Input } from "antd";
 import { useAppDispatch } from "@/redux/store";
 import { useRouter } from "next/navigation";
 import { updateUserInfo } from "@/redux/checkout/slice";
+import AddressForm from "@/components/global/address/form";
+import RenderIf from "@/components/global/renderif";
+import { MdNavigateNext } from "react-icons/md";
 
 type TProps = {
   user: IUser;
   checkout: string;
+  addresses: (Address & { path: string | undefined })[];
 };
 
-type formField = {
-  addressDetail: string;
-  districtCode: string;
+type FieldType = {
+  detail: string;
   email: string;
   fullName: string;
   phone: string;
+  districtCode: string;
   provinceCode: string;
   wardCode: string;
 };
-export default function UserInfo({ user, checkout }: TProps) {
+
+export default function UserInfo({ user, checkout, addresses }: TProps) {
   const [form] = Form.useForm();
   const dispath = useAppDispatch();
   const router = useRouter();
-  const onFinish = async (values: formField) => {
-    dispath(
-      updateUserInfo({
-        fullName: values.fullName,
-        email: values.email,
-        phone: values.phone,
-        address: values.addressDetail + ", " + values.wardCode,
-      })
-    );
+  const [isEditAddress, setEditAddress] = useState<boolean>(false);
+  const [path, setPath] = useState<string>("");
+
+  useEffect(() => {
+    if (!addresses.length) setEditAddress(true);
+    else {
+      const _default =
+        addresses.find((address) => address.default) || addresses[0];
+      setPath(`${_default.detail}, ${_default.code}`);
+    }
+  }, [addresses]);
+
+  const handleSubmit: FormProps<FieldType>["onFinish"] = async (values) => {
+    let address = "";
+    if (values.wardCode && values.detail)
+      address = values.detail + ", " + values.wardCode;
+    else address = path;
+    const _address = {
+      fullName: values.fullName,
+      email: values.email,
+      phone: values.phone,
+      address,
+    };
+
+    dispath(updateUserInfo(_address));
     router.push(`/cart/payment?checkout=${checkout}`);
   };
+
   const initialValues = {
     email: user.email,
     fullName: user.fullName,
     phone: user.phone,
   };
+
   return (
     <Form
       initialValues={initialValues}
       form={form}
       name="userInfo"
-      onFinish={onFinish}
+      onFinish={handleSubmit}
       scrollToFirstError
       size="large"
     >
@@ -115,12 +137,49 @@ export default function UserInfo({ user, checkout }: TProps) {
           >
             <Input type="phone" placeholder="Số điện thoại người nhận" />
           </Form.Item>
-          <Address />
-          <Form.Item
-            name="addressDetail"
-            rules={[{ required: true, message: "Vui lòng nhập địa chỉ" }]}
-          >
-            <Input placeholder="Số nhà, tên đường" />
+
+          <RenderIf renderIf={isEditAddress}>
+            <AddressForm />
+          </RenderIf>
+
+          <RenderIf renderIf={!isEditAddress}>
+            <Form.Item className="col-span-2">
+              <Radio.Group
+                value={path}
+                onChange={(e) => setPath(e.target.value)}
+              >
+                {addresses.map((address) => (
+                  <Radio
+                    key={`${address.detail}, ${address.code}`}
+                    value={`${address.detail}, ${address.code}`}
+                  >
+                    <div className="mb-4">
+                      <p>
+                        <b className="font-bold pr-5">{address.name}</b>
+                        <RenderIf renderIf={address.default}>
+                          <Tag color="red">Mặc định</Tag>
+                        </RenderIf>
+                      </p>
+                      <p className="text-sm text-gray-500">{`${address.detail}, ${address.path}`}</p>
+                    </div>
+                  </Radio>
+                ))}
+              </Radio.Group>
+            </Form.Item>
+          </RenderIf>
+
+          <Form.Item className="col-span-2 flex justify-end">
+            <Button
+              onClick={() => setEditAddress((preState) => !preState)}
+              htmlType="button"
+              type="text"
+              danger
+              iconPosition="end"
+              icon={<MdNavigateNext size={16} />}
+            >
+              <RenderIf renderIf={isEditAddress}>Chọn từ Sổ địa chỉ</RenderIf>
+              <RenderIf renderIf={!isEditAddress}>Nhập địa chỉ mới</RenderIf>
+            </Button>
           </Form.Item>
           <input
             type="text"

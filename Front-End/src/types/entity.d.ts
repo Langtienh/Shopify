@@ -9,10 +9,10 @@ type Product = {
   image: string;
   discountForMember: number;
   active: boolean;
-  brand: string;
-  category: string;
+  brand: { name: string; id: number };
+  category: { name: string; label: string; id: number };
   avgRate: number;
-  attributes: {};
+  attributes: { attribute: string; value: string }[];
 };
 
 type CartItemType = {
@@ -122,4 +122,12 @@ type AttibulteType = {
   values: { value: string; slug: string }[];
   label: string;
   slug: string;
+};
+
+type Address = {
+  id: number;
+  name: string;
+  detail: string;
+  code: string;
+  default: boolean;
 };

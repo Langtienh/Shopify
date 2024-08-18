@@ -1,5 +1,6 @@
 "use client";
 
+import BackBtn from "@/components/app/auth/btn.back";
 import { openNotification } from "@/lib/nofication";
 import { updatePassword } from "@/services/auth";
 import { Button, Form, Input, Spin } from "antd";
@@ -36,7 +37,10 @@ export default function Page() {
   };
   return (
     <>
-      <p className="text-xl font-bold">Tạo mật khẩu mới</p>
+      <div className="flex gap-5 items-center">
+        <BackBtn />
+        <p className="text-[22px] font-bold py-2">Tạo mật khẩu mới</p>
+      </div>
       <div className="py-5 flex">
         <Image
           className="mx-auto"

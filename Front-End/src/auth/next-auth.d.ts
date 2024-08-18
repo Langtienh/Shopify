@@ -8,7 +8,7 @@ interface IUser {
   phone?: string;
   id: number;
   providerId?: string;
-  address?: string;
+  address?: Address[];
   active?: boolean;
   roles?: string[];
 }

@@ -1,5 +1,6 @@
 "use server";
 
+import { IUser } from "@/auth/next-auth";
 import { post, put } from "../axios.helper";
 import { checkToken, getToken } from "../cookies";
 
@@ -14,7 +15,16 @@ export const updateStatus = async (userId: string, status: boolean) => {
     },
   });
 };
-export const updatePassword = async () => {};
-export const updateUser = async () => {};
-export const delUser = async () => {};
-export const createUser = async () => {};
+export const updateUser = async (user: {
+  fullName: string;
+  phone: string;
+  email: string;
+}) => {
+  await checkToken();
+  const { token, userId } = getToken();
+  await put(`/users/${userId}`, user, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};

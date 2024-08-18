@@ -12,9 +12,6 @@ export default function Record({ product }: { product: Product }) {
   const [showDetail, setShowDetail] = useState<boolean>(false);
   const toggle = (value: boolean) => setShowDetail(!value);
   // obj to arr
-  const keyValueArray = Object.entries(product.attributes).map(
-    ([key, value]) => ({ key, value })
-  );
   return (
     <>
       <TableRow className="hover:bg-gray-50 *:text-center *:text-nowrap">
@@ -67,7 +64,7 @@ export default function Record({ product }: { product: Product }) {
               <ul className="flex-1 grid gap-2">
                 <li>Mô tả: {product.description}</li>
                 <div className="flex *:flex-1 w-full">
-                  <li>Thương hiệu: {product.brand}</li>
+                  <li>Thương hiệu: {product.brand.name}</li>
                   <li>Giảm giá: {product.discount}%</li>
                   <li>
                     Giảm thêm cho member:{" "}
@@ -75,8 +72,10 @@ export default function Record({ product }: { product: Product }) {
                   </li>
                 </div>
                 <li className="flex *:flex-1 w-full">
-                  {keyValueArray.map((item) => (
-                    <span key={item.key}>{`${item.key}: ${item.value}`}</span>
+                  {product.attributes.map((item) => (
+                    <span
+                      key={item.attribute}
+                    >{`${item.attribute}: ${item.value}`}</span>
                   ))}
                 </li>
               </ul>

@@ -57,6 +57,7 @@ export const getProductById = async (id: number | string) => {
     throw error;
   }
 };
+
 export const getAttributesByCategory = async (
   category?: string,
   brand?: string

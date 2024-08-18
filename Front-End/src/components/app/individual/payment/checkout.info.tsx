@@ -11,7 +11,7 @@ import { IoClose } from "react-icons/io5";
 import { MdNavigateNext } from "react-icons/md";
 import { AddressInfo } from "./info";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
-import { getAddressDetail } from "@/services/vnAPI.services";
+import { getAddressDetail } from "@/services/address.helper";
 import { createInvoice, createInvoiceByVNPay } from "@/services/invoice";
 import { popCartItem } from "@/redux/cart/slice";
 
@@ -190,7 +190,7 @@ const paymentMethods = [
       <>
         VNPAY (Demo){" "}
         <Link
-          className="hover:underline"
+          className="text-blue-600 hover:text-blue-500 hover:underline"
           target="_blank"
           passHref
           href="https://sandbox.vnpayment.vn/apis/vnpay-demo/"

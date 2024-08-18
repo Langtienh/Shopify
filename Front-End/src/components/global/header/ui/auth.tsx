@@ -16,13 +16,14 @@ export const Auth = () => {
   const isLogin = session?.user && session.refreshToken;
   const user = session?.user;
   const path = usePathname();
+  const isLoginPage = path === "/login";
   useEffect(() => {
     setShow(false);
   }, [path]);
 
   return (
     <>
-      <RenderIf renderIf={isLogin}>
+      <RenderIf renderIf={isLogin && !isLoginPage}>
         <button
           onClick={() => setShow((pre) => !pre)}
           className="flex flex-col text-white items-center px-4 py-1 rounded-lg bg-white bg-opacity-30"

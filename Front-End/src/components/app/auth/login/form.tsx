@@ -55,7 +55,7 @@ const LoginForm: React.FC = () => {
 
               <Link
                 className="font-semibold text-sm text-gray-500"
-                href="/login"
+                href="/restore-password-method"
               >
                 Quên mật khẩu
               </Link>

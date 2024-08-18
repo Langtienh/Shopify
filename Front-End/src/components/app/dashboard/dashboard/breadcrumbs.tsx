@@ -1,11 +1,11 @@
 import { clsx } from "clsx";
 import Link from "next/link";
 
-interface Breadcrumb {
+type Breadcrumb = {
   label: string;
   href: string;
   active?: boolean;
-}
+};
 
 export default function Breadcrumbs({
   breadcrumbs,

@@ -1,6 +1,6 @@
 "use server";
 import { get } from "../axios.helper";
-import { getAddressDetail } from "../vnAPI.services";
+import { getAddressDetail } from "../address.helper";
 import { getToken, checkToken } from "../cookies";
 import { converPriceToVN, formatDate } from "@/lib/utils2";
 
@@ -34,6 +34,7 @@ export const getInvoiceDetailById = async (id: string | number) => {
       Authorization: `Bearer ${token}`,
     },
   });
+
   const orderDetail = await get<OrderDetailType[]>(
     `/order-details/order/${_id}`,
     {
@@ -42,7 +43,7 @@ export const getInvoiceDetailById = async (id: string | number) => {
       },
     }
   );
-  const address = await getAddressDetail(order.data.address);
+  const address = getAddressDetail(order.data.address);
   const orderDate = formatDate(order.data.orderDate);
   return {
     order: { ...order.data, address, orderDate },

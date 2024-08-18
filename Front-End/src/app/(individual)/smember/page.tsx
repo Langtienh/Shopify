@@ -2,9 +2,9 @@ import { Alert, Button, QRCode } from "antd";
 import Slider from "@/components/app/individual/smember/homePage/slider";
 import Carousels from "@/components/app/individual/smember/homePage/carousel";
 import Nav from "@/components/app/individual/smember/homePage/nav";
-import Profile from "../../../components/app/individual/smember/user.info";
+import Profile from "@/components/app/individual/smember/user.info";
 import { Suspense } from "react";
-import WishListSkeleton from "../../../components/app/individual/smember/homePage/slider/skeleton";
+import WishListSkeleton from "@/components/app/individual/smember/homePage/slider/skeleton";
 
 export default function Page() {
   return (

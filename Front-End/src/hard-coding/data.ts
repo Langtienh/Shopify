@@ -207,6 +207,13 @@ export const NavSmemverData = [
   },
 
   {
+    icon: "/images/smember/user-info.svg",
+    label: "Tài khoản của bạn",
+    link: "/user-info",
+    isNew: true,
+  },
+
+  {
     icon: "/images/smember/warranty.svg",
     label: "Tra cứu bảo hành",
     link: "/warranty",
@@ -224,13 +231,6 @@ export const NavSmemverData = [
     icon: "/images/smember/rank.svg",
     label: "Hạng thành viên",
     link: "/rank",
-    isNew: true,
-  },
-
-  {
-    icon: "/images/smember/user-info.svg",
-    label: "Đổi mật khẩu",
-    link: "/change-password",
     isNew: true,
   },
 

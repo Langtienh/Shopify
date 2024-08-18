@@ -3,14 +3,6 @@
 import RenderIf from "@/components/global/renderif";
 import { Button } from "@/components/ui/button";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Select } from "antd";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -21,8 +13,9 @@ import { RiDeleteBin6Line, RiSubtractFill } from "react-icons/ri";
 export const AddProduct = () => {
   return (
     <>
-      <Link href="/dashboard/products/create"></Link>
-      <Button>Thêm</Button>
+      <Link href="/dashboard/products/create">
+        <Button>Thêm</Button>
+      </Link>
     </>
   );
 };
@@ -34,7 +27,6 @@ export const EditProduct = ({ productId }: { productId: number }) => {
           className="text-blue-600 hover:text-blue-500 size-6"
           variant="ghost"
           size="icon"
-          // onClick={() => setEdit(true)}
         >
           <CiEdit size={20} />
         </Button>

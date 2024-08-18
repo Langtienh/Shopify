@@ -1,16 +1,3 @@
-import { getUser } from "./query";
-import {
-  updatePassword,
-  updateUser,
-  delUser,
-  createUser,
-  updateStatus,
-} from "./action";
-export {
-  updatePassword,
-  updateUser,
-  delUser,
-  createUser,
-  getUser,
-  updateStatus,
-};
+import { getUser, getMyInfo } from "./query";
+import { updateUser, updateStatus } from "./action";
+export { updateUser, getUser, updateStatus, getMyInfo };
