@@ -9,6 +9,6 @@ import lombok.*;
 @AllArgsConstructor
 public class RefreshTokenDTO {
 
-    @NotBlank(message = "RefreshToken không được để trống")
+    @NotBlank(message = "{refreshToken.valid.refreshToken}")
     private String refreshToken;
 }

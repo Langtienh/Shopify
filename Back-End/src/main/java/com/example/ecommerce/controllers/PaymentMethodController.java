@@ -3,6 +3,7 @@ package com.example.ecommerce.controllers;
 import com.example.ecommerce.dtos.PaymentMethodDTO;
 import com.example.ecommerce.responses.ResponseSuccess;
 import com.example.ecommerce.services.PaymentMethodService;
+import com.example.ecommerce.utils.Translator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ public class PaymentMethodController {
     public ResponseEntity<ResponseSuccess> createPaymentMethod(
             @Valid @RequestBody PaymentMethodDTO paymentMethodDTO){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Create payment method successfully")
+                .message(Translator.toLocale("payment_method.create.success"))
                 .status(HttpStatus.CREATED.value())
                 .data(paymentMethodService.createPaymentMethod(paymentMethodDTO))
                 .build());
@@ -30,7 +31,7 @@ public class PaymentMethodController {
     @GetMapping("/{id}")
     public ResponseEntity<ResponseSuccess> getPaymentMethodById(@PathVariable long id){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Get payment method information successfully")
+                .message(Translator.toLocale("payment_method.get_by_id.success"))
                 .status(HttpStatus.OK.value())
                 .data(paymentMethodService.getPaymentMethodById(id))
                 .build());
@@ -39,7 +40,7 @@ public class PaymentMethodController {
     @GetMapping("")
     public ResponseEntity<ResponseSuccess> getAllPaymentMethods(){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Get all payment method information successfully")
+                .message(Translator.toLocale("payment_method.get_all.success"))
                 .status(HttpStatus.OK.value())
                 .data(paymentMethodService.getAllPaymentMethods())
                 .build());
@@ -50,7 +51,7 @@ public class PaymentMethodController {
     public ResponseEntity<ResponseSuccess> updatePaymentMethod(@PathVariable long id,
                                                                @Valid @RequestBody PaymentMethodDTO paymentMethodDTO){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Update payment method successfully")
+                .message(Translator.toLocale("payment_method.update.success"))
                 .status(HttpStatus.OK.value())
                 .data(paymentMethodService.updatePaymentMethod(id, paymentMethodDTO))
                 .build());
@@ -61,7 +62,7 @@ public class PaymentMethodController {
     public ResponseEntity<ResponseSuccess> updatePaymentMethodStatus(@PathVariable("id") long id,
                                                                @PathVariable("status") boolean status){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Update payment method status successfully")
+                .message(Translator.toLocale("payment_method.update_status.success"))
                 .status(HttpStatus.OK.value())
                 .data(paymentMethodService.updatePaymentMethodStatus(id, status))
                 .build());

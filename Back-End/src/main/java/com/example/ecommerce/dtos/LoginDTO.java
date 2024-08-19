@@ -9,9 +9,9 @@ import lombok.*;
 @AllArgsConstructor
 public class LoginDTO {
 
-    @NotBlank(message = "Điện thoại không được để trống")
+    @NotBlank(message = "{login.valid.phone}")
     private String phone;
 
-    @NotBlank(message = "Mật khẩu không được để trống")
+    @NotBlank(message = "{login.valid.password}")
     private String password;
 }

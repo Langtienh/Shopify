@@ -12,9 +12,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CartItemDTO {
-    @NotNull(message = "ID sản phẩm không được rỗng")
+    @NotNull(message = "{cart.valid.productId}")
     private Long productId;
 
-    @NotNull(message = "Số lượng không được rỗng")
+    @NotNull(message = "{cart.valid.quantity}")
     private Long quantity;
 }

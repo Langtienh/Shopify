@@ -3,6 +3,7 @@ package com.example.ecommerce.controllers;
 import com.example.ecommerce.dtos.WishListDTO;
 import com.example.ecommerce.responses.ResponseSuccess;
 import com.example.ecommerce.services.WishListService;
+import com.example.ecommerce.utils.Translator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ public class WishListController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ResponseSuccess> createWishList(@Valid @RequestBody WishListDTO wishListDTO){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Create wish-list successfully")
+                .message(Translator.toLocale("wish_list.create.success"))
                 .status(HttpStatus.CREATED.value())
                 .data(wishListService.createWishList(wishListDTO))
                 .build());
@@ -30,7 +31,7 @@ public class WishListController {
     @PreAuthorize("#uid == authentication.principal.id")
     public ResponseEntity<ResponseSuccess> getAllWishListsByUser(@PathVariable long uid){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Get all wish-list by user information successfully")
+                .message(Translator.toLocale("wish_list.get_all_by_user.success"))
                 .status(HttpStatus.OK.value())
                 .data(wishListService.getAllWishListsByUser(uid))
                 .build());
@@ -41,7 +42,7 @@ public class WishListController {
     public ResponseEntity<ResponseSuccess> deleteOne(@PathVariable long productId){
         wishListService.deleteOne(productId);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Delete wish-list successfully")
+                .message(Translator.toLocale("wish_list.delete.success"))
                 .status(HttpStatus.NO_CONTENT.value())
                 .build());
     }
@@ -51,7 +52,7 @@ public class WishListController {
     public ResponseEntity<ResponseSuccess> deleteAllByUser(@PathVariable long uid){
         wishListService.deleteAll(uid);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Delete all wish-list by user successfully")
+                .message(Translator.toLocale("wish_list.delete_all_by_user.success"))
                 .status(HttpStatus.NO_CONTENT.value())
                 .build());
     }

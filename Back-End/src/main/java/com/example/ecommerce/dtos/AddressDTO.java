@@ -13,17 +13,17 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AddressDTO {
 
-    @NotBlank(message = "Tên gợi nhớ không được để trống")
+    @NotBlank(message = "{address.valid.name}")
     private String name;
 
-    @NotBlank(message = "Số nhà, tên đường không được để trống")
+    @NotBlank(message = "{address.valid.detail}")
     private String detail;
 
-    @NotBlank(message = "Code không được để trống")
+    @NotBlank(message = "{address.valid.code}")
     private String code;
 
     private boolean isDefault;
 
-    @NotNull(message = "User ID không được rỗng")
+    @NotNull(message = "{address.valid.userId}")
     private Long userId;
 }

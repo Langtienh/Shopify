@@ -7,6 +7,7 @@ import com.example.ecommerce.responses.OrderResponse;
 import com.example.ecommerce.responses.PageResponse;
 import com.example.ecommerce.responses.ResponseSuccess;
 import com.example.ecommerce.services.OrderService;
+import com.example.ecommerce.utils.Translator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,7 @@ public class OrderController {
     public ResponseEntity<ResponseSuccess> createOrder(@Valid @RequestBody OrderDTO orderDTO){
         OrderResponse orderResponse = orderService.createOrder(orderDTO);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Create order successfully")
+                .message(Translator.toLocale("order.create.success"))
                 .status(HttpStatus.CREATED.value())
                 .data(orderResponse)
                 .build());
@@ -38,7 +39,7 @@ public class OrderController {
                                                         @RequestParam(defaultValue = "5") int limit){
         PageResponse pageResponse = orderService.getAllOrders(page, limit);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Get all orders information successfully")
+                .message(Translator.toLocale("order.get_all.success"))
                 .status(HttpStatus.OK.value())
                 .data(pageResponse)
                 .build());
@@ -49,7 +50,7 @@ public class OrderController {
     public ResponseEntity<ResponseSuccess> getOrderById(@PathVariable long id){
         OrderResponse orderResponse = orderService.getOrderById(id);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Get order information successfully")
+                .message(Translator.toLocale("order.get_by_id.success"))
                 .status(HttpStatus.OK.value())
                 .data(orderResponse)
                 .build());
@@ -62,7 +63,7 @@ public class OrderController {
                                                               @RequestParam(defaultValue = "5") int limit){
         PageResponse pageResponse = orderService.getOrderByUser(uid, page, limit);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Get all orders by user information successfully")
+                .message(Translator.toLocale("order.get_all_by_user.success"))
                 .status(HttpStatus.OK.value())
                 .data(pageResponse)
                 .build());
@@ -73,7 +74,7 @@ public class OrderController {
     public ResponseEntity<ResponseSuccess> deleteOrder(@PathVariable long id){
         orderService.deleteOrder(id);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Delete order successfully")
+                .message(Translator.toLocale("order.delete.success"))
                 .status(HttpStatus.NO_CONTENT.value())
                 .build());
     }
@@ -84,7 +85,7 @@ public class OrderController {
     public ResponseEntity<ResponseSuccess> updateOrderStatus(@PathVariable long id,
                                                              @RequestParam String status){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Update order status successfully")
+                .message(Translator.toLocale("order.update_status.success"))
                 .status(HttpStatus.OK.value())
                 .data(orderService.updateOrderStatus(id, OrderStatus.valueOf(status.toUpperCase())))
                 .build());
@@ -95,7 +96,7 @@ public class OrderController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseSuccess> countOrderByOrderStatus(@PathVariable String status){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Count order by order status")
+                .message(Translator.toLocale("order.count_order.success"))
                 .status(HttpStatus.OK.value())
                 .data(orderService.countOrderByStatus(OrderStatus.valueOf(status)))
                 .build());
@@ -105,7 +106,7 @@ public class OrderController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseSuccess> totalOrder(){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Total order")
+                .message(Translator.toLocale("order.total_order.success"))
                 .status(HttpStatus.OK.value())
                 .data(orderService.totalPriceOrder())
                 .build());
@@ -115,7 +116,7 @@ public class OrderController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseSuccess> getOrderByMonthInYear(@PathVariable int year){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Success")
+                .message(Translator.toLocale("order.revenue.success"))
                 .status(HttpStatus.OK.value())
                 .data(orderService.getOrderByMonthInYear(year))
                 .build());
@@ -126,7 +127,7 @@ public class OrderController {
     public ResponseEntity<ResponseSuccess> getOrderByMonthInYear(@PathVariable("year") int year,
                                                                  @PathVariable("month") int month){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Success")
+                .message(Translator.toLocale("order.revenue.success"))
                 .status(HttpStatus.OK.value())
                 .data(orderService.getOrderByDayInMonth(month, year))
                 .build());
@@ -137,7 +138,7 @@ public class OrderController {
     public ResponseEntity<ResponseSuccess> findMonthlyProductQuantityByCategory(
             @PathVariable int year){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Success")
+                .message(Translator.toLocale("order.revenue.success"))
                 .status(HttpStatus.OK.value())
                 .data(orderService.findMonthlyProductQuantityByCategory(year))
                 .build());
@@ -149,7 +150,7 @@ public class OrderController {
             @PathVariable("year") int year,
             @PathVariable("month") int month){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Success")
+                .message(Translator.toLocale("order.revenue.success"))
                 .status(HttpStatus.OK.value())
                 .data(orderService.findDailyProductQuantityByCategory(month, year))
                 .build());

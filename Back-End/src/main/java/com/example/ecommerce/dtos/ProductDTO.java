@@ -16,34 +16,34 @@ import java.util.List;
 @AllArgsConstructor
 public class ProductDTO {
 
-    @NotBlank(message = "Tên sản phẩm không được để trống")
+    @NotBlank(message = "{product.valid.name}")
     private String name;
 
-    @NotNull(message = "Giá không được rỗng")
-    @Min(value = 1, message="Giá phải lớn hơn hoặc bằng 1")
+    @NotNull(message = "{product.valid.price}")
+    @Min(value = 1, message="{product.valid.price.min}")
     private Double price;
 
-    @NotNull(message = "Giảm giá không được rỗng")
-    @Min(value = 0, message="Mức giảm giá phải lớn hơn hoặc bằng 0")
+    @NotNull(message = "{product.valid.discount}")
+    @Min(value = 0, message="{product.valid.discount.min}")
     private Long discount;
 
-    @NotNull(message = "Số lượng tồn kho không được rỗng")
-    @Min(value = 1, message="Số lượng tồn kho phải lớn hơn hoặc bằng 1")
+    @NotNull(message = "{product.valid.stock}")
+    @Min(value = 1, message="{product.valid.stock.min}")
     private Long stock;
 
-    @NotBlank(message = "Mô tả không được để trống")
+    @NotBlank(message = "{product.valid.description}")
     private String description;
 
-    @NotNull(message = "Giảm giá cho học sinh/sinh viên không được rỗng")
-    @Min(value = 1, message="Giảm giá cho học sinh/sinh viên phải lớn hơn hoặc bằng 1")
+    @NotNull(message = "{product.valid.discountForMember}")
+    @Min(value = 1, message="{product.valid.discountForMember.min}")
     private Double discountForMember;
 
     private boolean active;
 
-    @NotNull(message = "ID thương hiệu không được rỗng")
+    @NotNull(message = "{product.valid.brandId}")
     private Long brandId;
 
-    @NotNull(message = "ID danh mục không được rỗng")
+    @NotNull(message = "{product.valid.categoryId}")
     private Long categoryId;
 
     private List<ProductAttributeDTO> attributes;

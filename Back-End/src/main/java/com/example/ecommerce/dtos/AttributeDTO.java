@@ -12,8 +12,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AttributeDTO {
 
-    @NotBlank(message = "Tên thuộc tính không được để trống")
+    @NotBlank(message = "{attribute.valid.name}")
     private String name;
-    @NotBlank(message = "Label không được để trống")
+    @NotBlank(message = "{attribute.valid.label}")
     private String label;
 }

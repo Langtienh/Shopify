@@ -12,9 +12,9 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ResetPasswordDTO {
 
-    @NotBlank(message = "OtpToken không được để trống")
+    @NotBlank(message = "{resetPassword.valid.otpToken}")
     private String otpToken;
 
-    @NotBlank(message = "Mật khẩu mới không được để trống")
+    @NotBlank(message = "{resetPassword.valid.newPassword}")
     private String newPassword;
 }

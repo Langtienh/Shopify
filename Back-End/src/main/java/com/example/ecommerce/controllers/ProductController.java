@@ -5,6 +5,7 @@ import com.example.ecommerce.responses.PageResponse;
 import com.example.ecommerce.responses.ProductResponse;
 import com.example.ecommerce.responses.ResponseSuccess;
 import com.example.ecommerce.services.ProductService;
+import com.example.ecommerce.utils.Translator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,7 +38,7 @@ public class ProductController {
         PageResponse pageResponse
                 = productService.searchProduct(page, limit, brand,category, search, active, sort);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Get all product information successfully")
+                .message(Translator.toLocale("product.search_product.success"))
                 .status(HttpStatus.OK.value())
                 .data(pageResponse)
                 .build());
@@ -46,7 +47,7 @@ public class ProductController {
     @GetMapping("")
     public ResponseEntity<ResponseSuccess> getAllProducts(){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Get all product information successfully")
+                .message(Translator.toLocale("product.get_all.success"))
                 .status(HttpStatus.OK.value())
                 .data(productService.getAllProducts())
                 .build());
@@ -56,7 +57,7 @@ public class ProductController {
     public ResponseEntity<ResponseSuccess> getProductById(@PathVariable("id") long id){
         ProductResponse productResponse = productService.getProductById(id);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Get product information successfully")
+                .message(Translator.toLocale("product.get_by_id.success"))
                 .status(HttpStatus.OK.value())
                 .data(productResponse)
                 .build());
@@ -68,7 +69,7 @@ public class ProductController {
 
         ProductResponse productResponse = productService.createProduct(productDTO);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Create product successfully")
+                .message(Translator.toLocale("product.create.success"))
                 .status(HttpStatus.CREATED.value())
                 .data(productResponse)
                 .build());
@@ -79,7 +80,7 @@ public class ProductController {
                                                          @RequestBody @Valid ProductDTO productDTO){
         ProductResponse productResponse = productService.updateProduct(id,productDTO);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Update product successfully")
+                .message(Translator.toLocale("product.update.success"))
                 .status(HttpStatus.OK.value())
                 .data(productResponse)
                 .build());
@@ -90,7 +91,7 @@ public class ProductController {
     public ResponseEntity<ResponseSuccess> updateProductStatus(@PathVariable long id,
                                                                @RequestParam("active") boolean active){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Update product status successfully")
+                .message(Translator.toLocale("product.update_status.success"))
                 .status(HttpStatus.OK.value())
                 .data(productService.updateProductStatus(id, active))
                 .build());
@@ -100,7 +101,7 @@ public class ProductController {
     public ResponseEntity<ResponseSuccess> updateViewCount(@PathVariable long id){
         productService.updateViewCount(id);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Update product view count successfully")
+                .message(Translator.toLocale("product.view_count.success"))
                 .status(HttpStatus.OK.value())
                 .build());
     }

@@ -9,9 +9,11 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class ProductAttributeDTO {
-    @NotBlank(message = "Attribute không được để trống")
+
+    @NotBlank(message = "{productAttribute.valid.attribute}")
     private String attribute;
-    @NotBlank(message = "Value không được để trống")
+
+    @NotBlank(message = "{productAttribute.valid.value}")
     private String value;
     private String label;
 }

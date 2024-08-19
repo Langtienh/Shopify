@@ -6,6 +6,7 @@ import com.example.ecommerce.responses.CommentResponse;
 import com.example.ecommerce.responses.PageResponse;
 import com.example.ecommerce.responses.ResponseSuccess;
 import com.example.ecommerce.services.CommentService;
+import com.example.ecommerce.utils.Translator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,7 @@ public class CommentController {
     public ResponseEntity<ResponseSuccess> createComment(@Valid @ModelAttribute CommentDTO commentDTO){
         CommentResponse commentResponse = commentService.createComment(commentDTO);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Create comment successfully")
+                .message(Translator.toLocale("comment.create.success"))
                 .status(HttpStatus.CREATED.value())
                 .data(commentResponse)
                 .build());
@@ -39,7 +40,7 @@ public class CommentController {
                                                                    @RequestParam(defaultValue = "5") int limit){
         PageResponse pageResponse = commentService.getAllCommentsByProduct(pid,rate, page, limit);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Get all comments by product information successfully")
+                .message(Translator.toLocale("comment.get_all_by_product.success"))
                 .status(HttpStatus.OK.value())
                 .data(pageResponse)
                 .build());
@@ -48,7 +49,7 @@ public class CommentController {
     public ResponseEntity<ResponseSuccess> getCommentById(@PathVariable long id){
         CommentResponse commentResponse = commentService.getCommentById(id);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Get comment information successfully")
+                .message(Translator.toLocale("comment.get_by_id.success"))
                 .status(HttpStatus.OK.value())
                 .data(commentResponse)
                 .build());
@@ -58,7 +59,7 @@ public class CommentController {
     public ResponseEntity<ResponseSuccess> getAllComments(@RequestParam(defaultValue = "1") int page,
                                                           @RequestParam(defaultValue = "10") int limit){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Get all comment information successfully")
+                .message(Translator.toLocale("comment.get_all.success"))
                 .status(HttpStatus.OK.value())
                 .data(commentService.getAllComments(page, limit))
                 .build());
@@ -69,7 +70,7 @@ public class CommentController {
     public ResponseEntity<ResponseSuccess> deleteComment(@PathVariable long id){
         commentService.deleteComment(id);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Delete comment successfully")
+                .message(Translator.toLocale("comment.delete.success"))
                 .status(HttpStatus.NO_CONTENT.value())
                 .build());
     }

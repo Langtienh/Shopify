@@ -5,6 +5,7 @@ import com.example.ecommerce.models.Attribute;
 import com.example.ecommerce.responses.AttributeResponse;
 import com.example.ecommerce.responses.ResponseSuccess;
 import com.example.ecommerce.services.AttributeService;
+import com.example.ecommerce.utils.Translator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,7 @@ public class AttributeController {
             @Valid @RequestBody AttributeDTO attributeDTO){
         Attribute attribute = attributeService.createAttribute(attributeDTO);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Create attribute successfully")
+                .message(Translator.toLocale("attribute.create.success"))
                 .status(HttpStatus.CREATED.value())
                 .data(attribute)
                 .build());
@@ -36,7 +37,7 @@ public class AttributeController {
     public ResponseEntity<ResponseSuccess> getAttributeById(@PathVariable("id") long id){
         Attribute attribute = attributeService.getAttributeById(id);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Get attribute information successfully")
+                .message(Translator.toLocale("attribute.get_by_id.success"))
                 .status(HttpStatus.OK.value())
                 .data(attribute)
                 .build());
@@ -48,7 +49,7 @@ public class AttributeController {
             @RequestParam(value = "brand", required = false) String bname){
         List<?> attributes = attributeService.getAllAttributes(cname, bname);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Get all attributes information successfully")
+                .message(Translator.toLocale("attribute.get_all.success"))
                 .status(HttpStatus.OK.value())
                 .data(attributes)
                 .build());
@@ -61,7 +62,7 @@ public class AttributeController {
                                                        @Valid @RequestBody AttributeDTO attributeDTO){
         Attribute attribute = attributeService.updateAttribute(id, attributeDTO);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Update attribute successfully")
+                .message(Translator.toLocale("attribute.update.success"))
                 .status(HttpStatus.OK.value())
                 .data(attribute)
                 .build());

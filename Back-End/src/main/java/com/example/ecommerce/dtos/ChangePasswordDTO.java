@@ -12,9 +12,9 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ChangePasswordDTO {
 
-    @NotBlank(message = "Mật khẩu cũ không được để trống")
+    @NotBlank(message = "{changePassword.valid.oldPassword}")
     private String oldPassword;
 
-    @NotBlank(message = "Mật khẩu mới không được để trống")
+    @NotBlank(message = "{changePassword.valid.newPassword}")
     private String newPassword;
 }

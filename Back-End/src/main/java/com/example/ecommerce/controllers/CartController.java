@@ -5,6 +5,7 @@ import com.example.ecommerce.dtos.CartUpdateDTO;
 import com.example.ecommerce.responses.CartResponse;
 import com.example.ecommerce.responses.ResponseSuccess;
 import com.example.ecommerce.services.CartService;
+import com.example.ecommerce.utils.Translator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public class CartController {
     public ResponseEntity<ResponseSuccess> createCart(@Valid @RequestBody CartDTO cartDTO){
         CartResponse cartResponse = cartService.createCart(cartDTO);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Create cart successfully")
+                .message(Translator.toLocale("cart.create.success"))
                 .status(HttpStatus.CREATED.value())
                 .data(cartResponse)
                 .build());
@@ -37,7 +38,7 @@ public class CartController {
     public ResponseEntity<ResponseSuccess> getCartByUser(@PathVariable long id){
         CartResponse cartResponse = cartService.getCartByUser(id);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Get cart by user information successfully")
+                .message(Translator.toLocale("cart.get_by_user.success"))
                 .status(HttpStatus.OK.value())
                 .data(cartResponse)
                 .build());
@@ -50,7 +51,7 @@ public class CartController {
                                                       @Valid @RequestBody CartUpdateDTO cartUpdateDTO){
         CartResponse cartResponse = cartService.updateCart(id, cartUpdateDTO);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Update cart successfully")
+                .message(Translator.toLocale("cart.update.success"))
                 .status(HttpStatus.OK.value())
                 .data(cartResponse)
                 .build());
@@ -61,7 +62,7 @@ public class CartController {
     public ResponseEntity<ResponseSuccess> deleteCartByUser(@PathVariable long userId){
         cartService.deleteCartByUser(userId);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Delete cart by user successfully")
+                .message(Translator.toLocale("cart.delete_by_user.success"))
                 .status(HttpStatus.NO_CONTENT.value())
                 .build());
     }
@@ -71,7 +72,7 @@ public class CartController {
     public ResponseEntity<ResponseSuccess> deleteCart(@PathVariable List<Long> ids){
         cartService.deleteCart(ids);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Delete cart-item successfully")
+                .message(Translator.toLocale("cart.delete.success"))
                 .status(HttpStatus.NO_CONTENT.value())
                 .build());
     }

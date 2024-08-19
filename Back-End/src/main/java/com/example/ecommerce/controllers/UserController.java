@@ -5,6 +5,7 @@ import com.example.ecommerce.models.User;
 import com.example.ecommerce.responses.ResponseSuccess;
 import com.example.ecommerce.responses.UserResponse;
 import com.example.ecommerce.services.UserService;
+import com.example.ecommerce.utils.Translator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class UserController{
     public ResponseEntity<ResponseSuccess> createUser(@Valid @RequestBody RegisterDTO registerDTO){
         userService.createUser(registerDTO);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Create user successfully")
+                .message(Translator.toLocale("user.register.success"))
                 .status(HttpStatus.CREATED.value())
                 .build());
     }
@@ -35,7 +36,7 @@ public class UserController{
     public ResponseEntity<ResponseSuccess> login(@Valid @RequestBody LoginDTO loginDTO,
                                                  HttpServletRequest request){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Login successfully")
+                .message(Translator.toLocale("user.login.success"))
                 .status(HttpStatus.OK.value())
                 .data(userService.login(loginDTO, request))
                 .build());
@@ -46,7 +47,7 @@ public class UserController{
             @Valid @RequestBody LoginWithGoogle loginWithGoogle,
             HttpServletRequest request){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Login successfully")
+                .message(Translator.toLocale("user.login.success"))
                 .status(HttpStatus.OK.value())
                 .data(userService.loginWithGoogle(loginWithGoogle, request))
                 .build());
@@ -57,7 +58,7 @@ public class UserController{
             @PathVariable String id,
             HttpServletRequest request){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Login successfully")
+                .message(Translator.toLocale("user.login.success"))
                 .status(HttpStatus.OK.value())
                 .data(userService.checkLoginWithGoogle(id, request))
                 .build());
@@ -66,7 +67,7 @@ public class UserController{
     @PostMapping("/refreshToken")
     public ResponseEntity<ResponseSuccess> refreshToken(@Valid @RequestBody RefreshTokenDTO refreshTokenDTO){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("RefreshToken successfully")
+                .message(Translator.toLocale("user.refresh_token.success"))
                 .status(HttpStatus.OK.value())
                 .data(userService.refreshToken(refreshTokenDTO))
                 .build());
@@ -75,7 +76,7 @@ public class UserController{
     public ResponseEntity<ResponseSuccess> logout(@Valid @RequestBody LogoutDTO logoutDTO){
         userService.logout(logoutDTO);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Logout successfully")
+                .message(Translator.toLocale("user.logout.success"))
                 .status(HttpStatus.OK.value())
                 .build());
     }
@@ -85,7 +86,7 @@ public class UserController{
         UserResponse userResponse = UserResponse.fromUser(
                 (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Get my info successfully")
+                .message(Translator.toLocale("user.get_my_info.success"))
                 .status(HttpStatus.OK.value())
                 .data(userResponse)
                 .build());
@@ -97,7 +98,7 @@ public class UserController{
     // Chỉ cho user get thông tin của chính mình or Admin có thể lấy
     public ResponseEntity<ResponseSuccess> getUserById(@PathVariable("id") long id){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Get user information successfully")
+                .message(Translator.toLocale("user.get_by_id.success"))
                 .status(HttpStatus.OK.value())
                 .data(userService.getUserById(id))
                 .build());
@@ -109,7 +110,7 @@ public class UserController{
                                                        @RequestParam(defaultValue = "10") int limit,
                                                        @RequestParam(value = "name", required = false) String name){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Get all user information successfully")
+                .message(Translator.toLocale("user.get_all.success"))
                 .status(HttpStatus.OK.value())
                 .data(userService.getAllUsers(page, limit, name))
                 .build());
@@ -120,7 +121,7 @@ public class UserController{
     public ResponseEntity<ResponseSuccess> updateUser(@PathVariable("id") long id,
                                                       @Valid @RequestBody UserDTO userDTO){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Update user successfully")
+                .message(Translator.toLocale("user.update.success"))
                 .status(HttpStatus.ACCEPTED.value())
                 .data(userService.updateUser(id, userDTO))
                 .build());
@@ -131,7 +132,7 @@ public class UserController{
     public ResponseEntity<ResponseSuccess> updateUserStatus(@PathVariable long id,
                                                             @RequestParam("active") boolean active){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Update user status successfully")
+                .message(Translator.toLocale("user.update_status.success"))
                 .status(HttpStatus.ACCEPTED.value())
                 .data(userService.updateUserStatus(id, active))
                 .build());
@@ -142,7 +143,7 @@ public class UserController{
     public ResponseEntity<ResponseSuccess> changePassword(@PathVariable long id,
            @Valid @RequestBody ChangePasswordDTO changePasswordDTO){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Update change password successfully")
+                .message(Translator.toLocale("user.change_password.success"))
                 .status(HttpStatus.ACCEPTED.value())
                 .data(userService.changePassword(id, changePasswordDTO))
                 .build());
@@ -152,7 +153,7 @@ public class UserController{
     public ResponseEntity<ResponseSuccess> sendMailForgotPassword(@PathVariable String email){
         userService.sendMailForgotPassword(email);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Send mail forgot password successfully")
+                .message(Translator.toLocale("user.verify_mail.success"))
                 .status(HttpStatus.OK.value())
                 .build());
     }
@@ -161,7 +162,7 @@ public class UserController{
     public ResponseEntity<ResponseSuccess> verifyOtp(@PathVariable("otp") String otp,
                                                      @PathVariable("email") String email){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Verify otp code successfully")
+                .message(Translator.toLocale("user.verify_otp.success"))
                 .status(HttpStatus.OK.value())
                 .data(userService.verifyOtp(otp, email))
                 .build());
@@ -172,7 +173,7 @@ public class UserController{
                                                          @Valid @RequestBody ResetPasswordDTO resetPasswordDTO){
         userService.resetPassword(id, resetPasswordDTO);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Reset password successfully")
+                .message(Translator.toLocale("user.reset_password.success"))
                 .status(HttpStatus.OK.value())
                 .build());
     }

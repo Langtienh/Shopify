@@ -3,6 +3,7 @@ package com.example.ecommerce.controllers;
 import com.example.ecommerce.responses.OrderDetailResponse;
 import com.example.ecommerce.responses.ResponseSuccess;
 import com.example.ecommerce.services.OrderDetailService;
+import com.example.ecommerce.utils.Translator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class OrderDetailController {
     public ResponseEntity<ResponseSuccess> getOrderDetailByOrder(@PathVariable long oid){
         List<OrderDetailResponse> orderDetailResponses = orderDetailService.getOrderDetailByOrder(oid);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Get all orderDetail by order information successfully")
+                .message(Translator.toLocale("order_detail.get_all_by_order.success"))
                 .status(HttpStatus.OK.value())
                 .data(orderDetailResponses)
                 .build());

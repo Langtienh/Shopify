@@ -12,13 +12,13 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AddressUpdateDTO {
 
-    @NotBlank(message = "Tên gợi nhớ không được để trống")
+    @NotBlank(message = "{address.valid.name}")
     private String name;
 
-    @NotBlank(message = "Số nhà, tên đường không được để trống")
+    @NotBlank(message = "{address.valid.detail}")
     private String detail;
 
-    @NotBlank(message = "Code không được để trống")
+    @NotBlank(message = "{address.valid.code}")
     private String code;
 
     private boolean isDefault;

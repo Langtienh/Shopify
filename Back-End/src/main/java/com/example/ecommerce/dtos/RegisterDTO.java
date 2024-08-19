@@ -14,16 +14,16 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class RegisterDTO {
 
-    @NotBlank(message = "Tên đầy đủ không được để trống")
+    @NotBlank(message = "{register.valid.fullName}")
     private String fullName;
 
-    @NotBlank(message = "Số điện thoại không được để trống")
+    @NotBlank(message = "{register.valid.phone}")
     private String phone;
 
-    @NotBlank(message = "Mật khẩu không được để trống")
+    @NotBlank(message = "{register.valid.password}")
     private String password;
 
-    @NotBlank(message = "Email không được để trống")
+    @NotBlank(message = "{register.valid.email}")
     private String email;
 
 }

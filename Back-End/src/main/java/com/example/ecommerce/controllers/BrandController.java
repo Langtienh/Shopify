@@ -4,6 +4,7 @@ import com.example.ecommerce.dtos.BrandDTO;
 import com.example.ecommerce.models.Brand;
 import com.example.ecommerce.responses.ResponseSuccess;
 import com.example.ecommerce.services.BrandService;
+import com.example.ecommerce.utils.Translator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public class BrandController {
             @Valid @RequestBody BrandDTO brandDTO){
         Brand brand = brandService.createBrand(brandDTO);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Create brand successfully")
+                .message(Translator.toLocale("brand.create.success"))
                 .status(HttpStatus.CREATED.value())
                 .data(brand)
                 .build());
@@ -35,7 +36,7 @@ public class BrandController {
     public ResponseEntity<ResponseSuccess> getBrandById(@PathVariable("id") long id){
         Brand brand = brandService.getBrandById(id);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Get brand information successfully")
+                .message(Translator.toLocale("brand.get_by_id.success"))
                 .status(HttpStatus.OK.value())
                 .data(brand)
                 .build());
@@ -45,7 +46,7 @@ public class BrandController {
     public ResponseEntity<ResponseSuccess> getAllBrands(){
         List<Brand> brands = brandService.getAllBrands();
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Get all brands information successfully")
+                .message(Translator.toLocale("brand.get_all.success"))
                 .status(HttpStatus.OK.value())
                 .data(brands)
                 .build());
@@ -54,7 +55,7 @@ public class BrandController {
     public ResponseEntity<ResponseSuccess> getBrandByCategory(@PathVariable("cname") String cname){
         List<Brand> brands = brandService.getBrandByCategory(cname);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Get all brands by category information successfully")
+                .message(Translator.toLocale("brand.get_all_by_category.success"))
                 .status(HttpStatus.OK.value())
                 .data(brands)
                 .build());
@@ -66,7 +67,7 @@ public class BrandController {
                                                           @Valid @RequestBody BrandDTO brandDTO){
         Brand brand = brandService.updateBrand(id, brandDTO);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Update brand successfully")
+                .message(Translator.toLocale("brand.update.success"))
                 .status(HttpStatus.OK.value())
                 .data(brand)
                 .build());

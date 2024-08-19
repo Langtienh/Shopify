@@ -5,6 +5,7 @@ import com.example.ecommerce.responses.OrderResponse;
 import com.example.ecommerce.responses.PaymentResponse;
 import com.example.ecommerce.responses.ResponseSuccess;
 import com.example.ecommerce.services.PaymentService;
+import com.example.ecommerce.utils.Translator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -34,7 +35,7 @@ public class PaymentController {
                                            @Valid @RequestBody OrderDTO orderDTO){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
                         .status(HttpStatus.OK.value())
-                        .message("Create payment success")
+                        .message(Translator.toLocale("payment.create.success"))
                         .data(paymentService.createVnPayPayment(amount, bankCode,request, orderDTO))
                         .build());
 
@@ -49,7 +50,7 @@ public class PaymentController {
                     "/cart/checkout?vnp_ResponseCode=%s&orderId=%d",status,orderId));
             return ResponseEntity.ok(ResponseSuccess.builder()
                     .status(HttpStatus.OK.value())
-                    .message("Success")
+                    .message(Translator.toLocale("payment.call_back.success"))
                     .data(new PaymentResponse(status))
                     .build());
         } else {
@@ -58,7 +59,7 @@ public class PaymentController {
                     "/cart/checkout?vnp_ResponseCode=%s&orderId=%d",status,orderId));
             return ResponseEntity.ok(ResponseSuccess.builder()
                     .status(HttpStatus.BAD_REQUEST.value())
-                    .message("Failed")
+                    .message(Translator.toLocale("payment.call_back.failed"))
                     .data(new PaymentResponse(status))
                     .build());
         }

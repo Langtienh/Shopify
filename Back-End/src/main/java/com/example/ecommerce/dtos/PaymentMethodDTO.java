@@ -12,13 +12,13 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PaymentMethodDTO {
 
-    @NotBlank(message = "Tên phương thức thanh toán không được để trống")
+    @NotBlank(message = "{paymentMethod.valid.name}")
     private String name;
 
-    @NotBlank(message = "Mô tả không được để trống")
+    @NotBlank(message = "{paymentMethod.valid.description}")
     private String description;
 
-    @NotBlank(message = "Hình ảnh không được để trống")
+    @NotBlank(message = "{paymentMethod.valid.image}")
     private String image;
 
 }

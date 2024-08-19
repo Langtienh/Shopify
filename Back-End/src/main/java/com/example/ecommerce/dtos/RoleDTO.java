@@ -12,6 +12,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class RoleDTO {
 
-    @NotBlank(message = "Tên role không được để trống")
+    @NotBlank(message = "{role.valid.name}")
     private String name;
 }

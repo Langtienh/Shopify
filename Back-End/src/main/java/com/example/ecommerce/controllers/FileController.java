@@ -3,6 +3,7 @@ package com.example.ecommerce.controllers;
 import com.example.ecommerce.dtos.FileDTO;
 import com.example.ecommerce.responses.ResponseSuccess;
 import com.example.ecommerce.services.FileService;
+import com.example.ecommerce.utils.Translator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,7 +23,7 @@ public class FileController {
                                                       @ModelAttribute FileDTO fileDTO){
         fileService.uploadUserFile(fileDTO, id);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Upload file successfully")
+                .message(Translator.toLocale("file.upload.success"))
                 .status(HttpStatus.CREATED.value())
                 .build());
     }
@@ -33,7 +34,7 @@ public class FileController {
                                                       @ModelAttribute FileDTO fileDTO){
         fileService.uploadProductFile(fileDTO, id);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Upload file successfully")
+                .message(Translator.toLocale("file.upload.success"))
                 .status(HttpStatus.CREATED.value())
                 .build());
     }

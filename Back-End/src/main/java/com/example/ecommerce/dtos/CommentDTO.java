@@ -16,16 +16,16 @@ import java.util.List;
 @AllArgsConstructor
 public class CommentDTO {
 
-    @NotBlank(message = "Nội dung không được để trống")
+    @NotBlank(message = "{comment.valid.content}")
     private String content;
 
-    @NotNull(message = "Số sao không được rỗng")
+    @NotNull(message = "{comment.valid.rate}")
     private Long rate;
 
-    @NotNull(message = "ID người dùng không được rỗng")
+    @NotNull(message = "{comment.valid.userId}")
     private Long userId;
 
-    @NotNull(message = "ID sản phẩm không được rỗng")
+    @NotNull(message = "{comment.valid.productId}")
     private Long productId;
 
     private List<MultipartFile> images;

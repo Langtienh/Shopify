@@ -12,9 +12,9 @@ import lombok.Setter;
 @AllArgsConstructor
 public class WishListDTO {
 
-    @NotNull(message = "ID người dùng không được rỗng")
+    @NotNull(message = "{wishList.valid.userId}")
     private Long userId;
 
-    @NotNull(message = "ID sản phẩm không được rỗng")
+    @NotNull(message = "{wishList.valid.productId}")
     private Long productId;
 }

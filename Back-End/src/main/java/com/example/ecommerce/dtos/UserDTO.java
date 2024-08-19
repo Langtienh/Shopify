@@ -13,13 +13,13 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class UserDTO {
 
-    @NotBlank(message = "Tên đầy đủ không được để trống")
+    @NotBlank(message = "{user.valid.fullName}")
     private String fullName;
 
-    @NotBlank(message = "Số điện thoại không được để trống")
+    @NotBlank(message = "{user.valid.phone}")
     private String phone;
 
-    @NotBlank(message = "Email không được để trống")
+    @NotBlank(message = "{user.valid.email}")
     private String email;
 
     private MultipartFile avatar;

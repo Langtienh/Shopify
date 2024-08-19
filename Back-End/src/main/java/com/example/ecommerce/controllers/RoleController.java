@@ -4,6 +4,7 @@ import com.example.ecommerce.dtos.RoleDTO;
 import com.example.ecommerce.models.Role;
 import com.example.ecommerce.responses.ResponseSuccess;
 import com.example.ecommerce.services.RoleService;
+import com.example.ecommerce.utils.Translator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,7 @@ public class RoleController {
     public ResponseEntity<ResponseSuccess> getAllRoles(){
         List<Role> roles = roleService.getAllRoles();
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Get all roles information successfully")
+                .message(Translator.toLocale("role.get_all.success"))
                 .status(HttpStatus.OK.value())
                 .data(roles)
                 .build());
@@ -35,7 +36,7 @@ public class RoleController {
     public ResponseEntity<ResponseSuccess> getRoleById(@PathVariable long id){
         Role role = roleService.getRoleById(id);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Get brand information successfully")
+                .message(Translator.toLocale("role.get_by_id.success"))
                 .status(HttpStatus.OK.value())
                 .data(role)
                 .build());
@@ -45,7 +46,7 @@ public class RoleController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ResponseSuccess> createRole(@Valid @RequestBody RoleDTO roleDTO){
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Create role successfully")
+                .message(Translator.toLocale("role.create.success"))
                 .status(HttpStatus.CREATED.value())
                 .data(roleService.createRole(roleDTO))
                 .build());
@@ -56,7 +57,7 @@ public class RoleController {
     public ResponseEntity<ResponseSuccess> deleteRole(@PathVariable long id){
         roleService.deleteRole(id);
         return ResponseEntity.ok().body(ResponseSuccess.builder()
-                .message("Delete role successfully")
+                .message(Translator.toLocale("role.delete.success"))
                 .status(HttpStatus.NO_CONTENT.value())
                 .build());
     }

@@ -9,8 +9,8 @@ import lombok.*;
 @AllArgsConstructor
 public class CategoryDTO {
 
-    @NotBlank(message = "Tên danh mục không được để trống")
+    @NotBlank(message = "{category.valid.name}")
     private String name;
-    @NotBlank(message = "Label không được để trống")
+    @NotBlank(message = "{category.valid.label}")
     private String label;
 }
