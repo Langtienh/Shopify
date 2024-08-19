@@ -1,13 +1,14 @@
 package com.example.ecommerce.utils;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.stereotype.Component;
 
 import java.util.Locale;
 
-@Configuration
+@Component
 public class Translator {
     private static ResourceBundleMessageSource messageSource;
 

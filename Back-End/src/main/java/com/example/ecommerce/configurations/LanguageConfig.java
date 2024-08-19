@@ -23,7 +23,7 @@ public class LanguageConfig extends AcceptHeaderLocaleResolver implements WebMvc
     }
 
     @Bean
-    public ResourceBundleMessageSource bundleMessageSource(){
+    public ResourceBundleMessageSource messageSource(){
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
         messageSource.setBasename("i18n/messages");
         messageSource.setDefaultEncoding("UTF-8");
@@ -35,7 +35,7 @@ public class LanguageConfig extends AcceptHeaderLocaleResolver implements WebMvc
     @Bean
     public LocalValidatorFactoryBean getValidator() {
         LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
-        bean.setValidationMessageSource(bundleMessageSource());
+        bean.setValidationMessageSource(messageSource());
         return bean;
     }
 }
