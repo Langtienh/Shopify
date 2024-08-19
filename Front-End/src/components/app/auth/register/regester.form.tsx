@@ -37,7 +37,6 @@ export default function RegesterForm({
     fullName: user?.fullName,
     email: user?.email,
     phone: user?.phone,
-    province: user?.address,
   };
 
   const [form] = Form.useForm();

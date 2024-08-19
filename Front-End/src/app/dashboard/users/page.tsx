@@ -55,7 +55,7 @@ export default async function Page({
             <TableHead>Tên</TableHead>
             <TableHead>SĐT</TableHead>
             <TableHead>Email</TableHead>
-            <TableHead>Mã vùng</TableHead>
+            {/* <TableHead>Mã vùng</TableHead> */}
             <TableHead>Vai trò</TableHead>
             <TableHead>Trạng thái</TableHead>
             <TableHead className="text-center">Thao tác</TableHead>
@@ -84,7 +84,7 @@ export default async function Page({
               </TableCell>
               <TableCell className="textce">{user.phone}</TableCell>
               <TableCell>{user.email}</TableCell>
-              <TableCell>{user.address}</TableCell>
+              {/* <TableCell>{user.address}</TableCell> */}
               <TableCell>{user.roles.toString()}</TableCell>
               <TableCell>
                 {user.active ? (

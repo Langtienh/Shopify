@@ -3,7 +3,7 @@ import { getMyInfo } from "@/services/user";
 import Image from "next/image";
 
 export default async function Page() {
-  const user = await getMyInfo();
+  const { user, addressDefautl } = await getMyInfo();
   return (
     <div className="pb-[200px] pt-10 w-full max-w-[600px] mx-auto">
       <div className="flex flex-col justify-center items-center">
@@ -16,7 +16,7 @@ export default async function Page() {
         />
         <h2 className="font-bold capitalize mb-10">{user.fullName}</h2>
       </div>
-      <UpdateUserForm user={user} />
+      <UpdateUserForm addressDefault={addressDefautl.path} user={user} />
     </div>
   );
 }

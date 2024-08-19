@@ -2,7 +2,8 @@
 import { getToken, checkToken } from "../cookies";
 import { get } from "../axios.helper";
 import { IUser } from "@/auth/next-auth";
-import { wardCodeToPath } from "../address.helper";
+import { getMyAddress } from "../address";
+
 export const getUser = async (
   limit: number = 5,
   page: number = 1,
@@ -38,7 +39,7 @@ export const getUserById = async (id: string) => {
   } catch {}
 };
 
-export const getMyInfo = async () => {
+export const getMyInfoBasic = async () => {
   await checkToken();
   const { token } = getToken();
   const res = await get<IUser>("/users/my-info", {
@@ -46,14 +47,15 @@ export const getMyInfo = async () => {
       Authorization: `Bearer ${token}`,
     },
   });
-  if (res.data.address) {
-    const addresses = res.data.address.map((address) => ({
-      ...address,
-      path: wardCodeToPath(address.code),
-    }));
-    const addressDefault = addresses.find((address) => address.default)?.path;
-    const user = { ...res.data, addressDefault };
-    return user;
-  }
   return res.data;
+};
+
+export const getMyInfo = async () => {
+  const [user, addresses] = await Promise.all([
+    getMyInfoBasic(),
+    getMyAddress(),
+  ]);
+  const addressDefautl =
+    addresses.find((address) => address.default) || addresses[0];
+  return { user, addressDefautl };
 };

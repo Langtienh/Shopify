@@ -16,7 +16,6 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
         fullName: {},
         phone: {},
         email: {},
-        address: {},
         avatar: {},
         active: {},
         roles: {},
@@ -29,7 +28,6 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
           fullName: credentials.fullName,
           phone: credentials.phone,
           email: credentials.email,
-          address: credentials.address,
           avatar: credentials.avatar,
           active: credentials.active,
           // @ts-ignore

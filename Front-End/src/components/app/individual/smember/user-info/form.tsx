@@ -14,8 +14,10 @@ type FieldType = {
 
 export default function UpdateUserForm({
   user,
+  addressDefault,
 }: {
-  user: IUser & { addressDefault?: string };
+  user: IUser;
+  addressDefault?: string;
 }) {
   const [isEditFullName, setEditFullName] = useState<boolean>(false);
   const [isEditEmail, setEditEmail] = useState<boolean>(false);
@@ -126,9 +128,7 @@ export default function UpdateUserForm({
             <Input
               disabled
               value={`Địa chỉ: ${
-                user?.addressDefault
-                  ? user.addressDefault
-                  : "Chưa có địa chỉ mặc định"
+                addressDefault ? addressDefault : "Chưa có địa chỉ mặc định"
               }`}
             />
           </Form.Item>

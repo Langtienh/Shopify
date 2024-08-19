@@ -8,10 +8,10 @@ interface IUser {
   phone?: string;
   id: number;
   providerId?: string;
-  address?: Address[];
   active?: boolean;
   roles?: string[];
 }
+
 declare module "next-auth/jwt" {
   /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
   interface JWT {
