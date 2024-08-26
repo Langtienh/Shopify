@@ -21,8 +21,9 @@ public class FileUtil {
 
     public List<String> uploadFile(List<MultipartFile> files) {
         List<String> images = new ArrayList<>();
+        if(files == null)
+            return images;
         isFileValid(files);
-
         // Tạo một ExecutorService với một số lượng luồng cố định
         ExecutorService executorService = Executors.newFixedThreadPool(files.size());
         List<Future<String>> futures = new ArrayList<>();

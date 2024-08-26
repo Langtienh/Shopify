@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,16 @@ public class ProductResponse {
 
     public static ProductResponse fromProduct(Product p, double avgRate,
                                               List<ProductAttribute> productAttributes){
+        List<ProductAttributeDTO> list = new ArrayList<>();
+        if(productAttributes != null){
+            list = productAttributes.stream()
+                    .map(pa -> ProductAttributeDTO.builder()
+                            .attribute(pa.getAttribute().getName())
+                            .value(pa.getValue())
+                            .label(pa.getAttribute().getLabel())
+                            .build())
+                    .toList();
+        }
         return ProductResponse.builder()
                 .id(p.getId())
                 .name(p.getName())
@@ -53,13 +64,7 @@ public class ProductResponse {
                 .active(p.isActive())
                 .brand(p.getBrand())
                 .category(p.getCategory())
-                .attributes(productAttributes.stream()
-                        .map(pa -> ProductAttributeDTO.builder()
-                                .attribute(pa.getAttribute().getName())
-                                .value(pa.getValue())
-                                .label(pa.getAttribute().getLabel())
-                                .build())
-                        .toList())
+                .attributes(list)
                 .build();
     }
 }
