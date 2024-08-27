@@ -1,9 +1,4 @@
-import axios, {
-  AxiosInstance,
-  AxiosRequestConfig,
-  AxiosResponse,
-  InternalAxiosRequestConfig,
-} from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 
 const BASEURL = process.env.API_URL;
 
@@ -11,19 +6,9 @@ const axiosInstance: AxiosInstance = axios.create({
   baseURL: BASEURL,
   headers: {
     "Content-Type": "application/json",
+    "Accept-Language": "vi",
   },
 });
-
-axiosInstance.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    // Thêm token hoặc chỉnh sửa config trước khi gửi request
-    // Ví dụ: config.headers.Authorization = `Bearer ${token}`;
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
 
 // Middleware
 axiosInstance.interceptors.response.use(
@@ -31,7 +16,8 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (error.body) return error.body;
+    const data = error.response.data;
+    if (data) return Promise.reject({ isError: true, ...data });
     return Promise.reject(error);
   }
 );

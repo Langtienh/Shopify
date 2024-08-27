@@ -1,13 +1,12 @@
 "use server";
 
 import { put } from "../axios.helper";
-import { checkToken, getToken } from "../cookies";
+import { getConfigToken } from "../cookies";
 
 export const createProduct = async () => {
-  await checkToken();
-  const { token } = getToken();
+  const { userId, configToken } = await getConfigToken();
 
-  return token;
+  // return token;
 };
 export const upViewCount = async (id: number | string) => {
   await put<Product>(`/products/view-count/${id}`);

@@ -75,6 +75,7 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
 
             customUser = {
               ...res.user,
+              avatar: res.user.avatar,
               providerId: account?.providerAccountId,
             };
           }

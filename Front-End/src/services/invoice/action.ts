@@ -1,55 +1,41 @@
 "use server";
 
-import { checkToken, getToken } from "../cookies";
 import { post, put } from "../axios.helper";
+import { getConfigToken } from "../cookies";
 
 export const updateInvoiceStatus = async (id: string, status: OrderStatus) => {
+  const { configToken } = await getConfigToken();
   const _id = id.replace("INV0", "");
-  await checkToken();
-  const { token } = getToken();
-  const res = await put(
-    `/orders/update-status/${_id}?status=${status}`,
-    undefined,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  try {
+    const res = await put(
+      `/orders/update-status/${_id}?status=${status}`,
+      undefined,
+      configToken
+    );
+    return res;
+  } catch (error) {
+    return error as ReqError;
+  }
 };
 
 export const createInvoice = async (data: {}) => {
   try {
-    await checkToken();
-    const { userId, token } = getToken();
-    console.log({ ...data, userId });
-    await post(
-      "/orders",
-      { ...data, userId },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const { userId, configToken } = await getConfigToken();
+    const res = await post("/orders", { ...data, userId }, configToken);
+    return res;
   } catch (error) {
-    throw error;
+    return error as ReqError;
   }
 };
 
 export const createInvoiceByVNPay = async (data: {}, totalPrice: number) => {
   try {
-    await checkToken();
-    let { userId, token } = getToken();
+    const { userId, configToken } = await getConfigToken();
 
     const res = await post<{ code: string; paymentUrl: string }>(
       `/payments/create-payment?amount=${totalPrice}&bankCode=NCB`,
       { ...data, userId: userId, paymentMethodId: 1 },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
+      configToken
     );
     return res.data.paymentUrl;
   } catch (error) {

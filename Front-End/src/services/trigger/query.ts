@@ -1,4 +1,6 @@
+"use server";
 import { getCart } from "../cart";
+import { getMyInfo } from "../user";
 import { getWishList } from "../wish-list";
 import isLoginFc from "./checkLogin";
 export const getWishListTrigger = async () => {
@@ -19,4 +21,12 @@ export const getCartTrigger = async () => {
     return data;
   }
   return [];
+};
+
+export const getMyInfoTrigger = async () => {
+  const isLogin = await isLoginFc();
+  if (isLogin) {
+    const { user } = await getMyInfo();
+    return user;
+  } else return null;
 };

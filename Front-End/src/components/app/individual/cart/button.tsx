@@ -1,18 +1,16 @@
 "use client";
 
-import { openNotification } from "@/lib/nofication";
 import { converPriceToVN } from "@/lib/utils2";
 import { updateTotalPrice } from "@/redux/checkout/slice";
 
-import { useAppDispatch, useAppSelector } from "@/redux/store";
+import { useAppDispatch } from "@/redux/store";
 import {
   addQuantity,
   deleteCartItem,
   deleteListItem,
   subQuantity,
 } from "@/services/cart";
-import { Button } from "antd";
-import Link from "next/link";
+import { Button, message } from "antd";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
@@ -33,15 +31,16 @@ export function DeleteItemBTN({
   const searchParams = useSearchParams();
   const handleDelCartItem = async () => {
     setLoading(true);
-    try {
-      await deleteCartItem(id);
+    const res = await deleteCartItem(id);
+    if (res.isError) message.error(res.message);
+    else {
+      message.success(res.message);
       const params = new URLSearchParams(searchParams);
       const _checkList = checkList.filter((item) => item !== id);
       if (_checkList.length) params.set("checkList", _checkList.toString());
       else params.delete("checkList");
       replace(`${patchName}?${params}`, { scroll: false });
-    } catch {}
-
+    }
     setLoading(true);
   };
   return (
@@ -58,15 +57,9 @@ export function AddItemBTN({ cartItem }: { cartItem: CartItemResponse }) {
   const [isLoading, setLoading] = useState<boolean>(false);
   const handleAddCartItem = async () => {
     if (cartItem.stock < cartItem.quantity + 1)
-      openNotification({
-        message: "Hết hàng",
-        description: "Liên hệ với quản trị viên để mua thêm",
-        notificationType: "error",
-      });
+      message.error("Hết hàng, vui lòng iên hệ với quản trị viên để mua thêm");
     setLoading(true);
-    try {
-      await addQuantity(cartItem.id, cartItem.quantity);
-    } catch {}
+    await addQuantity(cartItem.id, cartItem.quantity);
     setLoading(false);
   };
   return (
@@ -112,12 +105,14 @@ export const ClearListBtn = ({ checkList }: { checkList: number[] }) => {
   const searchParams = useSearchParams();
   const handledDeletelist = async () => {
     setLoading(true);
-    try {
-      await deleteListItem(checkList);
+    const res = await deleteListItem(checkList);
+    if (res.isError) message.error(res.message);
+    else {
+      message.success(res.message);
       const params = new URLSearchParams(searchParams);
       params.delete("checkList");
       replace(`${patchName}?${params}`, { scroll: false });
-    } catch {}
+    }
     setLoading(false);
   };
   return (

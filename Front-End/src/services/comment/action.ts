@@ -13,7 +13,7 @@ export const createComment = async (input: {
   try {
     await checkToken();
     const { userId, token } = getToken();
-    await post(
+    const res = await post(
       "/comments",
       { ...input, userId },
       {
@@ -22,7 +22,8 @@ export const createComment = async (input: {
         },
       }
     );
+    return res;
   } catch (error) {
-    throw error;
+    return error as ReqError;
   }
 };

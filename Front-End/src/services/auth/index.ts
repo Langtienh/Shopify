@@ -7,7 +7,6 @@ import {
   refreshToken,
   resetPassword,
   updatePassword,
-  revalidatePathTo,
   checkAccount,
 } from "./action";
 export {
@@ -19,6 +18,5 @@ export {
   refreshToken,
   resetPassword,
   updatePassword,
-  revalidatePathTo,
   checkAccount,
 };

@@ -1,5 +1,6 @@
 // java type to javascrip type
 type TResponse = {
+  isError?: boolean;
   status: number;
   message: string;
 };
@@ -49,7 +50,7 @@ type LoginResponse = {
   token: string;
   refreshToken: string;
   tokenType: string;
-  user: UserResponse;
+  user: User;
 };
 
 type checkTokenResponse = {

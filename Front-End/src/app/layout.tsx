@@ -5,8 +5,7 @@ import NextAuthWrapper from "@/auth/wrapper";
 import ReduxWrapper from "@/redux/wrapper";
 import { LoginModal } from "@/components/global/login-modal";
 import { Toaster } from "@/components/ui/toaster";
-import WishListTrigger from "@/components/trigger/wishList";
-import CartTrigger from "@/components/trigger/cart";
+import Trigger from "@/components/trigger";
 
 const roboto = Roboto({
   weight: ["100", "300", "400", "500", "700", "900"],
@@ -27,9 +26,8 @@ export default function RootLayout({
         <AntdRegistry>
           <NextAuthWrapper>
             <ReduxWrapper>
+              <Trigger />
               {children}
-              <CartTrigger />
-              <WishListTrigger />
               <LoginModal />
             </ReduxWrapper>
           </NextAuthWrapper>

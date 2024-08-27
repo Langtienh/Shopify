@@ -14,7 +14,6 @@ import {
   message,
 } from "antd";
 import Link from "next/link";
-import { openNotification } from "@/lib/nofication";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { FaFileUpload } from "react-icons/fa";
@@ -269,19 +268,9 @@ export default function ProductForm({
 
 // const res = await register(form);
 // if (res.status === 201) {
-//   openNotification({
-//     message: res.message || "Thành công",
-//     description: "",
-//     notificationType: "success",
-//   });
 //   setTimeout(() => {
 
 //   }, 2000);
 //   router.push("/dashboard/products");
 // } else {
-//   openNotification({
-//     message: res.message || "Đăng kí thất bại",
-//     description: "Tài khoản đã tồn tại hoặc không hợp lệ",
-//     notificationType: "error",
-//   });
 // }

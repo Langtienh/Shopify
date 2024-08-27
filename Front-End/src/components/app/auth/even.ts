@@ -1,7 +1,7 @@
 import { openNotification } from "@/lib/nofication";
 import { signIn } from "next-auth/react";
-import { firstLoginByprovider, login } from "@/services/auth";
-import { DELAY } from "@/lib/utils2";
+import { login } from "@/services/auth";
+import { message } from "antd";
 
 export const loginWithCredentials = async (
   values: LoginDTO,
@@ -16,7 +16,6 @@ export const loginWithCredentials = async (
         fullName: data?.user.fullName,
         phone: data?.user.phone,
         email: data?.user.email,
-        address: data?.user.address,
         avatar: data?.user.avatar,
         active: data?.user.active,
         roles: data?.user.roles,
@@ -30,7 +29,6 @@ export const loginWithCredentials = async (
         description: "Vui lòng đợi trong giây lát",
         notificationType: "success",
       });
-      await DELAY(2000);
     } else {
       openNotification({
         description: res?.message ?? "Vui lòng đăng nhập lại",
@@ -39,24 +37,4 @@ export const loginWithCredentials = async (
       });
     }
   } catch {}
-};
-
-export const addPhone = async (input: FirstLoginDTO) => {
-  const res = await firstLoginByprovider(input);
-  if (res.status === 200) {
-    openNotification({
-      message: res.message || "Cập nhật thành công",
-      description: "Vui lòng đợi trong giây lát",
-      notificationType: "success",
-    });
-    await DELAY(2000);
-    return res.data;
-  } else {
-    openNotification({
-      description: res?.message ?? "Vui lòng thử lại",
-      message: "Cập nhật thất bại",
-      notificationType: "error",
-    });
-    return null;
-  }
 };

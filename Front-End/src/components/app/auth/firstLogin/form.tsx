@@ -1,11 +1,12 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Checkbox, Form, Input, Spin } from "antd";
+import { Button, Checkbox, Form, Input, message, Spin } from "antd";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { IUser } from "@/auth/next-auth";
-import { addPhone } from "../even";
-import { revalidatePathTo } from "@/services/auth";
+import { firstLoginByprovider } from "@/services/auth";
+import { useAppDispatch } from "@/redux/store";
+import { updateUserInfo } from "@/redux/user-info/slice";
 
 type FieldType = {
   fullName: string;
@@ -22,22 +23,28 @@ const FirstLoginForm = ({ user }: { user: IUser }) => {
     email: user?.email,
     agreement: true,
   };
-
+  const dispatch = useAppDispatch();
   const [form] = Form.useForm();
   // xử lý đăng kí
   const onFinish = async (values: Omit<FieldType, "agreement">) => {
     setLoading(true);
-    const data = await addPhone({
+    const input = {
       providerId: user?.providerId!,
+      avatar: user.avatar!,
       fullName: values.fullName,
       phone: values.phone,
       email: values.email,
-      avatar: user?.avatar!,
-    });
-    if (data) {
+    };
+    const res = await firstLoginByprovider(input);
+    if (!res.isError) {
+      message.success(res.message);
+      const data = res.data;
+      dispatch(updateUserInfo(data.user));
       await session.update(data);
-      revalidatePathTo(callbackUrl);
       router.push(callbackUrl);
+    } else {
+      message.error(res.message);
+      return null;
     }
     setLoading(false);
   };

@@ -1,101 +1,58 @@
 "use server";
 
 import { del, post, put } from "../axios.helper";
-import { checkToken, getToken } from "../cookies";
+import { getConfigToken } from "../cookies";
 
 export const addCartItem = async (productId: number) => {
-  const check = await checkToken();
-  const { userId, token } = getToken();
-  if (check && userId && token) {
-    try {
-      const res = await post<CartResponse>(
-        `/carts`,
-        { productId, userId },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      return res.data.cartItems[0].id;
-    } catch {
-      return false;
-    }
-  } else return false;
+  try {
+    const { userId, configToken } = await getConfigToken();
+    const res = await post<CartResponse>(
+      `/carts`,
+      { productId, userId },
+      configToken
+    );
+    return res;
+  } catch (error) {
+    return error as ReqError;
+  }
 };
+
 export const deleteCartItem = async (id: number) => {
-  const check = await checkToken();
-  const { userId, token } = getToken();
-  if (check && token && userId) {
-    try {
-      await del(`/carts/cart-item/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      return true;
-    } catch {
-      return false;
-    }
+  const { configToken } = await getConfigToken();
+  try {
+    const res = await del(`/carts/cart-item/${id}`, configToken);
+    return res;
+  } catch (error) {
+    return error as ReqError;
   }
-  return false;
 };
+
 export const addQuantity = async (id: number, quantity: number) => {
-  const check = await checkToken();
-  const { userId, token } = getToken();
-  if (check && token && userId) {
-    try {
-      await put(
-        `/carts/cart-item/${id}`,
-        { quantity: quantity + 1 },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      return true;
-    } catch {
-      return false;
-    }
+  try {
+    const { configToken } = await getConfigToken();
+    const res = await put(
+      `/carts/cart-item/${id}`,
+      { quantity: quantity + 1 },
+      configToken
+    );
+    return res;
+  } catch (error) {
+    return error as ReqError;
   }
-  return false;
 };
+
 export const subQuantity = async (id: number, quantity: number) => {
-  const check = await checkToken();
-  const { userId, token } = getToken();
-  if (check && token && userId) {
-    try {
-      await put(
-        `/carts/cart-item/${id}`,
-        { quantity: quantity - 1 },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      return true;
-    } catch {
-      return false;
-    }
-  }
-  return false;
+  const { configToken } = await getConfigToken();
+
+  await put(`/carts/cart-item/${id}`, { quantity: quantity - 1 }, configToken);
 };
+
 export const deleteListItem = async (listId: number[]) => {
-  const check = await checkToken();
-  const { userId, token } = getToken();
-  if (check && token && userId) {
-    try {
-      await del(`/carts/cart-item/${listId.toString()}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      return true;
-    } catch {
-      return false;
-    }
+  const { configToken } = await getConfigToken();
+  try {
+    const res = await del(`/carts/cart-item/${listId.toString()}`, configToken);
+    return res;
+  } catch (error) {
+    return error as ReqError;
   }
-  return false;
 };

@@ -1,16 +1,11 @@
 "use server";
 import { get } from "../axios.helper";
-import { checkToken, getToken } from "../cookies";
+import { getConfigToken } from "../cookies";
 
 export async function getCart() {
-  await checkToken();
-  const { userId, token } = getToken();
+  const { userId, configToken } = await getConfigToken();
   try {
-    const res = await get<CartResponse>(`/carts/user/${userId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const res = await get<CartResponse>(`/carts/user/${userId}`, configToken);
     return res.data;
     // todo
   } catch {

@@ -9,8 +9,9 @@ export const EditAddressButton = ({ address }: { address: Address }) => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const handleSetDefault = async () => {
     setLoading(true);
-    await setAddressDefault(address);
-    message.success("Cập nhật thông tin thành công");
+    const res = await setAddressDefault(address);
+    if (res.isError) message.error(res.message);
+    else message.success(res.message);
     setLoading(false);
   };
   return (
@@ -24,8 +25,9 @@ export const DeleteAddressButton = ({ addressId }: { addressId: number }) => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const handleDeleteAddress = async () => {
     setLoading(true);
-    await deleteAddress(addressId);
-    message.success("Đã xóa địa chỉ");
+    const res = await deleteAddress(addressId);
+    if (res.isError) message.error(res.message);
+    else message.success(res.message);
     setLoading(false);
   };
   return (

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { CiDeliveryTruck } from "react-icons/ci";
 import { PiMapPinThin, PiPhoneThin } from "react-icons/pi";
 
 const nav = [
@@ -11,7 +10,7 @@ const nav = [
         1800.2044
       </p>
     ),
-    link: "/contact",
+    link: "tel:18002044",
   },
   {
     icon: <PiMapPinThin size={34} />,

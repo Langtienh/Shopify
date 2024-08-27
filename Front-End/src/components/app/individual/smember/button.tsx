@@ -5,12 +5,14 @@ import { logout } from "@/services/auth";
 import { useAppDispatch } from "@/redux/store";
 import { setTotalQuantity } from "@/redux/cart/slice";
 import { setWishList } from "@/redux/wish-list/slice";
+import { updateUserInfo } from "@/redux/user-info/slice";
 
 export const LogoutBtn = () => {
   const dispatch = useAppDispatch();
   const handleLogout = async () => {
     dispatch(setTotalQuantity(0));
     dispatch(setWishList([]));
+    dispatch(updateUserInfo(null));
     await logout();
   };
   return (

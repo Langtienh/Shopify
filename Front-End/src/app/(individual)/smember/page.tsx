@@ -5,6 +5,7 @@ import Nav from "@/components/app/individual/smember/homePage/nav";
 import Profile from "@/components/app/individual/smember/user.info";
 import { Suspense } from "react";
 import WishListSkeleton from "@/components/app/individual/smember/homePage/slider/skeleton";
+import Link from "next/link";
 
 export default function Page() {
   return (
@@ -32,7 +33,11 @@ export default function Page() {
         message="Cập nhật thông tin cá nhân và địa chỉ để có trải nghiệm đặt hàng nhanh và thuận tiện hơn."
         type="info"
         showIcon
-        action={<Button type="primary">Cập nhật</Button>}
+        action={
+          <Link href="/smember/user-info">
+            <Button type="primary">Cập nhật</Button>
+          </Link>
+        }
       />
       <Nav />
       <Suspense fallback={<WishListSkeleton />}>

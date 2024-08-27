@@ -1,10 +1,14 @@
+type ReqError = {
+  isError: true;
+  message: string;
+  status: number;
+};
+
 type RegisterDTO = {
   fullName: string;
   phone: string;
   password: string;
   email: string;
-  address: string;
-  avatar: string;
 };
 
 type FirstLoginDTO = {

@@ -1,18 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { openNotification } from "@/lib/nofication";
+import { message } from "antd";
 import { useState } from "react";
 
 export const VoucherButton = () => {
   const [voucher, setVoucher] = useState<string>("");
-  const onClick = () => {
-    openNotification({
-      notificationType: "success",
-      message: "Áp dụng thành công",
-      description: "",
-    });
-  };
+  const onClick = () => message.success("Áp dụng thành công");
   return (
     <>
       <input

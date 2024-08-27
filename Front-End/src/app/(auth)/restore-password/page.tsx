@@ -1,8 +1,7 @@
 "use client";
 
-import { openNotification } from "@/lib/nofication";
 import { resetPassword } from "@/services/auth";
-import { Button, Form, Input, Spin } from "antd";
+import { Button, Form, Input, message, Spin } from "antd";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -14,22 +13,12 @@ export default function Page() {
   const onFinish = async (form: { password: string }) => {
     setLoading(true);
     const res = await resetPassword(form.password);
-    if (res.isSucsess) {
-      openNotification({
-        message: res.message,
-        description:
-          "Bạn sẽ được chuyển tới trang đăng nhập trong vài giây nữa",
-        notificationType: "success",
-      });
+    if (!res.isError) {
+      message.success(res.message);
       setTimeout(() => {
         router.push("/login");
       }, 2000);
-    } else
-      openNotification({
-        message: res.message,
-        description: "Vui lòng thử lại",
-        notificationType: "error",
-      });
+    } else message.error(res.message);
     setLoading(false);
   };
   return (

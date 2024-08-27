@@ -16,7 +16,7 @@ export default function UpdateUserForm({
   user,
   addressDefault,
 }: {
-  user: IUser;
+  user: User;
   addressDefault?: string;
 }) {
   const [isEditFullName, setEditFullName] = useState<boolean>(false);
@@ -82,13 +82,20 @@ export default function UpdateUserForm({
             />
           </Form.Item>
         </div>
-
-        <Form.Item<FieldType>
-          name="phone"
-          rules={[{ required: true, message: "Vui lòng điền số điện thoại!" }]}
-        >
-          <Input disabled type="phone" placeholder="Nhập số điện thoại" />
-        </Form.Item>
+        <div className="flex gap-5">
+          <Form.Item<FieldType>
+            name="phone"
+            rules={[
+              { required: true, message: "Vui lòng điền số điện thoại!" },
+            ]}
+            className="flex-1"
+          >
+            <Input disabled type="phone" placeholder="Nhập số điện thoại" />
+          </Form.Item>
+          <Form.Item>
+            <div className="size-10" />
+          </Form.Item>
+        </div>
 
         <div className="flex gap-5">
           <Form.Item<FieldType>
@@ -117,12 +124,24 @@ export default function UpdateUserForm({
           </Form.Item>
         </div>
 
-        <Form.Item>
-          <Input disabled value={`Ngày tham gia Smember: ${formattedDate}`} />
-        </Form.Item>
-        <Form.Item>
-          <Input disabled value={`Tổng tiền đã mua sắm: ${0}đ`} />
-        </Form.Item>
+        <div className="flex gap-5">
+          <Form.Item className="flex-1">
+            <Input disabled value={`Ngày tham gia Smember: ${formattedDate}`} />
+          </Form.Item>
+          <Form.Item>
+            <div className="size-10" />
+          </Form.Item>
+        </div>
+
+        <div className="flex gap-5">
+          <Form.Item className="flex-1">
+            <Input disabled value={`Tổng tiền đã mua sắm: ${0}đ`} />
+          </Form.Item>
+          <Form.Item>
+            <div className="size-10" />
+          </Form.Item>
+        </div>
+
         <div className="flex gap-5">
           <Form.Item className="flex-1">
             <Input
@@ -138,18 +157,30 @@ export default function UpdateUserForm({
             </Link>
           </Form.Item>
         </div>
-        <Form.Item>
-          <Link href="/smember/change-password">
-            <Button htmlType="button" className="w-full">
-              Đổi mật khẩu
+
+        <div className="flex gap-5">
+          <Form.Item className="flex-1">
+            <Link href="/smember/change-password">
+              <Button htmlType="button" className="w-full">
+                Đổi mật khẩu
+              </Button>
+            </Link>
+          </Form.Item>
+          <Form.Item>
+            <div className="size-10" />
+          </Form.Item>
+        </div>
+
+        <div className="flex gap-5">
+          <Form.Item className="flex-1">
+            <Button type="primary" danger htmlType="submit" className="w-full">
+              Cập nhật thông tin
             </Button>
-          </Link>
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" danger htmlType="submit" className="w-full">
-            Cập nhật thông tin
-          </Button>
-        </Form.Item>
+          </Form.Item>
+          <Form.Item>
+            <div className="size-10" />
+          </Form.Item>
+        </div>
       </Form>
     </Spin>
   );

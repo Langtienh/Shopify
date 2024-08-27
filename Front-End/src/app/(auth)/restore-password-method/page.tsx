@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, message } from "antd";
 import Image from "next/image";
 import {
   Dialog,
@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/dialog";
 import { useState } from "react";
 import { verifyMail, verifyOTP } from "@/services/auth/action";
-import { openNotification } from "@/lib/nofication";
 import RenderIf from "@/components/global/renderif";
 import { useRouter } from "next/navigation";
 export default function Page() {
@@ -33,13 +32,11 @@ export default function Page() {
   const router = useRouter();
   const handleSubmit = async () => {
     const res = await verifyOTP(email, otp);
-    if (res.message)
-      openNotification({
-        message: res.message,
-        description: "",
-        notificationType: "error",
-      });
-    else router.push("/restore-password");
+    if (res.isError) message.error(res.message);
+    else {
+      message.success(res.message);
+      router.push("/restore-password");
+    }
     setOtp("");
   };
   return (

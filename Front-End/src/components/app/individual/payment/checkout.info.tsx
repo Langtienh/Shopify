@@ -1,8 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { openNotification } from "@/lib/nofication";
-import { Checkbox, Form } from "antd";
+import { Checkbox, Form, message } from "antd";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -35,35 +34,23 @@ export default function CheckoutInfo({
     getPath();
   }, [userInfo]);
   const onFinish = async () => {
-    if (paymentId === 0)
-      openNotification({
-        notificationType: "error",
-        message: "Vui lòng chọn phương thức thanh toán",
-        description: "",
-      });
+    if (paymentId === 0) message.error("Vui lòng chọn phương thức thanh toán");
     else if (paymentId === 1) {
       const data = { ...userInfo, paymentMethodId: 1, cartItemIds };
       const res = await createInvoiceByVNPay(data, totalPrice);
       router.push(res);
     } else if (paymentId === 2) {
       const data = { ...userInfo, paymentMethodId: 2, cartItemIds };
-      await createInvoice(data);
-      openNotification({
-        notificationType: "success",
-        message: "Đặt hàng thành công",
-        description:
-          "Thông tin chi tiết sẽ được gửi đến gmail của bạn, Vui lòng chú ý điện thoại, nhân viên sẽ liên hệ lại trong 2h",
-      });
-      dispatch(popCartItem(cartItemIds.length));
-      setTimeout(() => {
-        router.push("/");
-      }, 1000);
-    } else
-      openNotification({
-        notificationType: "error",
-        message: "Đã xảy ra lỗi",
-        description: "Vui lòng thử lại sau",
-      });
+      const res = await createInvoice(data);
+      if (res.isError) message.error(res.message);
+      else {
+        message.success(res.message);
+        dispatch(popCartItem(cartItemIds.length));
+        setTimeout(() => {
+          router.push("/");
+        }, 300);
+      }
+    } else message.error("Đã xảy ra lỗi, vui lòng thử lại sau");
   };
   const [paymentId, setPaymentId] = useState<number>(0);
   const [show, setShow] = useState<boolean>(false);

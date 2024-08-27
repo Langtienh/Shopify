@@ -1,23 +1,21 @@
 "use client";
 
+import { useAppSelector } from "@/redux/store";
 import { Image } from "antd";
-import { useSession } from "next-auth/react";
 
 export default function UserInfo() {
-  const session = useSession();
-  const user = session.data?.user;
-  const isSucsess = user && user?.phone && user?.avatar && user?.fullName;
+  const user = useAppSelector((state) => state.userInfo.user);
   return (
     <>
-      {isSucsess && (
+      {user && (
         <div className="flex gap-4 items-center w-full">
           <div className="size-[74px] flex-shrink-0 rounded-full border-2 border-purple-800 bg-white">
             <Image
               className="rounded-full"
               width={70}
               height={70}
-              src={user?.avatar || "/images/default/user.svg"}
-              fallback="/images/default/user.svg"
+              src={user?.avatar || "/images/default/avatar.jpg"}
+              fallback="/images/default/avatar.jpg"
               alt="avatar"
             />
           </div>

@@ -5,8 +5,7 @@ import { useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import RenderIf from "@/components/global/renderif";
 import { FaLock, FaUnlock } from "react-icons/fa";
-import { Tooltip } from "antd";
-import { openNotification } from "@/lib/nofication";
+import { message, Tooltip } from "antd";
 import { updateStatus } from "@/services/user";
 import { AiOutlineLoading } from "react-icons/ai";
 import Link from "next/link";
@@ -15,26 +14,20 @@ export const LockUser = ({
   user,
   isDemo,
 }: {
-  user: UserTypeCustom;
+  user: User;
   isDemo?: boolean;
 }) => {
   const isAdmin = user.roles.includes("admin");
   const change = async (preStatus: boolean) => {
     setLoading(true);
     if (isDemo) {
-      openNotification({
-        notificationType: "error",
-        message: "Chỉ được phép xem",
-        description: "Liên hệ quản trị viên để được cấp quyền truy cập",
-      });
+      message.warning("Chỉ được phép xem");
     } else if (isAdmin) {
-      openNotification({
-        notificationType: "error",
-        message: "Đã xảy ra lỗi",
-        description: "Không được thay đổi tài khoản admin",
-      });
+      message.warning("Không được thay đổi tài khoản admin");
     } else {
-      await updateStatus(user.id, !preStatus);
+      const res = await updateStatus(user.id, !preStatus);
+      if (res.isError) message.error(res.message);
+      else message.success(res.message);
     }
     setLoading(false);
   };
@@ -74,11 +67,11 @@ export const LockUser = ({
   );
 };
 
-export const EditUser = ({ userId }: { userId: string }) => {
+export const EditUser = ({ userId }: { userId: number }) => {
   return (
     <>
       <Tooltip title="Chỉnh sửa" color="green">
-        <Link href={`/dashboard/users/${userId.toLocaleLowerCase()}/edit`}>
+        <Link href={`/dashboard/users/${userId}/edit`}>
           <Button
             className="text-red-600 hover:text-red-500 size-6"
             variant="ghost"

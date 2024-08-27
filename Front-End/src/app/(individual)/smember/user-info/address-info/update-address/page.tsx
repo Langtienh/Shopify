@@ -41,8 +41,9 @@ export default function Page() {
     };
     // todo mesage
     setLoading(true);
-    await createAddress(_address);
-    message.success("Thêm địa chỉ thành công", 1);
+    const res = await createAddress(_address);
+    if (res.isError) message.error(res.message);
+    else message.success(res.message);
     setTimeout(() => {
       setLoading(false);
       router.push("/smember/user-info/address-info");

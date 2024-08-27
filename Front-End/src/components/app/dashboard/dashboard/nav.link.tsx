@@ -12,6 +12,7 @@ import { logout } from "@/services/auth";
 import { setTotalQuantity } from "@/redux/cart/slice";
 import { setWishList } from "@/redux/wish-list/slice";
 import { useAppDispatch } from "@/redux/store";
+import { updateUserInfo } from "@/redux/user-info/slice";
 const links = [
   { name: "Home", href: "/dashboard", icon: FaHome },
   { name: "Products", href: "/dashboard/products", icon: AiFillProduct },
@@ -61,6 +62,7 @@ export const LogoutBtn = () => {
   const handleLogout = async () => {
     dispatch(setTotalQuantity(0));
     dispatch(setWishList([]));
+    dispatch(updateUserInfo(null));
     await logout();
   };
   return (

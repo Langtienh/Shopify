@@ -1,10 +1,7 @@
 "use client";
-import { openNotification } from "@/lib/nofication";
-import { DELAY } from "@/lib/utils2";
-import { Button, Image, Spin } from "antd";
+import { Button, Image } from "antd";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
 // hardcode
 const providers = [
   {
@@ -28,30 +25,12 @@ export default function SignProvider() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
-  const [spinning, setSpinning] = useState<boolean>(false);
   const signInWith = async (provider: string) => {
-    try {
-      const res = await signIn(provider, { callbackUrl });
-      openNotification({
-        message: "Đăng nhập thành công",
-        description: "Vui lòng đợi trong giây lát",
-        notificationType: "success",
-      });
-      setSpinning(true);
-      await DELAY(2000);
-      setSpinning(false);
-      router.push("/");
-    } catch {
-      openNotification({
-        message: "Đăng nhập thất bại",
-        description: "Tài khoản hoặc mật khẩu không chính xác",
-        notificationType: "error",
-      });
-    }
+    await signIn(provider, { callbackUrl });
+    router.push("/");
   };
   return (
     <>
-      <Spin fullscreen spinning={spinning} />
       {providers.map((item) => (
         <Button
           onClick={() => {

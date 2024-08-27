@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "antd";
+import { Button, message } from "antd";
 
 import { useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
@@ -25,11 +25,19 @@ export default function WishListButton({ productId }: { productId: number }) {
     else {
       setIsloading(true);
       if (isLoved) {
-        await delWishListItem(productId);
-        dispatch(popWishListItem(productId));
+        const res = await delWishListItem(productId);
+        if (res.isError) message.error(res.message);
+        else {
+          message.success(res.message);
+          dispatch(popWishListItem(productId));
+        }
       } else {
-        await createWishListItem(productId);
-        dispatch(pushWishListItem(productId));
+        const res = await createWishListItem(productId);
+        if (res.isError) message.error(res.message);
+        else {
+          message.success(res.message);
+          dispatch(pushWishListItem(productId));
+        }
       }
       setIsloading(false);
     }

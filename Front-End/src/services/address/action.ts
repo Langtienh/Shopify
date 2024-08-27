@@ -1,38 +1,35 @@
 "use server";
 
 import { del, post, put } from "../axios.helper";
-import { checkToken, getToken } from "../cookies";
+import { getConfigToken } from "../cookies";
 
 export const createAddress = async (address: Omit<Address, "id">) => {
-  await checkToken();
-  const { token, userId } = getToken();
-  await post(
-    "/address",
-    { ...address, userId },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  try {
+    const { userId, configToken } = await getConfigToken();
+    const res = await post("/address", { ...address, userId }, configToken);
+    return res;
+  } catch (error) {
+    return error as ReqError;
+  }
 };
+
 export const deleteAddress = async (addressId: number) => {
-  await checkToken();
-  const { token } = getToken();
-  await del(`/address/${addressId}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  try {
+    const { configToken } = await getConfigToken();
+    const res = await del(`/address/${addressId}`, configToken);
+    return res;
+  } catch (error) {
+    return error as ReqError;
+  }
 };
 
 export const setAddressDefault = async (address: Address) => {
-  const _address = { ...address, default: true };
-  await checkToken();
-  const { token } = getToken();
-  await put(`/address/${address.id}`, _address, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  try {
+    const _address = { ...address, default: true };
+    const { configToken } = await getConfigToken();
+    const res = await put(`/address/${address.id}`, _address, configToken);
+    return res;
+  } catch (error) {
+    return error as ReqError;
+  }
 };

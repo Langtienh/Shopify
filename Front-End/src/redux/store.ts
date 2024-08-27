@@ -4,6 +4,7 @@ import cartReducers from "@/redux/cart/slice";
 import wishListReducers from "@/redux/wish-list/slice";
 import LoginModalReducers from "@/redux/login-modal/slice";
 import checkoutReducers from "@/redux/checkout/slice";
+import userInfoReducers from "@/redux/user-info/slice";
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     wishLish: wishListReducers,
     loginModal: LoginModalReducers,
     checkout: checkoutReducers,
+    userInfo: userInfoReducers,
   },
 });
 

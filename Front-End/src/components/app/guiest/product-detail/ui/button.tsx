@@ -1,11 +1,11 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { openNotification } from "@/lib/nofication";
 import { converPriceToVN } from "@/lib/utils2";
 import { pushCartItem } from "@/redux/cart/slice";
 import { showLoginModal } from "@/redux/login-modal/slice";
 import { useAppDispatch } from "@/redux/store";
 import { addCartItem } from "@/services/cart";
+import { message } from "antd";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
@@ -67,10 +67,12 @@ export const BuyButton = ({ productId }: { productId: number }) => {
   const dispatch = useAppDispatch();
   const onclick = async () => {
     if (isLogin) {
-      try {
-        const id = await addCartItem(productId);
-        router.push(`/cart?checkList=${id}`);
-      } catch {}
+      const res = await addCartItem(productId);
+      if (res.isError) message.error(res.message);
+      else {
+        message.success(res.message);
+        router.push(`/cart?checkList=${res.data.cartItems[0].id}`);
+      }
     } else dispatch(showLoginModal(path));
   };
   return (
@@ -93,15 +95,14 @@ export const AddToCartButton = ({ productId }: { productId: number }) => {
   const isLogin = session?.user && session.refreshToken;
   const onClick = async () => {
     if (isLogin) {
-      try {
-        await addCartItem(productId);
+      setLoading(true);
+      const res = await addCartItem(productId);
+      if (res.isError) message.error(res.message);
+      else {
+        message.success(res.message);
         dispatch(pushCartItem());
-        openNotification({
-          message: "Thêm vào giỏ hàng thành công",
-          description: "Thanh toán ngay để nhận ưu đãi",
-          notificationType: "success",
-        });
-      } catch {}
+      }
+      setLoading(false);
     } else dispatch(showLoginModal(path));
   };
   return (

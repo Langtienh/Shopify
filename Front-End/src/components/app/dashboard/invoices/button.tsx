@@ -1,10 +1,8 @@
 "use client";
 import RenderIf from "@/components/global/renderif";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
-import { openNotification } from "@/lib/nofication";
 import { updateInvoiceStatus } from "@/services/invoice";
-import { Badge, Select } from "antd";
+import { Badge, message, Select } from "antd";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
@@ -34,7 +32,6 @@ export const EditStatus = ({
   status: OrderStatus;
   id: string;
 }) => {
-  const { toast } = useToast();
   const [edit, setEdit] = useState(false);
   const [loading, setLoading] = useState(false);
   const [_status, setStatus] = useState<OrderStatus>("PENDING");
@@ -42,19 +39,12 @@ export const EditStatus = ({
   const handleChange = (values: OrderStatus) => setStatus(values);
   const submit = async () => {
     if (isDemo) {
-      openNotification({
-        notificationType: "error",
-        description: "Chỉ được phép xem",
-        message: "",
-      });
+      message.warning("Chỉ được phép xem");
     } else {
       setLoading(true);
-      await updateInvoiceStatus(id, _status);
-      openNotification({
-        notificationType: "success",
-        description: "Cập nhật thành công",
-        message: "Thành công",
-      });
+      const res = await updateInvoiceStatus(id, _status);
+      if (res.isError) message.error(res.message);
+      else message.success(res.message);
       setLoading(false);
       setEdit(false);
     }
