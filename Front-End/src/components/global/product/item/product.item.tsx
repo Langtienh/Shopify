@@ -1,19 +1,17 @@
-import {
-  discoutForMember,
-  priceShow,
-  priceThrough,
-  productToSlug,
-} from "@/lib/utils2";
 import Link from "next/link";
 import RibbonCustom from "@/components/global/product/item/badge.ribbon.custom";
 import Image from "next/image";
 import WishListButton from "@/components/global/product/item/wishlist.button";
-export default function ProductItem({ product }: { product: ProductResponse }) {
+export default function ProductItem({
+  product,
+}: {
+  product: Product & ProductFormat;
+}) {
   return (
     <div className="relative">
       <div className="flex gap-1 flex-col p-[10px] bg-white border shadow-md rounded-lg hover:shadow-xl">
         <RibbonCustom text={`Giảm ${product.discount}%`} />
-        <Link className="group" href={productToSlug(product.name, product.id)}>
+        <Link className="group" href={product.slug}>
           <div className="flex justify-center">
             <Image
               className="relative z-0 group-hover:scale-[1.05]"
@@ -28,10 +26,10 @@ export default function ProductItem({ product }: { product: ProductResponse }) {
           </h2>
           <div className="flex items-baseline gap-1 font-bold">
             <span className="text-sm sm:text-base text-red-500">
-              {priceShow(product.price, product.discount)}
+              {product.priceF}
             </span>
             <span className="line-through text-gray-500 text-[12px] sm:text-sm">
-              {priceThrough(product.price)}
+              {product.priceThroughF}
             </span>
           </div>
           <div className="h-5">
@@ -39,7 +37,7 @@ export default function ProductItem({ product }: { product: ProductResponse }) {
               <p className="text-[10px] sm:text-[12px]">
                 Student giảm thêm{" "}
                 <span className="text-red-500 text-[12px] sm:text-sm font-bold">
-                  {discoutForMember(product.discountForMember)}
+                  {product.discountForMemberF}
                 </span>
               </p>
             )}

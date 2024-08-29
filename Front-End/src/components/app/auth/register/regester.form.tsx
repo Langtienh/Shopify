@@ -6,7 +6,7 @@ import { register } from "@/services/auth";
 import { useRouter } from "next/navigation";
 import RenderIf from "@/components/global/renderif";
 import { Button as MyButton } from "@/components/ui/button";
-import { IUser } from "@/auth/next-auth";
+import { updateUserById } from "@/services/user/action";
 
 export default function RegesterForm({
   isCreateByAdmin,
@@ -29,11 +29,14 @@ export default function RegesterForm({
   const onFinish = async (values: RegisterForm) => {
     setLoading(true);
     console.log(values);
-    const res = await register(values);
+    const res = user
+      ? await updateUserById(user.id, values)
+      : await register(values);
     if (res.isError) message.error(res.message);
     else {
       message.success(res.message);
-      router.push("/login");
+      if (isCreateByAdmin) router.push("/dashboard/users");
+      else router.push("/login");
     }
     setLoading(false);
   };
@@ -84,43 +87,44 @@ export default function RegesterForm({
         >
           <Input placeholder="Nhập email" />
         </Form.Item>
-
-        <Form.Item
-          name="password"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng điền mật khẩu!",
-            },
-          ]}
-          hasFeedback
-        >
-          <Input.Password placeholder="Nhập mật khẩu" />
-        </Form.Item>
-
-        <Form.Item
-          name="confirm"
-          dependencies={["password"]}
-          hasFeedback
-          rules={[
-            {
-              required: true,
-              message: "Xác nhận lại mật khẩu!",
-            },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue("password") === value) {
-                  return Promise.resolve();
-                }
-                return Promise.reject(
-                  new Error("Mật khẩu mới mà bạn đã nhập không khớp!")
-                );
+        <RenderIf renderIf={!user}>
+          <Form.Item
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng điền mật khẩu!",
               },
-            }),
-          ]}
-        >
-          <Input.Password placeholder="Nhập lại mật khẩu" />
-        </Form.Item>
+            ]}
+            hasFeedback
+          >
+            <Input.Password placeholder="Nhập mật khẩu" />
+          </Form.Item>
+
+          <Form.Item
+            name="confirm"
+            dependencies={["password"]}
+            hasFeedback
+            rules={[
+              {
+                required: true,
+                message: "Xác nhận lại mật khẩu!",
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue("password") === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error("Mật khẩu mới mà bạn đã nhập không khớp!")
+                  );
+                },
+              }),
+            ]}
+          >
+            <Input.Password placeholder="Nhập lại mật khẩu" />
+          </Form.Item>
+        </RenderIf>
         <RenderIf renderIf={!isCreateByAdmin}>
           <Form.Item
             name="agreement"
@@ -170,7 +174,8 @@ export default function RegesterForm({
                   className="bg-blue-600 hover:bg-blue-500"
                   type="submit"
                 >
-                  Create user
+                  <RenderIf renderIf={user}>Update</RenderIf>
+                  <RenderIf renderIf={!user}>Create user</RenderIf>
                 </MyButton>
               </div>
             </RenderIf>

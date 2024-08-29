@@ -18,12 +18,34 @@ export const updateStatus = async (userId: number, status: boolean) => {
     return error as ReqError;
   }
 };
+
 export const updateUser = async (user: {
   fullName: string;
   phone: string;
   email: string;
 }) => {
   const { userId, configToken } = await getConfigToken();
+  try {
+    const res = await put(`/users/${userId}`, user, configToken);
+    return res;
+  } catch (error) {
+    return error as ReqError;
+  }
+};
 
-  await put(`/users/${userId}`, user, configToken);
+export const updateUserById = async (
+  userId: number,
+  user: {
+    fullName: string;
+    phone: string;
+    email: string;
+  }
+) => {
+  const { configToken } = await getConfigToken();
+  try {
+    const res = await put(`/users/${userId}`, user, configToken);
+    return res;
+  } catch (error) {
+    return error as ReqError;
+  }
 };

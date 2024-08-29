@@ -2,10 +2,12 @@
 
 import RenderIf from "@/components/global/renderif";
 import { Button } from "@/components/ui/button";
+import { updateProductStasus } from "@/services/product/action";
 
-import { Select } from "antd";
+import { message, Select } from "antd";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { IoIosAdd } from "react-icons/io";
 import { RiDeleteBin6Line, RiSubtractFill } from "react-icons/ri";
@@ -35,11 +37,31 @@ export const EditProduct = ({ productId }: { productId: number }) => {
   );
 };
 
-export const DelProduct = ({ productId }: { productId: number }) => {
-  const handleChange = () => {};
+export const DelProduct = ({
+  productId,
+  isDemo,
+  isActive,
+}: {
+  productId: number;
+  isDemo?: boolean;
+  isActive: boolean;
+}) => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const handleChange = async () => {
+    setLoading(true);
+    if (isDemo) {
+      message.warning("Chỉ được phép xem");
+    } else {
+      const res = await updateProductStasus(productId, !isActive);
+      if (res.isError) message.error(res.message);
+      else message.success(res.message);
+    }
+    setLoading(false);
+  };
   return (
     <>
       <Button
+        disabled={loading}
         className="text-red-600 hover:text-red-500 size-6"
         variant="ghost"
         size="icon"

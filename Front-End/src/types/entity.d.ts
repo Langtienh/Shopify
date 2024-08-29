@@ -12,7 +12,7 @@ type Product = {
   brand: { name: string; id: number };
   category: { name: string; label: string; id: number };
   avgRate: number;
-  attributes: { attribute: string; value: string }[];
+  attributes: { attribute: string; value: string; label: string }[];
 };
 
 type CartItemType = {

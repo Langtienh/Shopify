@@ -1,10 +1,7 @@
-import {
-  ChartFilterByCategory,
-  ProductChartCompare,
-} from "@/components/app/dashboard/products/chart";
 import ProductTable from "@/components/app/dashboard/products/table";
 import { Suspense } from "react";
 import ProductTableSkeleton from "@/components/app/dashboard/products/skeleton";
+import getAuthCache from "@/auth/getSesstion";
 
 type PropsType = {
   searchParams: {
@@ -19,25 +16,23 @@ export default async function Page({
 }: PropsType) {
   const _limit = limit || 10;
   const _page = page || 1;
-
+  const auth = await getAuthCache();
+  const isDemo = auth?.user?.roles?.includes("demo");
   return (
     <>
-      <div className="grid gap-5 lg:grid-cols-12">
-        <ChartFilterByCategory />
-        <ProductChartCompare />
-        <div className="lg:col-span-12 shadow-xl">
-          <Suspense
-            key={`${_limit}${page}${category}${search}`}
-            fallback={<ProductTableSkeleton />}
-          >
-            <ProductTable
-              limit={_limit}
-              page={_page}
-              category={category}
-              search={search}
-            />
-          </Suspense>
-        </div>
+      <div className="lg:col-span-12 shadow-xl">
+        <Suspense
+          key={`${_limit}${page}${category}${search}`}
+          fallback={<ProductTableSkeleton />}
+        >
+          <ProductTable
+            isDemo={isDemo}
+            limit={_limit}
+            page={_page}
+            category={category}
+            search={search}
+          />
+        </Suspense>
       </div>
     </>
   );

@@ -64,7 +64,7 @@ export default async function Page({
         <TableBody>
           {users.map((user) => (
             <TableRow key={user.id}>
-              <TableCell className="font-bold">{user.id}</TableCell>
+              <TableCell className="font-bold">{`U0${user.id}`}</TableCell>
               <TableCell className="font-bold capitalize">
                 <div className="flex items-center">
                   <Avatar className="mr-3 size-8">

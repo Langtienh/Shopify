@@ -41,8 +41,9 @@ export default function UpdateUserForm({
     setEditEmail(false);
     setEditFullName(false);
     setLoading(true);
-    await updateUser(values);
-    message.success("Cập nhật thành công");
+    const res = await updateUser(values);
+    if (res.isError) message.error(res.message);
+    else message.success(res.message);
     setLoading(false);
   };
 

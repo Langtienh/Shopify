@@ -1,3 +1,9 @@
+import {
+  converPriceToVN,
+  priceShow,
+  priceThrough,
+  productToSlug,
+} from "@/lib/utils2";
 import { get } from "../axios.helper";
 
 export const getProduct = async (
@@ -15,7 +21,13 @@ export const getProduct = async (
   if (search) query += `&search=${search}`;
   try {
     const res = await get<Page<Product>>(`/products/search-product?${query}`);
-    const products = res.data.result;
+    const products = res.data.result.map((product) => ({
+      ...product,
+      priceF: priceShow(product.price, product.discount),
+      discountForMemberF: converPriceToVN(product.discountForMember, "đ"),
+      priceThroughF: priceThrough(product.price),
+      slug: productToSlug(product.name, product.id),
+    }));
     const totalItem = res.data.totalItem;
     return { products, totalItem };
   } catch (error) {

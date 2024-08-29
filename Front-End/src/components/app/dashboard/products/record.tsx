@@ -1,6 +1,5 @@
 "use client";
 import { TableCell, TableRow } from "@/components/ui/table";
-import { converPriceToVN } from "@/lib/utils2";
 import { useState } from "react";
 import { DelProduct, EditProduct, ViewDetailToggle } from "./button";
 import Image from "next/image";
@@ -8,7 +7,13 @@ import { FaStar } from "react-icons/fa";
 import RenderIf from "@/components/global/renderif";
 import { Badge } from "antd";
 
-export default function Record({ product }: { product: Product }) {
+export default function Record({
+  isDemo,
+  product,
+}: {
+  product: Product & ProductFormat;
+  isDemo?: boolean;
+}) {
   const [showDetail, setShowDetail] = useState<boolean>(false);
   const toggle = (value: boolean) => setShowDetail(!value);
   // obj to arr
@@ -36,7 +41,7 @@ export default function Record({ product }: { product: Product }) {
             <Badge status="default" text="Dừng bán" />
           </RenderIf>
         </TableCell>
-        <TableCell>{converPriceToVN(product.price, "đ")}</TableCell>
+        <TableCell>{product.priceF}</TableCell>
         <TableCell>{product.stock}</TableCell>
         <TableCell>{product.viewCount}</TableCell>
         <TableCell>
@@ -47,7 +52,11 @@ export default function Record({ product }: { product: Product }) {
         </TableCell>
         <TableCell className="flex gap-3 justify-center items-center">
           <EditProduct productId={product.id} />
-          <DelProduct productId={product.id} />
+          <DelProduct
+            isActive={product.active}
+            isDemo={isDemo}
+            productId={product.id}
+          />
         </TableCell>
       </TableRow>
       {showDetail && (
@@ -66,16 +75,13 @@ export default function Record({ product }: { product: Product }) {
                 <div className="flex *:flex-1 w-full">
                   <li>Thương hiệu: {product.brand.name}</li>
                   <li>Giảm giá: {product.discount}%</li>
-                  <li>
-                    Giảm thêm cho member:{" "}
-                    {converPriceToVN(product.discountForMember, "đ")}
-                  </li>
+                  <li>Giảm thêm cho member: {product.discountForMemberF}</li>
                 </div>
                 <li className="flex *:flex-1 w-full">
                   {product.attributes.map((item) => (
                     <span
                       key={item.attribute}
-                    >{`${item.attribute}: ${item.value}`}</span>
+                    >{`${item.label}: ${item.value}`}</span>
                   ))}
                 </li>
               </ul>
