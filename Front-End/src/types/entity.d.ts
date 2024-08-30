@@ -50,9 +50,10 @@ type CommentType = {
   id: number;
   content: string;
   rate: number;
-  user: UserType;
+  user: User;
   product: Product;
-  productId: number;
+  purchased: boolean;
+  images: string[];
 };
 
 type OrderDetailType = {

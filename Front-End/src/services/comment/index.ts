@@ -1,3 +1,9 @@
-import { getAllCommentsByProductId } from "./query";
-import { update, del, createComment } from "./action";
-export { getAllCommentsByProductId, update, del, createComment };
+import { getAllCommentsByProductId, getAllComments } from "./query";
+import { update, deleteComment, createComment } from "./action";
+export {
+  getAllCommentsByProductId,
+  update,
+  deleteComment,
+  createComment,
+  getAllComments,
+};

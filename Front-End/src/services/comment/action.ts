@@ -1,27 +1,28 @@
 "use server";
 
-import { post } from "../axios.helper";
-import { checkToken, getToken } from "../cookies";
+import { del, post } from "../axios.helper";
+import { checkToken, getConfigToken, getToken } from "../cookies";
 
 export const update = async () => {};
-export const del = async () => {};
+
 export const createComment = async (input: {
   rate: number;
   productId: number;
   content: string;
 }) => {
+  const { configToken, userId } = await getConfigToken();
   try {
-    await checkToken();
-    const { userId, token } = getToken();
-    const res = await post(
-      "/comments",
-      { ...input, userId },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const res = await post("/comments", { ...input, userId }, configToken);
+    return res;
+  } catch (error) {
+    return error as ReqError;
+  }
+};
+
+export const deleteComment = async (commentId: number) => {
+  const { configToken } = await getConfigToken();
+  try {
+    const res = await del(`/comments/${commentId}`, configToken);
     return res;
   } catch (error) {
     return error as ReqError;
