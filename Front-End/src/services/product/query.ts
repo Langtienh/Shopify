@@ -1,3 +1,4 @@
+"use server";
 import {
   converPriceToVN,
   priceShow,
@@ -44,7 +45,7 @@ export const getAllProduct = async () => {
     return [];
   }
 };
-// bug call ở client bị lỗi
+// bug call ở client bị lỗi do env phải để next_public
 export const searchProductByName = async (value: string) => {
   const query = `name:${value}`;
   const res = await getProduct(1, 5, undefined, undefined, undefined, query);

@@ -3,12 +3,12 @@ import {
   getAllProduct,
   getProductById,
   getAttributesByCategory,
-  // searchProductByName,
+  searchProductByName,
   getProductByCategorySortByViewCounter,
 } from "./query";
-import { createProduct, upViewCount } from "./action";
-import { searchProductByName } from "./bug";
+import { createProduct, upViewCount, updateProduct } from "./action";
 export {
+  updateProduct,
   upViewCount,
   createProduct,
   getProduct,

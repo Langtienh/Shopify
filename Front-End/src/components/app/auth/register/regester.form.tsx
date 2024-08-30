@@ -28,7 +28,6 @@ export default function RegesterForm({
   const router = useRouter();
   const onFinish = async (values: RegisterForm) => {
     setLoading(true);
-    console.log(values);
     const res = user
       ? await updateUserById(user.id, values)
       : await register(values);

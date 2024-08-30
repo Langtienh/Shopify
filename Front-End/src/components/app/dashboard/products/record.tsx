@@ -64,11 +64,11 @@ export default function Record({
           <TableCell className="bg-gray-50" colSpan={9}>
             <div className="flex gap-5 w-full">
               <Image
-                className="basis-[80px]"
+                className="basis-[128px]"
                 src={product.image}
                 alt={product.name}
-                width={80}
-                height={80}
+                width={128}
+                height={128}
               />
               <ul className="flex-1 grid gap-2">
                 <li>Mô tả: {product.description}</li>

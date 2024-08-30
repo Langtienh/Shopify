@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
+import { Input as MyInput } from "@/components/ui/input";
 import {
   Checkbox,
   Form,
@@ -7,30 +8,99 @@ import {
   InputNumber,
   Select,
   Spin,
-  Upload,
-  GetProp,
-  UploadFile,
-  UploadProps,
   message,
 } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { FaFileUpload } from "react-icons/fa";
-import { createProduct } from "@/services/product";
+import { FaCamera } from "react-icons/fa";
+import {
+  createProduct,
+  getAttributesByCategory,
+  updateProduct,
+} from "@/services/product";
 import { AiFillProduct } from "react-icons/ai";
-import { MdOutlineAttachMoney } from "react-icons/md";
-import { LuPercent } from "react-icons/lu";
-import { converPriceToVN } from "@/lib/utils2";
+import Image from "next/image";
+import { getbrandsByCategory } from "@/services/brand";
+import { uploadProductImage } from "@/services/upload";
 
-type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
+type FormField = {
+  name: string;
+  price: number;
+  discount: number;
+  stock: number;
+  description: string;
+  active: boolean;
+  brandId: number;
+  categoryId: number;
+  discountForMember: number;
+};
+
+type Attribute = { attribute: string; value?: string; label: string };
 
 export default function ProductForm({
+  categories,
   product,
+  _brands,
 }: {
   product?: Product;
+  categories: CategoryType[];
+  _brands?: BrandType[];
 }): React.JSX.Element {
-  // tạo giá trị mặc định
+  const [file, setFile] = useState<File | null>(null);
+  const [image, setImage] = useState<string | null>(null);
+  const [category, setCategory] = useState<string | null>(null);
+  const [brands, setBrands] = useState<BrandType[]>([]);
+  // const [attributes, setAttributes] = useState<AttibulteResponse[]>([]);
+  const [attributesDatas, setAttributesDatas] = useState<Attribute[]>([]);
+
+  useEffect(() => {
+    if (product) {
+      setImage(product.image);
+      setAttributesDatas(product.attributes);
+    }
+  }, [product]);
+
+  useEffect(() => {
+    if (_brands) setBrands(_brands);
+  }, [_brands]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      if (category) {
+        const [_brands, _attributes] = await Promise.all([
+          getbrandsByCategory(category),
+          getAttributesByCategory(category),
+        ]);
+        setBrands(_brands);
+        const _attributesData = _attributes.map((item) => ({
+          attribute: item.name,
+          value: undefined,
+          label: item.label,
+        }));
+        setAttributesDatas(_attributesData);
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [category]);
+
+  const handleChangeCategory = (value: number) => {
+    const _category = categories.find((category) => category.id === value);
+    if (_category) setCategory(_category.name);
+  };
+
+  // xử lý ảnh trước upload
+  const handleAddImage = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setFile(file);
+      setImage(URL.createObjectURL(file));
+    }
+  };
+
+  // tạo giá trị form mặc định nếu là edit product
   const initialValues = {
     name: product?.name,
     description: product?.description,
@@ -39,62 +109,64 @@ export default function ProductForm({
     discount: product?.discount || 0,
     discountForMember: product?.discountForMember || 0,
     stock: product?.stock || 0,
+    categoryId: product?.category.id,
+    brandId: product?.brand.id,
   };
   // xử lý submit
   const [form] = Form.useForm();
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const onFinish = async (values: any) => {
+  const onFinish = async (productForm: FormField) => {
     setLoading(true);
-    const product = { ...values, "attributes[ram]": "11 GB" };
-    const formData = new FormData();
-    for (const name in product) {
-      if (product.hasOwnProperty(name)) {
-        formData.append(name, product[name]);
+    if (product) {
+      if (product.id < 413) message.error("Không được phép sửa sản phẩm gốc");
+      else {
+        message.error("Tính năng chưa hoàn thiện");
+        // const res = await updateProduct(productForm, product.id);
+      }
+    } else {
+      if (!file) message.warning("Vui lòng chọn ảnh");
+      else {
+        const attributes = attributesDatas.filter((item) => item.value);
+        const res = await createProduct({
+          ...productForm,
+          // @ts-ignore
+          attributes,
+        });
+        if (res?.isError) message.error(res.message);
+        else {
+          message.success(res.message);
+          const newProductId = res.data.id;
+          const formData = new FormData();
+          formData.append("files", file);
+          const resUpload = await uploadProductImage(formData, newProductId);
+          if (resUpload?.isError) message.error(res.message);
+          else {
+            message.success(res.message);
+            router.push("/dashboard/products");
+          }
+        }
       }
     }
-    const token = await createProduct();
-    console.log("check", token);
-    const res = await fetch("http://localhost:8080/api/v1/products", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    });
-    const data = await res.json();
-    console.log(data);
+
     setLoading(false);
   };
 
-  // xử lý ảnh trước upload
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
-
-  const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) =>
-    setFileList(newFileList);
-
-  const beforeUpload = (file: FileType) => {
-    const imageType = ["image/jpeg", "image/png", "image/webp"];
-    const isImage = imageType.includes(file.type);
-    if (!isImage) {
-      message.error(
-        `${file.name} không phải là file ảnh hoặc chưa hỗ trợ định dạng file`
-      );
-      return isImage || Upload.LIST_IGNORE;
+  const handleChangeAttribute = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    attribute: string
+  ) => {
+    const value = e.target.value;
+    const preAtributeIndex = attributesDatas.findIndex(
+      (item) => item.attribute == attribute
+    );
+    if (preAtributeIndex >= 0) {
+      const newValue = attributesDatas;
+      newValue[preAtributeIndex].value = value;
+      const newState = [...newValue];
+      setAttributesDatas(newState);
     }
-    const isLt2M = file.size / 1024 / 1024 < 10;
-    if (!isLt2M) {
-      message.error("Hình ảnh phải nhỏ hơn 10MB!");
-    }
-    return isLt2M || Upload.LIST_IGNORE;
-  };
-
-  const normFile = (e: any) => {
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e?.fileList;
   };
 
   return (
@@ -108,33 +180,6 @@ export default function ProductForm({
           size="large"
           initialValues={initialValues}
         >
-          {/* <Form.Item
-            name="image"
-            label="Image"
-            valuePropName="fileList"
-            getValueFromEvent={normFile}
-          >
-            <>
-              <Upload
-                accept="image/png, image/jpeg"
-                // action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
-                listType="picture-card"
-                fileList={fileList}
-                onChange={handleChange}
-                maxCount={1}
-                beforeUpload={beforeUpload}
-              >
-                <button style={{ border: 0, background: "none" }} type="button">
-                  <div className="flex justify-center">
-                    <FaFileUpload />
-                  </div>
-
-                  <div style={{ marginTop: 8 }}>Upload</div>
-                </button>
-              </Upload>
-            </>
-          </Form.Item> */}
-
           <Form.Item
             name="name"
             rules={[
@@ -154,14 +199,16 @@ export default function ProductForm({
               {
                 required: true,
                 message: "Vui lòng chọn loại hàng",
-                whitespace: true,
               },
             ]}
           >
-            <Select placeholder="Category (*)">
-              <Select.Option value="1">Red</Select.Option>
-              <Select.Option value="2">Green</Select.Option>
-              <Select.Option value="3">Blue</Select.Option>
+            <Select placeholder="Category (*)" onChange={handleChangeCategory}>
+              {categories &&
+                categories.map((category) => (
+                  <Select.Option key={category.name} value={category.id}>
+                    {category.label}
+                  </Select.Option>
+                ))}
             </Select>
           </Form.Item>
           <Form.Item
@@ -170,16 +217,28 @@ export default function ProductForm({
               {
                 required: true,
                 message: "Vui lòng chọn thương hiệu",
-                whitespace: true,
               },
             ]}
           >
             <Select placeholder="Brand (*)">
-              <Select.Option value="1">Red</Select.Option>
-              <Select.Option value="2">Green</Select.Option>
-              <Select.Option value="3">Blue</Select.Option>
+              {brands &&
+                brands.map((brand) => (
+                  <Select.Option key={brand.name} value={brand.id}>
+                    {brand.name}
+                  </Select.Option>
+                ))}
             </Select>
           </Form.Item>
+
+          {attributesDatas.map((item) => (
+            <Form.Item key={`${item.attribute}`}>
+              <Input
+                onChange={(e) => handleChangeAttribute(e, item.attribute)}
+                prefix={`${item.label}: `}
+                defaultValue={item.value}
+              />
+            </Form.Item>
+          ))}
 
           <div className="flex flex-wrap gap-5 justify-between">
             <Form.Item name="price">
@@ -221,7 +280,6 @@ export default function ProductForm({
                 parser={(value) =>
                   value?.replace(" đ", "") as unknown as number
                 }
-                defaultValue={100}
                 name="discountForMember"
                 min={0}
                 placeholder="0"
@@ -245,17 +303,52 @@ export default function ProductForm({
             <Input.TextArea cols={2} placeholder="Description (*)" />
           </Form.Item>
 
+          <Form.Item>
+            <div className="pt-3 flex gap-4">
+              <div className="flex gap-4">
+                {image && (
+                  <div className="size-32 mr-5">
+                    <Image
+                      width={128}
+                      height={128}
+                      alt={image}
+                      src={image}
+                      className="size-32 rounded-xl object-cover"
+                    />
+                  </div>
+                )}
+                <label
+                  htmlFor="files"
+                  className="size-32 flex flex-col gap-3 items-center justify-center cursor-pointer border border-dashed rounded-lg bg-white"
+                >
+                  <FaCamera size={24} />
+                  <b className="text-sm">{image ? "Thay đổi" : "Tải lên"}</b>
+                </label>
+              </div>
+              <MyInput
+                onChange={handleAddImage}
+                accept="image/*"
+                name="files"
+                id="files"
+                type="file"
+                className="!hidden"
+              />
+            </div>
+          </Form.Item>
+
           <Form.Item valuePropName="checked" name="active">
             <Checkbox>Mở bán</Checkbox>
           </Form.Item>
 
           <div className="flex gap-5 justify-end">
-            <Button
-              className="bg-gray-400 hover:bg-gray-400 hover:opacity-80"
-              type="button"
-            >
-              Cancel
-            </Button>
+            <Link href="/dashboard/products">
+              <Button
+                className="bg-gray-400 hover:bg-gray-400 hover:opacity-80"
+                type="button"
+              >
+                Cancel
+              </Button>
+            </Link>
             <Button className="bg-blue-600 hover:bg-blue-500" type="submit">
               Create product
             </Button>
@@ -265,12 +358,3 @@ export default function ProductForm({
     </>
   );
 }
-
-// const res = await register(form);
-// if (res.status === 201) {
-//   setTimeout(() => {
-
-//   }, 2000);
-//   router.push("/dashboard/products");
-// } else {
-// }

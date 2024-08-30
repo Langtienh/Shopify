@@ -32,7 +32,18 @@ type LogoutDTO = {
   token: string;
 };
 
-type ProductDTO = Omit<Product, ["id", "viewCount, active"]>;
+type ProductDTO = {
+  name: string;
+  price: number;
+  discount: number;
+  stock: number;
+  description: string;
+  active: boolean;
+  brandId: number;
+  categoryId: number;
+  discountForMember: number;
+  attributes?: { attribute: string; value: string }[];
+};
 
 type OrderDTO = {
   fullName: string;

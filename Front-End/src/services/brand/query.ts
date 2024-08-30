@@ -1,3 +1,4 @@
+"use server";
 import { get } from "../axios.helper";
 
 export const getbrandsByCategory = async (

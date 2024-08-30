@@ -26,6 +26,6 @@ export const getAllComments = async (page: number = 1, limit: number = 10) => {
     const totalItem = res.data.totalItem;
     return { comments, totalItem };
   } catch {
-    return [];
+    return { comments: [], totalItem: 0 };
   }
 };

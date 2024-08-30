@@ -6,6 +6,9 @@ import { signOut } from "@/auth/auth";
 import { checkToken } from "../cookies";
 import { getConfigToken } from "../cookies";
 
+const EXP_REFRESH_TOKEN = +process.env.REFRESH_TOKEN! || 604800;
+const EXP_TOKEN = +process.env.TOKEN! || 36000;
+
 export const login = async (input: LoginDTO) => {
   const res = await post<LoginResponse>("/users/login", input);
   const data = res.data;
@@ -45,8 +48,22 @@ export const firstLoginByprovider = async (input: FirstLoginDTO) => {
       refreshToken: data.refreshToken,
       token: data.token,
     };
-    cookies().set("TOKEN", dataCustom.token);
-    cookies().set("REFRESH_TOKEN", dataCustom.refreshToken);
+    cookies().set({
+      name: "REFRESH_TOKEN",
+      value: dataCustom.refreshToken,
+      maxAge: EXP_REFRESH_TOKEN,
+      secure: true,
+      httpOnly: true,
+      path: "/",
+    });
+    cookies().set({
+      name: "TOKEN",
+      value: dataCustom.token,
+      maxAge: EXP_TOKEN,
+      secure: true,
+      httpOnly: true,
+      path: "/",
+    });
     return {
       ...res,
       data: dataCustom,

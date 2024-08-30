@@ -1,7 +1,17 @@
 import { Breadcrumbs } from "@/components/app/dashboard";
 import ProductForm from "@/components/app/dashboard/products/form";
+import { getbrandsByCategory } from "@/services/brand";
+import { getAllCategory } from "@/services/category";
+import { getProductById } from "@/services/product";
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page({
+  params: { id },
+}: {
+  params: { id: string };
+}) {
+  const categories = await getAllCategory();
+  const product = await getProductById(id);
+  const brands = await getbrandsByCategory(product.category.name);
   return (
     <>
       <Breadcrumbs
@@ -14,7 +24,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           },
         ]}
       />
-      <ProductForm />
+      <ProductForm product={product} categories={categories} _brands={brands} />
     </>
   );
 }

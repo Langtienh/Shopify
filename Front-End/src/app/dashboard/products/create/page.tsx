@@ -1,7 +1,9 @@
 import { Breadcrumbs } from "@/components/app/dashboard";
 import ProductForm from "@/components/app/dashboard/products/form";
+import { getAllCategory } from "@/services/category";
 
 export default async function Page() {
+  const categories = await getAllCategory();
   return (
     <>
       <Breadcrumbs
@@ -14,7 +16,7 @@ export default async function Page() {
           },
         ]}
       />
-      <ProductForm />
+      <ProductForm categories={categories} />
     </>
   );
 }

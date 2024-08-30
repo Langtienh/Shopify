@@ -17,7 +17,7 @@ export default async function Similar({ category }: { category: string }) {
       <div className="py-2 ps-2 rounded-lg overflow-hidden">
         <Carousel>
           <CarouselContent className="-ml-2 pr-[10px]">
-            {products.map((product: ProductResponse) => (
+            {products.map((product) => (
               <CarouselItem
                 className="pl-2 basis-1/2  md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
                 key={`product_${product.id}`}
