@@ -1,15 +1,17 @@
 "use client";
 
-import { createComment } from "@/services/comment";
 import { Button } from "@/components/ui/button";
-import { Input, Rate } from "antd";
+import { Input, message, Rate } from "antd";
+import { Input as MyInput } from "@/components/ui/input";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { ChangeEvent, useState } from "react";
 import { MdClose } from "react-icons/md";
-import { useSession } from "next-auth/react";
 import { showLoginModal } from "@/redux/login-modal/slice";
-import { useAppDispatch } from "@/redux/store";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
+import { createComment } from "@/services/upload";
+import { FaCamera } from "react-icons/fa";
+import { IoIosCloseCircleOutline } from "react-icons/io";
 
 export default function CommentModal({
   title,
@@ -19,19 +21,38 @@ export default function CommentModal({
   productId: number;
 }) {
   const dispatch = useAppDispatch();
-  const session = useSession().data;
-  const isLogin = session?.user && session.refreshToken;
+  const user = useAppSelector((state) => state.userInfo.user);
+  const isLogin = !!user;
   const [show, setShow] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [rate, setRate] = useState<number>(5);
   const [content, setContent] = useState<string>("");
   const path = usePathname();
+
+  const [files, setFiles] = useState<File[]>([]);
+  const handleAddImage = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) setFiles((prestate) => [...prestate, file]);
+  };
+  const handleDeleteImage = (index: number) =>
+    setFiles([...files.filter((_, i) => i != index)]);
+  const router = useRouter();
   const handlesubmit = async () => {
-    const input = { rate, productId, content };
     setLoading(true);
-    await createComment(input);
+    const formData = new FormData();
+    formData.append("rate", rate.toString());
+    formData.append("productId", productId.toString());
+    formData.append("content", content);
+    files.forEach((file) => {
+      formData.append("images", file); // Tất cả các file đều sẽ có key "images"
+    });
+    const res = await createComment(formData);
+    if (res.isError) message.error(res.message);
+    else message.success(res.message);
+    setFiles([]);
     setLoading(false);
     setShow(false);
+    router.refresh();
   };
   const showModalHandle = () => {
     if (isLogin) setShow(true);
@@ -87,9 +108,52 @@ export default function CommentModal({
                   allowClear
                   placeholder="Xin mời chia sẻ một số cảm nhận về sản phẩm (nhập tối thiểu 15 kí tự)"
                 />
+                <div className="pt-3 flex gap-4">
+                  <div className="flex gap-4">
+                    {files.map((file, index) => (
+                      <div
+                        key={`${file.name}-${index}`}
+                        className="relative mr-5"
+                      >
+                        <div className="size-20">
+                          <Image
+                            width={80}
+                            height={80}
+                            alt={`${file.name}-${index}`}
+                            src={URL.createObjectURL(file)}
+                            className="size-20 rounded-xl object-cover"
+                          />
+                        </div>
+                        <button
+                          onClick={() => handleDeleteImage(index)}
+                          className="rofull absolute -top-1 -right-4"
+                        >
+                          <IoIosCloseCircleOutline size={20} />
+                        </button>
+                      </div>
+                    ))}
+                    {files.length < 4 && (
+                      <label
+                        htmlFor="files"
+                        className="p-3 flex flex-col gap-3 items-center justify-center cursor-pointer border border-dashed rounded-lg"
+                      >
+                        <FaCamera size={24} />
+                        <b className="text-sm">Thêm hình ảnh</b>
+                      </label>
+                    )}
+                  </div>
+                  <MyInput
+                    onChange={handleAddImage}
+                    accept="image/*"
+                    name="files"
+                    id="files"
+                    type="file"
+                    className="hidden"
+                  />
+                </div>
               </div>
             </div>
-            <div className="p-3 mt-5">
+            <div className="p-3">
               <Button
                 onClick={handlesubmit}
                 disabled={!content || loading}

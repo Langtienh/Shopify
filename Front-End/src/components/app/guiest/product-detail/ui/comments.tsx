@@ -1,7 +1,9 @@
 import { getAllCommentsByProductId } from "@/services/comment";
 import { StarFilledIcon } from "@radix-ui/react-icons";
-import { Image, Progress, Rate } from "antd";
+import { Progress, Rate } from "antd";
+import Image from "next/image";
 import CommentModal from "./comment.modal";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 type PropsType = {
   productId: number;
@@ -58,14 +60,23 @@ export default async function Comments({
         {comments.map((item) => (
           <li key={item.id} className="flex flex-col pb-5 mb-5 border-b">
             <div className="flex gap-3 items-center">
-              <Image
-                className="rounded-full"
-                width={32}
-                height={32}
-                alt={item.user.fullName}
-                src={item.user.avatar}
-                preview={false}
-              ></Image>
+              <Avatar className="mr-3 size-8">
+                <AvatarImage
+                  className="size-10"
+                  alt={item.user.fullName}
+                  src={item.user.avatar}
+                />
+                <AvatarFallback>
+                  <Image
+                    src="/images/default/avatar.jpg"
+                    alt={`${item.user.fullName}'s profile picture`}
+                    className="rounded-full"
+                    width={24}
+                    height={24}
+                  />
+                </AvatarFallback>
+              </Avatar>
+
               <div>
                 <p className="font-bold">
                   {item.user.fullName}
@@ -75,7 +86,6 @@ export default async function Comments({
                 </p>
                 <div className="flex gap-2 text-green-600 text-sm">
                   <Image
-                    preview={false}
                     width={16}
                     height={16}
                     src="/images/detail/check-sucsess.svg"
@@ -88,6 +98,19 @@ export default async function Comments({
             <div className="ms-10">
               <Rate allowHalf disabled defaultValue={item.rate} />
               <p>{item.content}</p>
+            </div>
+            <div className="flex gap-5">
+              {item.images.map((image, index) => (
+                <div key={`${image}${index}`} className="h-15 mt-3">
+                  <Image
+                    alt={`${image}${index}`}
+                    width={60}
+                    height={60}
+                    src={image}
+                    className="h-15 object-contain rounded-lg"
+                  />
+                </div>
+              ))}
             </div>
           </li>
         ))}

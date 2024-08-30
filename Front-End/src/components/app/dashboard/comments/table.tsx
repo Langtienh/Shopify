@@ -88,11 +88,13 @@ export default async function TableComments({ limit, page }: Props) {
               <TableCell className="w-[340px] text-wrap">
                 {comment.content}
               </TableCell>
-              <TableCell className="flex items-center justify-center gap-1">
-                <span>{comment.rate}</span>
-                <span>
-                  <FaStar className="size-[14px] text-yellow-500" />
-                </span>
+              <TableCell>
+                <div className="flex items-center justify-center gap-1">
+                  <span>{comment.rate}</span>
+                  <span>
+                    <FaStar className="size-[14px] text-yellow-500" />
+                  </span>
+                </div>
               </TableCell>
               <TableCell className="text-center">{formattedDate}</TableCell>
               <TableCell className="text-center">

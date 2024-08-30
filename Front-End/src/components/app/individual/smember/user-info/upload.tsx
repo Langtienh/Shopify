@@ -3,7 +3,7 @@ import RenderIf from "@/components/global/renderif";
 import { Input } from "@/components/ui/input";
 import { useAppDispatch } from "@/redux/store";
 import { updateAvatar } from "@/redux/user-info/slice";
-import { getConfigTokenClient } from "@/services/cookies/configTokenClient";
+import { uploadAvatar } from "@/services/upload";
 import { Button, message } from "antd";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -23,31 +23,16 @@ export default function UploadAvatar({ avatar }: { avatar?: string }) {
   const router = useRouter();
   const handleUpload = async () => {
     setUploading(true);
-    const { configToken, userId, token } = await getConfigTokenClient();
     const formData = new FormData();
-
     formData.append("files", files as File);
-
-    fetch(`http://localhost:8080/api/v1/files/upload/user/${userId}`, {
-      method: "POST",
-      body: formData,
-      headers: { Authorization: `Bearer ${token}`, "Accept-Language": "vi" },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.status === 201) {
-          if (url) dispatch(updateAvatar(url));
-          message.success(data.message);
-        } else message.error(data.message);
-      })
-      .catch(() => {
-        message.error("Lỗi server");
-      })
-      .finally(() => {
-        setFiles(null);
-        setUploading(false);
-        router.refresh();
-      });
+    const res = await uploadAvatar(formData);
+    if (res.isError) message.error(res.message);
+    else {
+      if (url) dispatch(updateAvatar(url));
+      message.success(res.message);
+    }
+    setFiles(null);
+    router.refresh();
   };
 
   const handleChangeImage = (e: ChangeEvent<HTMLInputElement>) => {

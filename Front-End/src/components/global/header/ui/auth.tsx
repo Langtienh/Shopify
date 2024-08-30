@@ -1,6 +1,6 @@
 "use client";
 
-import { Image } from "antd";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaUser } from "react-icons/fa";
@@ -10,6 +10,7 @@ import RenderIf from "@/components/global/renderif";
 import { useSession } from "next-auth/react";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { showLoginModal } from "@/redux/login-modal/slice";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export const Auth = () => {
   const [show, setShow] = useState<boolean>(false);
@@ -32,15 +33,18 @@ export const Auth = () => {
           className="flex flex-col text-white items-center px-4 py-1 rounded-lg bg-white bg-opacity-30"
         >
           {user && (
-            <Image
-              className="rounded-full cursor-pointer"
-              width={34}
-              height={34}
-              alt="avatar"
-              src={user?.avatar ? user.avatar : "/images/default/user.svg"}
-              fallback="/images/default/user.svg"
-              preview={false}
-            />
+            <Avatar className="mr-3 size-8">
+              <AvatarImage alt={user.fullName} src={user.avatar} />
+              <AvatarFallback>
+                <Image
+                  src="/images/default/avatar.jpg"
+                  alt={`${user.fullName}'s profile picture`}
+                  className="rounded-full cursor-pointer"
+                  width={34}
+                  height={34}
+                />
+              </AvatarFallback>
+            </Avatar>
           )}
         </button>
         <Noiti hiddenNoiti={hiddenNoiti} show={show} />
@@ -66,7 +70,6 @@ export const Auth = () => {
             height={34}
             alt="avatar"
             src={"/images/default/user.svg"}
-            preview={false}
           />
         </button>
       </RenderIf>
