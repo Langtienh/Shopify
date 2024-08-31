@@ -45,4 +45,11 @@ public class CategoryServiceImpl implements CategoryService {
         category.setLabel(categoryDTO.getLabel());
         return categoryRepository.save(category);
     }
+
+    @Override
+    @Transactional
+    public void deleteCategory(long id) {
+        Category category = getCategoryById(id);
+        categoryRepository.delete(category);
+    }
 }

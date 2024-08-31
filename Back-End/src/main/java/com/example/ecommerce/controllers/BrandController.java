@@ -72,4 +72,14 @@ public class BrandController {
                 .data(brand)
                 .build());
     }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<ResponseSuccess> deleteBrand(@PathVariable long id){
+        brandService.deleteBrand(id);
+        return ResponseEntity.ok().body(ResponseSuccess.builder()
+                .message(Translator.toLocale("brand.delete.success"))
+                .status(HttpStatus.NO_CONTENT.value())
+                .build());
+    }
 }

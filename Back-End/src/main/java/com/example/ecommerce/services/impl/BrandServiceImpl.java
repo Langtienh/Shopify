@@ -59,4 +59,11 @@ public class BrandServiceImpl implements BrandService {
         brand.setName(brandDTO.getName());
         return brandRepository.save(brand);
     }
+
+    @Override
+    @Transactional
+    public void deleteBrand(long id) {
+        Brand brand = getBrandById(id);
+        brandRepository.delete(brand);
+    }
 }

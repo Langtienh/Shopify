@@ -12,4 +12,5 @@ public interface BrandService {
     List<Brand> getAllBrands();
     List<Brand> getBrandByCategory(String name);
     Brand updateBrand(long id, BrandDTO brandDTO);
+    void deleteBrand(long id);
 }

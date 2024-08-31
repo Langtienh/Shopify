@@ -87,6 +87,9 @@ public class GlobalExceptionHandler {
         if(matcher.find()){
             error = matcher.group(1) + " đã tồn tại";
         }
+        else{
+            error = "Cannot be deleted";
+        }
         return ResponseEntity.badRequest().body(
                 ResponseError.builder()
                         .status(HttpStatus.BAD_REQUEST.value())
@@ -191,4 +194,5 @@ public class GlobalExceptionHandler {
                         .build()
         );
     }
+
 }
