@@ -1,9 +1,3 @@
-type ReqError = {
-  isError: true;
-  message: string;
-  status: number;
-};
-
 type RegisterDTO = {
   fullName: string;
   phone: string;

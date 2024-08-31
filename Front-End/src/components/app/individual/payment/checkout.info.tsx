@@ -13,6 +13,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { getAddressDetail } from "@/services/address.helper";
 import { createInvoice, createInvoiceByVNPay } from "@/services/invoice";
 import { popCartItem } from "@/redux/cart/slice";
+import useAction from "@/hooks/useAction";
 
 export default function CheckoutInfo({
   checkout,
@@ -26,6 +27,7 @@ export default function CheckoutInfo({
   const router = useRouter();
   const userInfo = useAppSelector((state) => state.checkout.userInfo);
   const [path, setPath] = useState<string>("");
+  const [response, isPending, _createInvoice] = useAction(createInvoice);
   useEffect(() => {
     const getPath = async () => {
       const path = await getAddressDetail(userInfo.address);
@@ -41,14 +43,10 @@ export default function CheckoutInfo({
       router.push(res);
     } else if (paymentId === 2) {
       const data = { ...userInfo, paymentMethodId: 2, cartItemIds };
-      const res = await createInvoice(data);
-      if (res.isError) message.error(res.message);
-      else {
-        message.success(res.message);
+      const res = await _createInvoice(data);
+      if (res) {
         dispatch(popCartItem(cartItemIds.length));
-        setTimeout(() => {
-          router.push("/");
-        }, 300);
+        router.push("/");
       }
     } else message.error("Đã xảy ra lỗi, vui lòng thử lại sau");
   };

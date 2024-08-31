@@ -1,18 +1,14 @@
 "use client";
 
+import useAction from "@/hooks/useAction";
 import { deleteComment } from "@/services/comment";
-import { Button, message } from "antd";
-import { useState } from "react";
+import { Button } from "antd";
 import { MdDelete } from "react-icons/md";
 
 export const DeleteCommentButton = ({ commentId }: { commentId: number }) => {
-  const [isPending, setPending] = useState<boolean>(false);
+  const [response, isPending, _deleteComment] = useAction(deleteComment);
   const handleDeleteComment = async () => {
-    setPending(true);
-    const res = await deleteComment(commentId);
-    if (res.isError) message.error(res.message);
-    else message.success(res.message);
-    setPending(false);
+    await _deleteComment(commentId);
   };
   return (
     <Button

@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import RenderIf from "@/components/global/renderif";
 import { FaLock, FaUnlock } from "react-icons/fa";
@@ -9,6 +8,7 @@ import { message, Tooltip } from "antd";
 import { updateStatus } from "@/services/user";
 import { AiOutlineLoading } from "react-icons/ai";
 import Link from "next/link";
+import useAction from "@/hooks/useAction";
 
 export const LockUser = ({
   user,
@@ -17,35 +17,32 @@ export const LockUser = ({
   user: User;
   isDemo?: boolean;
 }) => {
+  const [response, isPending, _updateStatus] = useAction(updateStatus);
   const isAdmin = user.roles.includes("admin");
   const change = async (preStatus: boolean) => {
-    setLoading(true);
     if (isDemo) {
       message.warning("Chỉ được phép xem");
     } else if (isAdmin) {
       message.warning("Không được thay đổi tài khoản admin");
     } else {
-      const res = await updateStatus(user.id, !preStatus);
-      if (res.isError) message.error(res.message);
-      else message.success(res.message);
+      await _updateStatus(user.id, !preStatus);
     }
-    setLoading(false);
   };
-  const [loading, setLoading] = useState<boolean>(false);
   return (
     <>
       <RenderIf renderIf={user.active}>
         <Tooltip title="Khóa" color="red">
           <Button
+            disabled={isPending}
             onClick={() => change(true)}
             className="size-6"
             variant="ghost"
             size="icon"
           >
-            <RenderIf renderIf={!loading}>
+            <RenderIf renderIf={!isPending}>
               <FaUnlock size={18} />
             </RenderIf>
-            <RenderIf renderIf={loading}>
+            <RenderIf renderIf={isPending}>
               <AiOutlineLoading className="mr-2 size-[14px] animate-spin" />
             </RenderIf>
           </Button>

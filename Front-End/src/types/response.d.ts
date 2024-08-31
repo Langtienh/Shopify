@@ -1,6 +1,5 @@
 // java type to javascrip type
 type TResponse = {
-  isError?: boolean;
   status: number;
   message: string;
 };

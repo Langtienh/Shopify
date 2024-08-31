@@ -1,29 +1,24 @@
 "use client";
 
 import BackBtn from "@/components/app/auth/btn.back";
+import useAction from "@/hooks/useAction";
 import { updatePassword } from "@/services/auth";
-import { Button, Form, Input, message, Spin } from "antd";
+import { Button, Form, Input, Spin } from "antd";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 
 export default function Page() {
   const [form] = Form.useForm();
-  const [isLoading, setLoading] = useState<boolean>(false);
+  const [response, isPending, _updatePassword] = useAction(updatePassword);
   const router = useRouter();
   const onFinish = async (form: {
     newPassword: string;
     oldPassword: string;
   }) => {
-    setLoading(true);
-    const res = await updatePassword(form.oldPassword, form.newPassword);
-    if (!res.isError) {
-      message.success(res.message);
-      setTimeout(() => {
-        router.push("/smember");
-      }, 1000);
-    } else message.error(res.message);
-    setLoading(false);
+    const res = await _updatePassword(form.oldPassword, form.newPassword);
+    if (res) {
+      router.push("/smember");
+    }
   };
   return (
     <>
@@ -40,7 +35,7 @@ export default function Page() {
           height={200}
         />
       </div>
-      <Spin spinning={isLoading}>
+      <Spin spinning={isPending}>
         <Form
           form={form}
           name="register"

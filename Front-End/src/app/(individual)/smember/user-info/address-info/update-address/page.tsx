@@ -1,19 +1,11 @@
 "use client";
 import BackBtn from "@/components/app/auth/btn.back";
-import {
-  Button,
-  Checkbox,
-  Form,
-  FormProps,
-  Input,
-  message,
-  Radio,
-  Spin,
-} from "antd";
-import { useState } from "react";
+import { Button, Checkbox, Form, FormProps, Input, Radio, Spin } from "antd";
 import { createAddress } from "@/services/address";
 import { useRouter } from "next/navigation";
 import AddressForm from "@/components/global/address/form";
+import useAction from "@/hooks/useAction";
+import { useEffect } from "react";
 
 type FieldType = {
   provinceCode: string;
@@ -28,8 +20,7 @@ export default function Page() {
   const initialForm = {
     default: false,
   };
-
-  const [isLoading, setLoading] = useState<boolean>(false);
+  const [data, isPending, createAddressFc] = useAction(createAddress);
   const router = useRouter();
 
   const handleSubmit: FormProps<FieldType>["onFinish"] = async (address) => {
@@ -40,15 +31,11 @@ export default function Page() {
       name: address.name,
     };
     // todo mesage
-    setLoading(true);
-    const res = await createAddress(_address);
-    if (res.isError) message.error(res.message);
-    else message.success(res.message);
-    setTimeout(() => {
-      setLoading(false);
-      router.push("/smember/user-info/address-info");
-    }, 1000);
+    await createAddressFc(_address);
   };
+  useEffect(() => {
+    if (data) router.push("/smember/user-info/address-info");
+  }, [data, router]);
 
   return (
     <>
@@ -56,7 +43,7 @@ export default function Page() {
         <BackBtn />
         <p className="text-[22px] font-bold py-2">Thêm địa chỉ mới</p>
       </div>
-      <Spin spinning={isLoading}>
+      <Spin spinning={isPending}>
         <Form
           initialValues={initialForm}
           onFinish={handleSubmit}

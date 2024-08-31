@@ -1,5 +1,6 @@
 "use client";
 
+import useAction from "@/hooks/useAction";
 import { converPriceToVN } from "@/lib/utils2";
 import { updateTotalPrice } from "@/redux/checkout/slice";
 
@@ -24,16 +25,13 @@ export function DeleteItemBTN({
   id: number;
   checkList: number[];
 }) {
-  const dispath = useAppDispatch();
-  const [isLoading, setLoading] = useState<boolean>(false);
+  const [response, isPending, _deleteCartItem] = useAction(deleteCartItem);
   const { replace } = useRouter();
   const patchName = usePathname();
   const searchParams = useSearchParams();
   const handleDelCartItem = async () => {
-    setLoading(true);
-    const res = await deleteCartItem(id);
-    if (res.isError) message.error(res.message);
-    else {
+    const res = await _deleteCartItem(id);
+    if (res) {
       message.success(res.message);
       const params = new URLSearchParams(searchParams);
       const _checkList = checkList.filter((item) => item !== id);
@@ -41,11 +39,10 @@ export function DeleteItemBTN({
       else params.delete("checkList");
       replace(`${patchName}?${params}`, { scroll: false });
     }
-    setLoading(true);
   };
   return (
     <Button
-      loading={isLoading}
+      loading={isPending}
       onClick={handleDelCartItem}
       type="text"
       icon={<AiFillDelete size={20} />}
@@ -98,25 +95,20 @@ export function SubItemBTN({
 }
 
 export const ClearListBtn = ({ checkList }: { checkList: number[] }) => {
-  const dispath = useAppDispatch();
-  const [isLoading, setLoading] = useState<boolean>(false);
+  const [response, isPending, _deleteListItem] = useAction(deleteListItem);
   const { replace } = useRouter();
   const patchName = usePathname();
   const searchParams = useSearchParams();
   const handledDeletelist = async () => {
-    setLoading(true);
-    const res = await deleteListItem(checkList);
-    if (res.isError) message.error(res.message);
-    else {
-      message.success(res.message);
+    const res = await _deleteListItem(checkList);
+    if (res) {
       const params = new URLSearchParams(searchParams);
       params.delete("checkList");
       replace(`${patchName}?${params}`, { scroll: false });
     }
-    setLoading(false);
   };
   return (
-    <Button loading={isLoading} type="text">
+    <Button loading={isPending} type="text">
       <p
         onClick={handledDeletelist}
         className="cursor-pointer text-gray-400 text-sm italic font-semibold"

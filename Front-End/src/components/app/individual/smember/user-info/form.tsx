@@ -1,10 +1,10 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Form, FormProps, Input, message, Spin } from "antd";
+import { Button, Form, FormProps, Input, Spin } from "antd";
 import Link from "next/link";
-import { IUser } from "@/auth/next-auth";
 import { CiEdit } from "react-icons/ci";
 import { updateUser } from "@/services/user";
+import useAction from "@/hooks/useAction";
 
 type FieldType = {
   fullName: string;
@@ -37,21 +37,17 @@ export default function UpdateUserForm({
 
   const [form] = Form.useForm();
   // xử lý đăng kí
+  const [response, isPending, _updateUser] = useAction(updateUser);
   const handleSubmit: FormProps<FieldType>["onFinish"] = async (values) => {
     setEditEmail(false);
     setEditFullName(false);
-    setLoading(true);
-    const res = await updateUser(values);
-    if (res.isError) message.error(res.message);
-    else message.success(res.message);
-    setLoading(false);
+    await _updateUser(values);
   };
 
   // xử lý trước upload
 
-  const [loading, setLoading] = useState<boolean>(false);
   return (
-    <Spin spinning={loading}>
+    <Spin spinning={isPending}>
       <Form
         form={form}
         name="register"

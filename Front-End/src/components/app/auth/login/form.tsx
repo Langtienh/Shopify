@@ -1,19 +1,37 @@
 "use client";
 import React, { useState } from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Checkbox, Form, Input, Spin } from "antd";
+import { Button, Checkbox, Form, Input, message, Spin } from "antd";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { loginWithCredentials } from "../even";
+import { useRouter, useSearchParams } from "next/navigation";
+import { signIn } from "next-auth/react";
+import { getMyInfoTrigger } from "@/services/trigger/query";
+import { updateUserInfo } from "@/redux/user-info/slice";
+import { useAppDispatch } from "@/redux/store";
 
 const LoginForm: React.FC = () => {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const router = useRouter();
   const [spinning, setSpinning] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
   const onFinish = async (values: LoginDTO) => {
     setSpinning(true);
-    await loginWithCredentials(values, callbackUrl);
-    setSpinning(false);
+    try {
+      const res = await signIn("credentials", {
+        ...values,
+        redirect: false,
+      });
+      if (res?.error) message.error("Tài khoản hoặc mật khẩu không đúng");
+      else {
+        const user = await getMyInfoTrigger();
+        if (user) dispatch(updateUserInfo(user));
+        message.success("Đăng nhập thành công");
+        router.push(callbackUrl);
+      }
+    } finally {
+      setSpinning(false);
+    }
   };
 
   return (

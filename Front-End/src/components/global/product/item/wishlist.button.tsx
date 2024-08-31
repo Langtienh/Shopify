@@ -1,7 +1,6 @@
 "use client";
-import { Button, message } from "antd";
+import { Button } from "antd";
 
-import { useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import { usePathname } from "next/navigation";
 import RenderIf from "@/components/global/renderif";
@@ -10,6 +9,7 @@ import { useSession } from "next-auth/react";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { showLoginModal } from "@/redux/login-modal/slice";
 import { popWishListItem, pushWishListItem } from "@/redux/wish-list/slice";
+import useAction from "@/hooks/useAction";
 
 export default function WishListButton({ productId }: { productId: number }) {
   const session = useSession().data;
@@ -18,35 +18,29 @@ export default function WishListButton({ productId }: { productId: number }) {
 
   const dispatch = useAppDispatch();
   const isLoved = wishList.includes(productId);
-  const [isLoading, setIsloading] = useState<boolean>(false);
+  const [responseDel, isPendingDel, _delWishListItem] =
+    useAction(delWishListItem);
+  const [responseCreate, isPendingCreate, _createWishListItem] =
+    useAction(createWishListItem);
+  const isPending = isPendingDel && isPendingCreate;
   const path = usePathname();
   const onclick = async () => {
     if (!isLogin) dispatch(showLoginModal(path));
     else {
-      setIsloading(true);
       if (isLoved) {
-        const res = await delWishListItem(productId);
-        if (res.isError) message.error(res.message);
-        else {
-          message.success(res.message);
-          dispatch(popWishListItem(productId));
-        }
+        const res = await _delWishListItem(productId);
+        if (res) dispatch(popWishListItem(productId));
       } else {
-        const res = await createWishListItem(productId);
-        if (res.isError) message.error(res.message);
-        else {
-          message.success(res.message);
-          dispatch(pushWishListItem(productId));
-        }
+        const res = await _createWishListItem(productId);
+        if (res) dispatch(pushWishListItem(productId));
       }
-      setIsloading(false);
     }
   };
   return (
     <Button
       size="small"
       type="text"
-      loading={isLoading}
+      loading={isPending}
       onClick={onclick}
       icon={
         <>

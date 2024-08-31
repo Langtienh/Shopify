@@ -16,8 +16,12 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   (error) => {
-    const data = error.response.data;
-    if (data) return Promise.reject({ isError: true, ...data });
+    const messageError = error?.response?.data?.message;
+    const statusError = error?.response?.data?.status;
+    if (messageError && statusError) {
+      const err = new Error(`${statusError} ${messageError}`);
+      return Promise.reject(err);
+    }
     return Promise.reject(error);
   }
 );

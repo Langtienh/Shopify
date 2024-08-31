@@ -1,6 +1,7 @@
 "use client";
 import RenderIf from "@/components/global/renderif";
 import { Button } from "@/components/ui/button";
+import useAction from "@/hooks/useAction";
 import { updateInvoiceStatus } from "@/services/invoice";
 import { Badge, message, Select } from "antd";
 import Link from "next/link";
@@ -33,7 +34,8 @@ export const EditStatus = ({
   id: string;
 }) => {
   const [edit, setEdit] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [response, isPending, _updateInvoiceStatus] =
+    useAction(updateInvoiceStatus);
   const [_status, setStatus] = useState<OrderStatus>("PENDING");
   useEffect(() => setStatus(status), [status]);
   const handleChange = (values: OrderStatus) => setStatus(values);
@@ -41,11 +43,7 @@ export const EditStatus = ({
     if (isDemo) {
       message.warning("Chỉ được phép xem");
     } else {
-      setLoading(true);
-      const res = await updateInvoiceStatus(id, _status);
-      if (res.isError) message.error(res.message);
-      else message.success(res.message);
-      setLoading(false);
+      await _updateInvoiceStatus(id, _status);
       setEdit(false);
     }
   };
@@ -72,7 +70,7 @@ export const EditStatus = ({
 
       {edit ? (
         <Button size="sm" className="ml-3" onClick={submit}>
-          <RenderIf renderIf={loading}>
+          <RenderIf renderIf={isPending}>
             <AiOutlineLoading className="mr-2 size-[14px] animate-spin" />
           </RenderIf>
           Gửi

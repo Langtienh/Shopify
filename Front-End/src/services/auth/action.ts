@@ -10,23 +10,13 @@ const EXP_REFRESH_TOKEN = +process.env.REFRESH_TOKEN! || 604800;
 const EXP_TOKEN = +process.env.TOKEN! || 36000;
 
 export const login = async (input: LoginDTO) => {
-  const res = await post<LoginResponse>("/users/login", input);
-  const data = res.data;
-  if (data) {
-    const dataCustom = {
-      user: data.user,
-      refreshToken: data.refreshToken,
-      token: data.token,
-    };
-    return {
-      message: res.message,
-      status: res.status,
-      data: dataCustom,
-    };
+  try {
+    const res = await post<LoginResponse | null>("/users/login", input);
+    return res;
+  } catch {
+    return null;
   }
-  return { message: res.message, status: res.status };
 };
-export const loginByProvider = async () => {};
 
 export const checkAccount = async (id: string) => {
   try {
@@ -40,37 +30,33 @@ export const checkAccount = async (id: string) => {
 };
 
 export const firstLoginByprovider = async (input: FirstLoginDTO) => {
-  try {
-    const res = await post<LoginResponse>("/users/login-with-google", input);
-    const data = res.data;
-    const dataCustom = {
-      user: data.user,
-      refreshToken: data.refreshToken,
-      token: data.token,
-    };
-    cookies().set({
-      name: "REFRESH_TOKEN",
-      value: dataCustom.refreshToken,
-      maxAge: EXP_REFRESH_TOKEN,
-      secure: true,
-      httpOnly: true,
-      path: "/",
-    });
-    cookies().set({
-      name: "TOKEN",
-      value: dataCustom.token,
-      maxAge: EXP_TOKEN,
-      secure: true,
-      httpOnly: true,
-      path: "/",
-    });
-    return {
-      ...res,
-      data: dataCustom,
-    };
-  } catch (error) {
-    return error as ReqError;
-  }
+  const res = await post<LoginResponse>("/users/login-with-google", input);
+  const data = res.data;
+  const dataCustom = {
+    user: data.user,
+    refreshToken: data.refreshToken,
+    token: data.token,
+  };
+  cookies().set({
+    name: "REFRESH_TOKEN",
+    value: dataCustom.refreshToken,
+    maxAge: EXP_REFRESH_TOKEN,
+    secure: true,
+    httpOnly: true,
+    path: "/",
+  });
+  cookies().set({
+    name: "TOKEN",
+    value: dataCustom.token,
+    maxAge: EXP_TOKEN,
+    secure: true,
+    httpOnly: true,
+    path: "/",
+  });
+  return {
+    ...res,
+    data: dataCustom,
+  };
 };
 
 export const logout = async () => {
@@ -85,72 +71,50 @@ export const logout = async () => {
 };
 
 export const register = async (input: RegisterForm) => {
-  try {
-    const res = await post("/users/register", input);
-    return res;
-  } catch (error) {
-    return error as ReqError;
-  }
+  const res = await post("/users/register", input);
+  return res;
 };
-
-export const refreshToken = async () => {};
 
 // handle resetPassword
 
 export const verifyMail = async (mail: string) => {
-  try {
-    await post(`/users/verify-mail/${mail}`);
-    return true;
-  } catch {
-    return false;
-  }
+  const res = await post(`/users/verify-mail/${mail}`);
+  return res;
 };
 type VerifyOTP = {
   userId: string;
   otpToken: string;
 };
 export const verifyOTP = async (mail: string, OTP: string) => {
-  try {
-    const res = await post<VerifyOTP>(`/users/verify-otp/${OTP}/${mail}`);
-    cookies().set("otpToken", res.data.otpToken);
-    cookies().set("userId", res.data.userId);
-    return res;
-  } catch (error) {
-    return error as ReqError;
-  }
+  const res = await post<VerifyOTP>(`/users/verify-otp/${OTP}/${mail}`);
+  cookies().set("otpToken", res.data.otpToken);
+  cookies().set("userId", res.data.userId);
+  return res;
 };
 
 export const resetPassword = async (newPassword: string) => {
-  try {
-    const otpToken = cookies().get("otpToken")?.value;
-    const userId = cookies().get("userId")?.value;
+  const otpToken = cookies().get("otpToken")?.value;
+  const userId = cookies().get("userId")?.value;
 
-    const res = await put(`/users/reset-password/${userId}`, {
-      otpToken,
-      newPassword,
-    });
-    cookies().delete("otpToken");
-    cookies().delete("userId");
-    return res;
-  } catch (error) {
-    return error as ReqError;
-  }
+  const res = await put(`/users/reset-password/${userId}`, {
+    otpToken,
+    newPassword,
+  });
+  cookies().delete("otpToken");
+  cookies().delete("userId");
+  return res;
 };
 
 export const updatePassword = async (
   oldPassword: string,
   newPassword: string
 ) => {
-  try {
-    const { userId, configToken } = await getConfigToken();
+  const { userId, configToken } = await getConfigToken();
 
-    const res = await put(
-      `users/change-password/${userId}`,
-      { oldPassword, newPassword },
-      configToken
-    );
-    return res;
-  } catch (error) {
-    return error as ReqError;
-  }
+  const res = await put(
+    `users/change-password/${userId}`,
+    { oldPassword, newPassword },
+    configToken
+  );
+  return res;
 };

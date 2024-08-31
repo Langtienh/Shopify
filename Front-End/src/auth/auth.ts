@@ -2,46 +2,36 @@ import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import Github from "next-auth/providers/github";
 import Credentials from "next-auth/providers/credentials";
-import { checkAccount } from "@/services/auth";
+import { checkAccount, login } from "@/services/auth";
 const EXP_REFRESH_TOKEN = +process.env.REFRESH_TOKEN! || 604800;
 const EXP_TOKEN = +process.env.TOKEN! || 36000;
 export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
   providers: [
     Credentials({
-      name: "Số điện thoại",
-      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
-      // e.g. domain, username, password, 2FA token, etc.
+      name: "Đăng nhập bằng số điện thoại",
       credentials: {
-        id: {},
-        fullName: {},
         phone: {},
-        email: {},
-        avatar: {},
-        active: {},
-        roles: {},
-        refreshToken: {},
-        token: {},
+        password: {},
       },
       authorize: async (credentials) => {
-        const user = {
-          id: credentials.id,
-          fullName: credentials.fullName,
-          phone: credentials.phone,
-          email: credentials.email,
-          avatar: credentials.avatar,
-          active: credentials.active,
-          // @ts-ignore
-          roles: credentials.roles.split(",") || [],
-        };
-        if (credentials.refreshToken && credentials.token && user) {
-          const data = {
-            refreshToken: credentials.refreshToken,
-            token: credentials.token,
-            user,
-          };
-          return data as any;
+        if (!credentials.password || !credentials.phone)
+          throw new Error("Vui lòng điền đủ thông tin");
+        else {
+          const res = await login({
+            password: credentials.password as string,
+            phone: credentials.phone as string,
+          });
+          if (!res?.data) {
+            throw new Error("Tài khoản hoặc mật khẩu không đúng");
+          } else {
+            const data = {
+              refreshToken: res.data.refreshToken,
+              token: res.data.token,
+              user: res.data.user,
+            };
+            return data as any;
+          }
         }
-        return null;
       },
     }),
     Google,
@@ -110,9 +100,6 @@ export const { handlers, signIn, signOut, auth, unstable_update } = NextAuth({
         (session.exp_token = token.exp_token);
       return session;
     },
-  },
-  pages: {
-    signIn: "/login",
   },
   trustHost: true,
   session: {

@@ -1,11 +1,11 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import useAction from "@/hooks/useAction";
 import { converPriceToVN } from "@/lib/utils2";
 import { pushCartItem } from "@/redux/cart/slice";
 import { showLoginModal } from "@/redux/login-modal/slice";
 import { useAppDispatch } from "@/redux/store";
 import { addCartItem } from "@/services/cart";
-import { message } from "antd";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
@@ -65,18 +65,16 @@ export const BuyButton = ({ productId }: { productId: number }) => {
   const isLogin = session?.user && session.refreshToken;
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const [response, isPending, _addCartItem] = useAction(addCartItem);
   const onclick = async () => {
     if (isLogin) {
-      const res = await addCartItem(productId);
-      if (res.isError) message.error(res.message);
-      else {
-        message.success(res.message);
-        router.push(`/cart?checkList=${res.data.cartItems[0].id}`);
-      }
+      const res = await _addCartItem(productId);
+      if (res) router.push(`/cart?checkList=${res.data.cartItems[0].id}`);
     } else dispatch(showLoginModal(path));
   };
   return (
     <Button
+      disabled={isPending}
       onClick={onclick}
       className="flex-1 bg-red-600 h-full hover:bg-red-500"
     >
@@ -88,26 +86,20 @@ export const BuyButton = ({ productId }: { productId: number }) => {
   );
 };
 export const AddToCartButton = ({ productId }: { productId: number }) => {
-  const [isLoading, setLoading] = useState<boolean>(false);
+  const [response, isPending, _addCartItem] = useAction(addCartItem);
   const path = usePathname();
   const dispatch = useAppDispatch();
   const session = useSession().data;
   const isLogin = session?.user && session.refreshToken;
   const onClick = async () => {
     if (isLogin) {
-      setLoading(true);
-      const res = await addCartItem(productId);
-      if (res.isError) message.error(res.message);
-      else {
-        message.success(res.message);
-        dispatch(pushCartItem());
-      }
-      setLoading(false);
+      const res = await _addCartItem(productId);
+      if (res) dispatch(pushCartItem());
     } else dispatch(showLoginModal(path));
   };
   return (
     <Button
-      disabled={isLoading}
+      disabled={isPending}
       onClick={onClick}
       variant="outline"
       className="h-full basis-[60px] px-0 flex-grow-0 flex-shrink-0 border-2 border-red-600 hover:border-red-500"

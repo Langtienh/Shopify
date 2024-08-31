@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Input, message, Rate } from "antd";
+import { Input, Rate } from "antd";
 import { Input as MyInput } from "@/components/ui/input";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { createComment } from "@/services/upload";
 import { FaCamera } from "react-icons/fa";
 import { IoIosCloseCircleOutline } from "react-icons/io";
+import useAction from "@/hooks/useAction";
 
 export default function CommentModal({
   title,
@@ -24,7 +25,7 @@ export default function CommentModal({
   const user = useAppSelector((state) => state.userInfo.user);
   const isLogin = !!user;
   const [show, setShow] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [response, isPending, _createComment] = useAction(createComment);
   const [rate, setRate] = useState<number>(5);
   const [content, setContent] = useState<string>("");
   const path = usePathname();
@@ -38,7 +39,6 @@ export default function CommentModal({
     setFiles([...files.filter((_, i) => i != index)]);
   const router = useRouter();
   const handlesubmit = async () => {
-    setLoading(true);
     const formData = new FormData();
     formData.append("rate", rate.toString());
     formData.append("productId", productId.toString());
@@ -46,11 +46,8 @@ export default function CommentModal({
     files.forEach((file) => {
       formData.append("images", file); // Tất cả các file đều sẽ có key "images"
     });
-    const res = await createComment(formData);
-    if (res.isError) message.error(res.message);
-    else message.success(res.message);
+    await _createComment(formData);
     setFiles([]);
-    setLoading(false);
     setShow(false);
     router.refresh();
   };
@@ -156,7 +153,7 @@ export default function CommentModal({
             <div className="p-3">
               <Button
                 onClick={handlesubmit}
-                disabled={!content || loading}
+                disabled={!content || isPending}
                 className="text-white text-lg font-bold bg-red-600 hover:bg-red-500 w-full px-[30px] py-[10px]"
               >
                 Gửi đánh giá

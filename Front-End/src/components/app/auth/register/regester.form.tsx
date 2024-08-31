@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button, Checkbox, Form, Input, message, Spin } from "antd";
 import Link from "next/link";
 import { register } from "@/services/auth";
@@ -26,23 +26,30 @@ export default function RegesterForm({
   const [form] = Form.useForm();
   // xử lý đăng kí
   const router = useRouter();
+  const [isPending, setPending] = useState<boolean>(false);
   const onFinish = async (values: RegisterForm) => {
-    setLoading(true);
-    const res = user
-      ? await updateUserById(user.id, values)
-      : await register(values);
-    if (res.isError) message.error(res.message);
-    else {
+    setPending(true);
+    try {
+      const res = user
+        ? await updateUserById(user.id, values)
+        : await register(values);
       message.success(res.message);
+
       if (isCreateByAdmin) router.push("/dashboard/users");
       else router.push("/login");
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message);
+      } else {
+        message.error("Server error");
+      }
+    } finally {
+      setPending(false);
     }
-    setLoading(false);
   };
 
-  const [loading, setLoading] = useState<boolean>(false);
   return (
-    <Spin spinning={loading}>
+    <Spin spinning={isPending}>
       <Form
         form={form}
         name="register"

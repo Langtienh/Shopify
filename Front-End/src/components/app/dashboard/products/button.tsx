@@ -2,12 +2,12 @@
 
 import RenderIf from "@/components/global/renderif";
 import { Button } from "@/components/ui/button";
+import useAction from "@/hooks/useAction";
 import { updateProductStasus } from "@/services/product/action";
 
 import { message, Select } from "antd";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { IoIosAdd } from "react-icons/io";
 import { RiDeleteBin6Line, RiSubtractFill } from "react-icons/ri";
@@ -46,22 +46,17 @@ export const DelProduct = ({
   isDemo?: boolean;
   isActive: boolean;
 }) => {
-  const [loading, setLoading] = useState<boolean>(false);
+  const [response, isPending, _updateProductStasus] =
+    useAction(updateProductStasus);
   const handleChange = async () => {
-    setLoading(true);
     if (isDemo) {
       message.warning("Chỉ được phép xem");
-    } else {
-      const res = await updateProductStasus(productId, !isActive);
-      if (res.isError) message.error(res.message);
-      else message.success(res.message);
-    }
-    setLoading(false);
+    } else await _updateProductStasus(productId, !isActive);
   };
   return (
     <>
       <Button
-        disabled={loading}
+        disabled={isPending}
         className="text-red-600 hover:text-red-500 size-6"
         variant="ghost"
         size="icon"

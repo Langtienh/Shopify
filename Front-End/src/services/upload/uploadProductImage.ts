@@ -6,14 +6,10 @@ export default async function uploadProductImage(
   productId: number
 ) {
   const { configToken } = await getConfigTokenClient();
-  try {
-    const res = await postFormData(
-      `/files/upload/product/${productId}`,
-      formData,
-      configToken
-    );
-    return res;
-  } catch (error) {
-    return error as ReqError;
-  }
+  const res = await postFormData(
+    `/files/upload/product/${productId}`,
+    formData,
+    configToken
+  );
+  return res;
 }

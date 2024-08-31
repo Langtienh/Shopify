@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Checkbox, Form, Input, message, Spin } from "antd";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -7,6 +7,7 @@ import { IUser } from "@/auth/next-auth";
 import { firstLoginByprovider } from "@/services/auth";
 import { useAppDispatch } from "@/redux/store";
 import { updateUserInfo } from "@/redux/user-info/slice";
+import useAction from "@/hooks/useAction";
 
 type FieldType = {
   fullName: string;
@@ -23,11 +24,23 @@ const FirstLoginForm = ({ user }: { user: IUser }) => {
     email: user?.email,
     agreement: true,
   };
+  const [res, isPending, _firstLoginByprovider] =
+    useAction(firstLoginByprovider);
   const dispatch = useAppDispatch();
+  useEffect(() => {
+    const updateData = async () => {
+      if (res) {
+        dispatch(updateUserInfo(res.user));
+        router.push(callbackUrl);
+        await session.update(res);
+      }
+    };
+    updateData();
+  }, [res, dispatch, callbackUrl, router, session]);
+
   const [form] = Form.useForm();
   // xử lý đăng kí
   const onFinish = async (values: Omit<FieldType, "agreement">) => {
-    setLoading(true);
     const input = {
       providerId: user?.providerId!,
       avatar: user.avatar!,
@@ -35,23 +48,11 @@ const FirstLoginForm = ({ user }: { user: IUser }) => {
       phone: values.phone,
       email: values.email,
     };
-    const res = await firstLoginByprovider(input);
-    if (!res.isError) {
-      message.success(res.message);
-      const data = res.data;
-      dispatch(updateUserInfo(data.user));
-      await session.update(data);
-      router.push(callbackUrl);
-    } else {
-      message.error(res.message);
-      return null;
-    }
-    setLoading(false);
+    await _firstLoginByprovider(input);
   };
-  const [loading, setLoading] = useState<boolean>(false);
 
   return (
-    <Spin spinning={loading}>
+    <Spin spinning={isPending}>
       <Form
         form={form}
         name="register"

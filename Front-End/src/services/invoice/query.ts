@@ -56,36 +56,28 @@ export const getLatestInvoices = async () => {
 };
 
 export const getOrderById = async (id: string | number) => {
-  try {
-    await checkToken();
-    let { token } = getToken();
+  await checkToken();
+  let { token } = getToken();
 
-    const res = await get<OrderType>(`/orders/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const address = await getAddressDetail(res.data.address);
-    return { ...res.data, address };
-  } catch (error) {
-    throw error;
-  }
+  const res = await get<OrderType>(`/orders/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const address = await getAddressDetail(res.data.address);
+  return { ...res.data, address };
 };
 
 export const getOrderDetailById = async (id: string | number) => {
-  try {
-    await checkToken();
-    let { token } = getToken();
+  await checkToken();
+  let { token } = getToken();
 
-    const res = await get<OrderDetailType[]>(`/order-details/order/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return res.data;
-  } catch (error) {
-    throw error;
-  }
+  const res = await get<OrderDetailType[]>(`/order-details/order/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.data;
 };
 
 export const getAllOrderByUserId = async () => {

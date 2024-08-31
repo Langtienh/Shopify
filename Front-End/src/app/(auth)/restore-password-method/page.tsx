@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Form, Input, message } from "antd";
+import { Button, Form, Input } from "antd";
 import Image from "next/image";
 import {
   Dialog,
@@ -14,29 +14,28 @@ import { useState } from "react";
 import { verifyMail, verifyOTP } from "@/services/auth/action";
 import RenderIf from "@/components/global/renderif";
 import { useRouter } from "next/navigation";
+import useAction from "@/hooks/useAction";
 export default function Page() {
   const [form] = Form.useForm();
   const [email, setEmail] = useState<string>("");
-  const [isLoading, setLoading] = useState<boolean>(false);
-  const [isSucsess, setSucsess] = useState<boolean>(false);
+  const [isVerifyMailSucsess, setSucsess] = useState<boolean>(false);
   const [otp, setOtp] = useState<string>("");
+  const [verifyMailReponse, isPendingVerifyMail, _verifyMail] =
+    useAction(verifyMail);
   const onFinish = async (form: { email: string }) => {
-    setLoading(true);
-    const res = await verifyMail(form.email);
+    const res = await _verifyMail(form.email);
     if (res) {
       setEmail(form.email);
       setSucsess(true);
     }
-    setLoading(false);
   };
   const router = useRouter();
+  const [verifyOTPReponse, isPendingVerifyOTP, _verifyOTP] =
+    useAction(verifyOTP);
   const handleSubmit = async () => {
-    const res = await verifyOTP(email, otp);
-    if (res.isError) message.error(res.message);
-    else {
-      message.success(res.message);
-      router.push("/restore-password");
-    }
+    await _verifyOTP(email, otp);
+    const res = await _verifyOTP(email, otp);
+    if (res) router.push("/restore-password");
     setOtp("");
   };
   return (
@@ -92,12 +91,12 @@ export default function Page() {
             <DialogContent className="sm:max-w-[425px] p-0">
               <DialogHeader>
                 <DialogTitle className="p-5 text-xl font-medium bg-gray-100 text-center">
-                  Xác thực Số điện thoại
+                  Xác thực Số điện Email
                 </DialogTitle>
               </DialogHeader>
-              <RenderIf renderIf={isLoading}>
+              <RenderIf renderIf={isPendingVerifyMail}>
                 <div className="px-5 pt-5 mb-5">
-                  <p className="text-lg text-center">Đang xác nhận...</p>
+                  <p className="text-lg text-center">Đang xác nhận email...</p>
                   <div className="w-[200px] mx-auto py-5">
                     <Input.OTP disabled length={4} size="large" />
                   </div>
@@ -113,7 +112,7 @@ export default function Page() {
                   </DialogClose>
                 </div>
               </RenderIf>
-              <RenderIf renderIf={isSucsess && !isLoading}>
+              <RenderIf renderIf={isVerifyMailSucsess && !isPendingVerifyMail}>
                 <div className="px-5 pt-5 mb-5">
                   <p className="text-lg text-center">{`Nhập mã OTP được gửi qua email ${email}`}</p>
                   <div className="w-[200px] mx-auto py-5">
@@ -131,6 +130,7 @@ export default function Page() {
                     type="primary"
                     size="large"
                     onClick={handleSubmit}
+                    loading={isPendingVerifyOTP}
                   >
                     Xác nhận
                   </Button>
@@ -139,7 +139,7 @@ export default function Page() {
                   </p>
                 </div>
               </RenderIf>
-              <RenderIf renderIf={!isLoading && !isSucsess}>
+              <RenderIf renderIf={!isPendingVerifyMail && !isVerifyMailSucsess}>
                 <div className="px-5 pt-5 mb-5">
                   <p className="text-lg text-center">
                     Không tìm thấy tài khoản

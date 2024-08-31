@@ -20,20 +20,16 @@ export const getProduct = async (
   if (brand) query += `&brand=${brand}`;
   if (sort) query += `&sort=${sort}`;
   if (search) query += `&search=${search}`;
-  try {
-    const res = await get<Page<Product>>(`/products/search-product?${query}`);
-    const products = res.data.result.map((product) => ({
-      ...product,
-      priceF: priceShow(product.price, product.discount),
-      discountForMemberF: converPriceToVN(product.discountForMember, "đ"),
-      priceThroughF: priceThrough(product.price),
-      slug: productToSlug(product.name, product.id),
-    }));
-    const totalItem = res.data.totalItem;
-    return { products, totalItem };
-  } catch (error) {
-    throw error;
-  }
+  const res = await get<Page<Product>>(`/products/search-product?${query}`);
+  const products = res.data.result.map((product) => ({
+    ...product,
+    priceF: priceShow(product.price, product.discount),
+    discountForMemberF: converPriceToVN(product.discountForMember, "đ"),
+    priceThroughF: priceThrough(product.price),
+    slug: productToSlug(product.name, product.id),
+  }));
+  const totalItem = res.data.totalItem;
+  return { products, totalItem };
 };
 
 export const getAllProduct = async () => {
@@ -62,13 +58,9 @@ export const getProductByCategorySortByViewCounter = async (
 };
 
 export const getProductById = async (id: number | string) => {
-  try {
-    const res = await get<Product>(`/products/${id}`);
-    const data = res.data;
-    return data;
-  } catch (error) {
-    throw error;
-  }
+  const res = await get<Product>(`/products/${id}`);
+  const data = res.data;
+  return data;
 };
 
 export const getAttributesByCategory = async (

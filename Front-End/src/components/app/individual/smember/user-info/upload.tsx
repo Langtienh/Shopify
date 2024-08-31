@@ -1,10 +1,11 @@
 "use client";
 import RenderIf from "@/components/global/renderif";
 import { Input } from "@/components/ui/input";
+import useAction from "@/hooks/useAction";
 import { useAppDispatch } from "@/redux/store";
 import { updateAvatar } from "@/redux/user-info/slice";
 import { uploadAvatar } from "@/services/upload";
-import { Button, message } from "antd";
+import { Button } from "antd";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
@@ -13,7 +14,8 @@ import { FaCamera } from "react-icons/fa";
 export default function UploadAvatar({ avatar }: { avatar?: string }) {
   const [url, setUrl] = useState<string | null>(null);
   const [files, setFiles] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
+
+  const [response, isPending, _uploadAvatar] = useAction(uploadAvatar);
 
   useEffect(() => {
     if (avatar) setUrl(avatar);
@@ -22,14 +24,11 @@ export default function UploadAvatar({ avatar }: { avatar?: string }) {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const handleUpload = async () => {
-    setUploading(true);
     const formData = new FormData();
     formData.append("files", files as File);
-    const res = await uploadAvatar(formData);
-    if (res.isError) message.error(res.message);
-    else {
+    const res = await _uploadAvatar(formData);
+    if (res) {
       if (url) dispatch(updateAvatar(url));
-      message.success(res.message);
     }
     setFiles(null);
     router.refresh();
@@ -76,8 +75,8 @@ export default function UploadAvatar({ avatar }: { avatar?: string }) {
         accept="image/*"
       />
       <RenderIf renderIf={files}>
-        <Button loading={uploading} onClick={handleUpload}>
-          {uploading ? "Đang cập nhật" : "Cập nhật"}
+        <Button loading={isPending} onClick={handleUpload}>
+          {isPending ? "Đang cập nhật" : "Cập nhật"}
         </Button>
       </RenderIf>
     </>

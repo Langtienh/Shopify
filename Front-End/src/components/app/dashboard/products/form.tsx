@@ -23,6 +23,7 @@ import { AiFillProduct } from "react-icons/ai";
 import Image from "next/image";
 import { getbrandsByCategory } from "@/services/brand";
 import { uploadProductImage } from "@/services/upload";
+import useAction from "@/hooks/useAction";
 
 type FormField = {
   name: string;
@@ -64,25 +65,29 @@ export default function ProductForm({
   useEffect(() => {
     if (_brands) setBrands(_brands);
   }, [_brands]);
-
+  const [isFetching, setFetching] = useState<boolean>(false);
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
-      if (category) {
-        const [_brands, _attributes] = await Promise.all([
-          getbrandsByCategory(category),
-          getAttributesByCategory(category),
-        ]);
-        setBrands(_brands);
-        const _attributesData = _attributes.map((item) => ({
-          attribute: item.name,
-          value: undefined,
-          label: item.label,
-        }));
-        setAttributesDatas(_attributesData);
-        setLoading(false);
+      setFetching(true);
+      try {
+        if (category) {
+          const [_brands, _attributes] = await Promise.all([
+            getbrandsByCategory(category),
+            getAttributesByCategory(category),
+          ]);
+          setBrands(_brands);
+          const _attributesData = _attributes.map((item) => ({
+            attribute: item.name,
+            value: undefined,
+            label: item.label,
+          }));
+          setAttributesDatas(_attributesData);
+        }
+      } finally {
+        setFetching(false);
       }
     };
+
     fetchData();
   }, [category]);
 
@@ -115,10 +120,10 @@ export default function ProductForm({
   // xử lý submit
   const [form] = Form.useForm();
   const router = useRouter();
-  const [loading, setLoading] = useState<boolean>(false);
-
+  const [response, isPending, _createProduct] = useAction(createProduct);
+  const [responseUpload, uploading, _uploadProductImage] =
+    useAction(uploadProductImage);
   const onFinish = async (productForm: FormField) => {
-    setLoading(true);
     if (product) {
       if (product.id < 413) message.error("Không được phép sửa sản phẩm gốc");
       else {
@@ -129,28 +134,20 @@ export default function ProductForm({
       if (!file) message.warning("Vui lòng chọn ảnh");
       else {
         const attributes = attributesDatas.filter((item) => item.value);
-        const res = await createProduct({
+        const res = await _createProduct({
           ...productForm,
           // @ts-ignore
           attributes,
         });
-        if (res?.isError) message.error(res.message);
-        else {
-          message.success(res.message);
+        if (res) {
           const newProductId = res.data.id;
           const formData = new FormData();
           formData.append("files", file);
-          const resUpload = await uploadProductImage(formData, newProductId);
-          if (resUpload?.isError) message.error(res.message);
-          else {
-            message.success(res.message);
-            router.push("/dashboard/products");
-          }
+          const resUpload = await _uploadProductImage(formData, newProductId);
+          if (resUpload) router.push("/dashboard/products");
         }
       }
     }
-
-    setLoading(false);
   };
 
   const handleChangeAttribute = (
@@ -171,7 +168,7 @@ export default function ProductForm({
 
   return (
     <>
-      <Spin spinning={loading}>
+      <Spin spinning={isPending || isFetching}>
         <Form
           form={form}
           name="productForm"
