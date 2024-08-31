@@ -13,13 +13,15 @@ export const getProduct = async (
   category?: string,
   brand?: string,
   sort?: string,
-  search?: string
+  search?: string,
+  active: boolean = true
 ) => {
   let query = `page=${page}&limit=${limit}`;
   if (category) query += `&category=${category}`;
   if (brand) query += `&brand=${brand}`;
   if (sort) query += `&sort=${sort}`;
   if (search) query += `&search=${search}`;
+  query += `&active=${active}`;
   const res = await get<Page<Product>>(`/products/search-product?${query}`);
   const products = res.data.result.map((product) => ({
     ...product,
@@ -32,16 +34,31 @@ export const getProduct = async (
   return { products, totalItem };
 };
 
-export const getAllProduct = async () => {
-  try {
-    const res = await get<ProductResponse[]>(`/products`);
-    const products = res.data;
-    return products;
-  } catch {
-    return [];
-  }
+export const getProductDeleted = async (page?: number, limit?: number) => {
+  const { products, totalItem } = await getProduct(
+    page,
+    limit,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    false
+  );
+  return { products, totalItem };
 };
-// bug call ở client bị lỗi do env phải để next_public
+
+export const getAllProduct = async () => {
+  // get all
+  // const res = await get<ProductResponse[]>(`/products`);
+  // const products = res.data;
+  // return products;
+  // get by limit option
+  const limit = +process.env.PRODUCT_ITEM! || 10;
+  const { products } = await getProduct(1, limit);
+  return products;
+};
+
+// cái này call ở client sẽ bị lỗi do env phải để next_public
 export const searchProductByName = async (value: string) => {
   const query = `name:${value}`;
   const res = await getProduct(1, 5, undefined, undefined, undefined, query);

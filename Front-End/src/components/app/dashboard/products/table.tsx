@@ -15,6 +15,9 @@ import Search from "./search";
 import { AddProduct } from "./button";
 import MyPagination from "@/components/global/pagination";
 import { getProduct } from "@/services/product";
+import { Button } from "@/components/ui/button";
+import { MdOutlineAutoDelete } from "react-icons/md";
+import Link from "next/link";
 
 type Props = {
   page: number;
@@ -53,6 +56,11 @@ export default async function ProductTable({
           <div className="flex-1"></div>
           <Search value={search} />
           <AddProduct />
+          <Link href="/dashboard/products/deleted">
+            <Button variant="ghost" size="icon">
+              <MdOutlineAutoDelete size={28} />
+            </Button>
+          </Link>
         </div>
       </div>
       <Table className="bg-white">

@@ -12,6 +12,8 @@ import {
 import MyPagination from "@/components/global/pagination";
 import { AddProduct } from "./button";
 import { shimmer } from "@/components/global/skeleton";
+import { Button } from "@/components/ui/button";
+import { MdOutlineAutoDelete } from "react-icons/md";
 export default function ProductTableSkeleton() {
   return (
     <>
@@ -29,6 +31,9 @@ export default function ProductTableSkeleton() {
           <div className="flex-1"></div>
           <Search value="" />
           <AddProduct />
+          <Button variant="ghost" size="icon">
+            <MdOutlineAutoDelete size={28} />
+          </Button>
         </div>
       </div>
       <Table className="bg-white">

@@ -21,7 +21,11 @@ export const updateProductStasus = async (id: number, isActive: boolean) => {
 
 export const updateProduct = async (product: ProductDTO, productId: number) => {
   const { configToken } = await getConfigToken();
-  const res = await post<Product>("/products", product, configToken);
+  const res = await put<Product>(
+    `/products/${productId}`,
+    product,
+    configToken
+  );
   return res;
 };
 

@@ -17,7 +17,7 @@ export const DeleteCommentButton = ({ commentId }: { commentId: number }) => {
       type="text"
       size="small"
       danger
-      icon={<MdDelete size={18} />}
+      icon={<MdDelete size={20} />}
     />
   );
 };

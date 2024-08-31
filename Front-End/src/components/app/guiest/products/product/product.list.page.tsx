@@ -4,7 +4,7 @@ import MyPagination from "@/components/global/pagination";
 import { DELAY } from "@/lib/utils2";
 
 import { ProductListPage } from "@/app/(guiest)/(base)/products/[...slug]/page";
-const delaynum = +process.env.DELAY_GET_PRODUCT! || 1000;
+const delaynum = +process.env.DELAY_GET_PRODUCT! || 300;
 export default async function ProductsListPage(props: ProductListPage) {
   await DELAY(delaynum);
   const { products, totalItem } = await getProduct(

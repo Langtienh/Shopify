@@ -120,25 +120,49 @@ export default function ProductForm({
   // xử lý submit
   const [form] = Form.useForm();
   const router = useRouter();
-  const [response, isPending, _createProduct] = useAction(createProduct);
+  const [response, isCreating, _createProduct] = useAction(createProduct);
   const [responseUpload, uploading, _uploadProductImage] =
     useAction(uploadProductImage);
+  const [responseUpdate, isUpdating, _updateProduct] = useAction(updateProduct);
+  const isPending = isCreating || uploading || isUpdating;
   const onFinish = async (productForm: FormField) => {
+    const attributes = attributesDatas.filter((item) => item.value);
+    console.log(productForm);
     if (product) {
       if (product.id < 413) message.error("Không được phép sửa sản phẩm gốc");
       else {
-        message.error("Tính năng chưa hoàn thiện");
-        // const res = await updateProduct(productForm, product.id);
+        const data = product
+          ? {
+              ...product,
+              ...productForm,
+              attributes,
+            }
+          : {
+              ...productForm,
+              attributes,
+            };
+        // @ts-ignore
+        const res = await _updateProduct(data, product.id);
+        if (res) {
+          if (file) {
+            const newProductId = res.data.id;
+            const formData = new FormData();
+            formData.append("files", file);
+            const resUpload = await _uploadProductImage(formData, newProductId);
+            if (resUpload) router.push("/dashboard/products");
+          }
+          router.push("/dashboard/products");
+        }
       }
     } else {
       if (!file) message.warning("Vui lòng chọn ảnh");
       else {
-        const attributes = attributesDatas.filter((item) => item.value);
-        const res = await _createProduct({
+        const data = {
           ...productForm,
-          // @ts-ignore
           attributes,
-        });
+        };
+        // @ts-ignore
+        const res = await _createProduct(data);
         if (res) {
           const newProductId = res.data.id;
           const formData = new FormData();
@@ -347,7 +371,7 @@ export default function ProductForm({
               </Button>
             </Link>
             <Button className="bg-blue-600 hover:bg-blue-500" type="submit">
-              Create product
+              {product ? "Update" : "Create product"}
             </Button>
           </div>
         </Form>
