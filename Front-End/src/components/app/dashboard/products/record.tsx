@@ -8,11 +8,9 @@ import RenderIf from "@/components/global/renderif";
 import { Badge } from "antd";
 
 export default function Record({
-  isDemo,
   product,
 }: {
   product: Product & ProductFormat;
-  isDemo?: boolean;
 }) {
   const [showDetail, setShowDetail] = useState<boolean>(false);
   const toggle = (value: boolean) => setShowDetail(!value);
@@ -52,11 +50,7 @@ export default function Record({
         </TableCell>
         <TableCell className="flex gap-3 justify-center items-center">
           <EditProduct productId={product.id} />
-          <DelProduct
-            isActive={product.active}
-            isDemo={isDemo}
-            productId={product.id}
-          />
+          <DelProduct isActive={product.active} productId={product.id} />
         </TableCell>
       </TableRow>
       {showDetail && (

@@ -3,6 +3,7 @@
 import RenderIf from "@/components/global/renderif";
 import { Button } from "@/components/ui/button";
 import useAction from "@/hooks/useAction";
+import { useAppSelector } from "@/redux/store";
 import { updateProductStasus } from "@/services/product/action";
 
 import { message, Select } from "antd";
@@ -39,15 +40,16 @@ export const EditProduct = ({ productId }: { productId: number }) => {
 
 export const DelProduct = ({
   productId,
-  isDemo,
   isActive,
 }: {
   productId: number;
-  isDemo?: boolean;
   isActive: boolean;
 }) => {
   const [response, isPending, _updateProductStasus] =
     useAction(updateProductStasus);
+  const isDemo = !!useAppSelector(
+    (state) => state.userInfo.user
+  )?.roles.includes("demo");
   const handleChange = async () => {
     if (isDemo) {
       message.warning("Chỉ được phép xem");

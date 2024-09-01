@@ -12,7 +12,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import useAction from "@/hooks/useAction";
+import { useAppSelector } from "@/redux/store";
 import { createCategory, updateCategory } from "@/services/category";
+import { message } from "antd";
 import { useEffect, useState } from "react";
 import { CiEdit } from "react-icons/ci";
 
@@ -33,10 +35,13 @@ export default function CategoryForm({
       setLabel(category.label);
     }
   }, [category]);
-
+  const isDemo = !!useAppSelector(
+    (state) => state.userInfo.user
+  )?.roles.includes("demo");
   const handleSubmit = async () => {
     try {
-      if (name && label) {
+      if (isDemo) message.warning("Chỉ được phép xem");
+      else if (name && label) {
         const data = { name, label };
         if (category) await _updateCategory(data, category.id);
         else await _createCategory(data);

@@ -12,7 +12,6 @@ import MyPagination, { OptionPageSize } from "@/components/global/pagination";
 import { Input } from "antd";
 import { IoSearch } from "react-icons/io5";
 import { MdLaptopChromebook } from "react-icons/md";
-import getAuthCache from "@/auth/getSesstion";
 
 type PropsType = {
   searchParams: {
@@ -26,8 +25,6 @@ export default async function Page({
   const PAGE = page || 1;
   const LIMIT = limit || 10;
   const { invoices, totalItem } = await getInvoice(LIMIT, PAGE);
-  const auth = await getAuthCache();
-  const isDemo = !!auth?.user?.roles?.includes("demo");
   return (
     <>
       <div className="bg-white py-3 border-y flex justify-between items-center px-3 border-t rounded-t-xl">
@@ -56,11 +53,7 @@ export default async function Page({
               <TableCell>{invoice.totalPrice}</TableCell>
               <TableCell>{invoice.paymentMethod}</TableCell>
               <TableCell>
-                <EditStatus
-                  isDemo={isDemo}
-                  status={invoice.orderStatus}
-                  id={invoice.id}
-                />
+                <EditStatus status={invoice.orderStatus} id={invoice.id} />
               </TableCell>
               <TableCell>
                 <View id={invoice.id} />

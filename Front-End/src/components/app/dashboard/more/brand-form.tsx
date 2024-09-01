@@ -12,7 +12,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import useAction from "@/hooks/useAction";
+import { useAppSelector } from "@/redux/store";
 import { createBrand, updateBrand } from "@/services/brand";
+import { message } from "antd";
 import { useEffect, useState } from "react";
 import { CiEdit } from "react-icons/ci";
 
@@ -27,10 +29,13 @@ export default function BrandForm({ brand }: { brand?: BrandType }) {
       setName(brand.name);
     }
   }, [brand]);
-
+  const isDemo = !!useAppSelector(
+    (state) => state.userInfo.user
+  )?.roles.includes("demo");
   const handleSubmit = async () => {
     try {
-      if (name) {
+      if (isDemo) message.warning("Chỉ được phép xem");
+      else if (name) {
         if (brand) await _updateBrand(name, brand.id);
         else await _createBrand(name);
       }

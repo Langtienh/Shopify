@@ -12,10 +12,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import useAction from "@/hooks/useAction";
+import { useAppSelector } from "@/redux/store";
 import {
   createPaymentMethod,
   updatePaymentMethod,
 } from "@/services/payment-method";
+import { message } from "antd";
 import { useEffect, useState } from "react";
 import { CiEdit } from "react-icons/ci";
 
@@ -40,10 +42,13 @@ export default function PaymentMethodForm({
       setImage(paymentMethod.image);
     }
   }, [paymentMethod]);
-
+  const isDemo = !!useAppSelector(
+    (state) => state.userInfo.user
+  )?.roles.includes("demo");
   const handleSubmit = async () => {
     try {
-      if (name && description && image) {
+      if (isDemo) message.warning("Chỉ được phép xem");
+      else if (name && description && image) {
         const data = { name, description, image };
         if (paymentMethod) await _updatePaymentMethod(data, paymentMethod.id);
         else await _createPaymentMethod(data);

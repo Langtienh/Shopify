@@ -9,16 +9,14 @@ import { updateStatus } from "@/services/user";
 import { AiOutlineLoading } from "react-icons/ai";
 import Link from "next/link";
 import useAction from "@/hooks/useAction";
+import { useAppSelector } from "@/redux/store";
 
-export const LockUser = ({
-  user,
-  isDemo,
-}: {
-  user: User;
-  isDemo?: boolean;
-}) => {
+export const LockUser = ({ user }: { user: User }) => {
   const [response, isPending, _updateStatus] = useAction(updateStatus);
   const isAdmin = user.roles.includes("admin");
+  const isDemo = !!useAppSelector(
+    (state) => state.userInfo.user
+  )?.roles.includes("demo");
   const change = async (preStatus: boolean) => {
     if (isDemo) {
       message.warning("Chỉ được phép xem");

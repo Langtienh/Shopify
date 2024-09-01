@@ -15,7 +15,6 @@ import {
 import MyPagination, { OptionPageSize } from "@/components/global/pagination";
 import { Badge } from "antd";
 import { FaUser } from "react-icons/fa";
-import getAuthCache from "@/auth/getSesstion";
 import Search from "@/components/app/dashboard/users/search";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
@@ -33,8 +32,6 @@ export default async function Page({
   const LIMIT = limit || 10;
   const data = await getUser(LIMIT, PAGE, name);
   const users = data.result;
-  const auth = await getAuthCache();
-  const isDemo = auth?.user?.roles?.includes("demo");
   return (
     <>
       <div className="bg-white py-3 border-y flex justify-between items-center px-3 border-t rounded-t-xl">
@@ -95,7 +92,7 @@ export default async function Page({
               </TableCell>
               <TableCell className="flex h-full items-center gap-4 px-4">
                 <EditUser userId={user.id} />
-                <LockUser isDemo={isDemo} user={user} />
+                <LockUser user={user} />
               </TableCell>
             </TableRow>
           ))}

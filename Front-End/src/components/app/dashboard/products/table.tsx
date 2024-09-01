@@ -24,11 +24,9 @@ type Props = {
   limit: number;
   category?: string;
   search?: string;
-  isDemo?: boolean;
 };
 
 export default async function ProductTable({
-  isDemo,
   page,
   limit,
   category,
@@ -42,6 +40,7 @@ export default async function ProductTable({
     "id:desc",
     search
   );
+
   return (
     <>
       <div className="bg-white py-3 border-y flex justify-between items-center px-3 border-t rounded-t-xl">
@@ -83,7 +82,7 @@ export default async function ProductTable({
         <TableBody>
           <RenderIf renderIf={products.length}>
             {products.map((product) => (
-              <Record isDemo={isDemo} product={product} key={product.id} />
+              <Record product={product} key={product.id} />
             ))}
           </RenderIf>
         </TableBody>

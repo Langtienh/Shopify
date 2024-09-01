@@ -2,6 +2,7 @@
 import RenderIf from "@/components/global/renderif";
 import { Button } from "@/components/ui/button";
 import useAction from "@/hooks/useAction";
+import { useAppSelector } from "@/redux/store";
 import { updateInvoiceStatus } from "@/services/invoice";
 import { Badge, message, Select } from "antd";
 import Link from "next/link";
@@ -27,12 +28,13 @@ const statusColor: Record<OrderStatus, badgeStatus> = {
 export const EditStatus = ({
   status,
   id,
-  isDemo,
 }: {
-  isDemo: boolean;
   status: OrderStatus;
   id: string;
 }) => {
+  const isDemo = !!useAppSelector(
+    (state) => state.userInfo.user
+  )?.roles.includes("demo");
   const [edit, setEdit] = useState(false);
   const [response, isPending, _updateInvoiceStatus] =
     useAction(updateInvoiceStatus);

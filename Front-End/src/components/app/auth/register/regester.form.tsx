@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import RenderIf from "@/components/global/renderif";
 import { Button as MyButton } from "@/components/ui/button";
 import { updateUserById } from "@/services/user/action";
+import { useAppSelector } from "@/redux/store";
 
 export default function RegesterForm({
   isCreateByAdmin,
@@ -27,16 +28,21 @@ export default function RegesterForm({
   // xử lý đăng kí
   const router = useRouter();
   const [isPending, setPending] = useState<boolean>(false);
+  const isDemo = !!useAppSelector(
+    (state) => state.userInfo.user
+  )?.roles.includes("demo");
   const onFinish = async (values: RegisterForm) => {
     setPending(true);
     try {
-      const res = user
-        ? await updateUserById(user.id, values)
-        : await register(values);
-      message.success(res.message);
-
-      if (isCreateByAdmin) router.push("/dashboard/users");
-      else router.push("/login");
+      if (isDemo && isCreateByAdmin) message.warning("Chỉ được phép xem");
+      else {
+        const res = user
+          ? await updateUserById(user.id, values)
+          : await register(values);
+        message.success(res.message);
+        if (isCreateByAdmin) router.push("/dashboard/users");
+        else router.push("/login");
+      }
     } catch (error) {
       if (error instanceof Error) {
         message.error(error.message);

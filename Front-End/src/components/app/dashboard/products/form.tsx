@@ -24,6 +24,7 @@ import Image from "next/image";
 import { getbrandsByCategory } from "@/services/brand";
 import { uploadProductImage } from "@/services/upload";
 import useAction from "@/hooks/useAction";
+import { useAppSelector } from "@/redux/store";
 
 type FormField = {
   name: string;
@@ -125,50 +126,59 @@ export default function ProductForm({
     useAction(uploadProductImage);
   const [responseUpdate, isUpdating, _updateProduct] = useAction(updateProduct);
   const isPending = isCreating || uploading || isUpdating;
+  const isDemo = !!useAppSelector(
+    (state) => state.userInfo.user
+  )?.roles.includes("demo");
   const onFinish = async (productForm: FormField) => {
-    const attributes = attributesDatas.filter((item) => item.value);
-    console.log(productForm);
-    if (product) {
-      if (product.id < 413) message.error("Không được phép sửa sản phẩm gốc");
-      else {
-        const data = product
-          ? {
-              ...product,
-              ...productForm,
-              attributes,
+    if (isDemo) message.warning("Chỉ được phép xem");
+    else {
+      const attributes = attributesDatas.filter((item) => item.value);
+      console.log(productForm);
+      if (product) {
+        if (product.id < 413) message.error("Không được phép sửa sản phẩm gốc");
+        else {
+          const data = product
+            ? {
+                ...product,
+                ...productForm,
+                attributes,
+              }
+            : {
+                ...productForm,
+                attributes,
+              };
+          // @ts-ignore
+          const res = await _updateProduct(data, product.id);
+          if (res) {
+            if (file) {
+              const newProductId = res.data.id;
+              const formData = new FormData();
+              formData.append("files", file);
+              const resUpload = await _uploadProductImage(
+                formData,
+                newProductId
+              );
+              if (resUpload) router.push("/dashboard/products");
             }
-          : {
-              ...productForm,
-              attributes,
-            };
-        // @ts-ignore
-        const res = await _updateProduct(data, product.id);
-        if (res) {
-          if (file) {
+            router.push("/dashboard/products");
+          }
+        }
+      } else {
+        if (!file) message.warning("Vui lòng chọn ảnh");
+        else {
+          const data = {
+            ...productForm,
+            attributes,
+          };
+          // @ts-ignore
+          const res = await _createProduct(data);
+          if (res) {
             const newProductId = res.data.id;
             const formData = new FormData();
             formData.append("files", file);
             const resUpload = await _uploadProductImage(formData, newProductId);
             if (resUpload) router.push("/dashboard/products");
           }
-          router.push("/dashboard/products");
-        }
-      }
-    } else {
-      if (!file) message.warning("Vui lòng chọn ảnh");
-      else {
-        const data = {
-          ...productForm,
-          attributes,
-        };
-        // @ts-ignore
-        const res = await _createProduct(data);
-        if (res) {
-          const newProductId = res.data.id;
-          const formData = new FormData();
-          formData.append("files", file);
-          const resUpload = await _uploadProductImage(formData, newProductId);
-          if (resUpload) router.push("/dashboard/products");
         }
       }
     }

@@ -1,15 +1,20 @@
 "use client";
 
 import useAction from "@/hooks/useAction";
+import { useAppSelector } from "@/redux/store";
 import { updateProductStasus } from "@/services/product/action";
-import { Button } from "antd";
+import { Button, message } from "antd";
 import { MdRestore } from "react-icons/md";
 
 export const RestoreProductButton = ({ productId }: { productId: number }) => {
   const [response, isPending, _updateProductStasus] =
     useAction(updateProductStasus);
+  const isDemo = !!useAppSelector(
+    (state) => state.userInfo.user
+  )?.roles.includes("demo");
   const handleDeleteComment = async () => {
-    await _updateProductStasus(productId, true);
+    if (isDemo) message.warning("Chỉ được phép xem");
+    else await _updateProductStasus(productId, true);
   };
   return (
     <Button

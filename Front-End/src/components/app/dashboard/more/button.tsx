@@ -2,20 +2,25 @@
 import RenderIf from "@/components/global/renderif";
 import { Button } from "@/components/ui/button";
 import useAction from "@/hooks/useAction";
+import { useAppSelector } from "@/redux/store";
 import { delBrand } from "@/services/brand";
 import { delCategory } from "@/services/category";
 import { updateStatusPaymentMethod } from "@/services/payment-method";
+import { message } from "antd";
 import { FaLock, FaUnlock } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
 
 export const DelCategoryButton = ({ categoryId }: { categoryId: number }) => {
   const [response, isPending, _delCategory] = useAction(delCategory);
+  const isDemo = !!useAppSelector(
+    (state) => state.userInfo.user
+  )?.roles.includes("demo");
+  const handleDelete = async () => {
+    if (isDemo) message.warning("Chỉ được phép xem");
+    else await _delCategory(categoryId);
+  };
   return (
-    <Button
-      onClick={() => _delCategory(categoryId)}
-      variant="ghost"
-      size="icon"
-    >
+    <Button onClick={handleDelete} variant="ghost" size="icon">
       <MdDeleteOutline size={20} />
     </Button>
   );
@@ -23,8 +28,15 @@ export const DelCategoryButton = ({ categoryId }: { categoryId: number }) => {
 
 export const DelBrandButton = ({ brandId }: { brandId: number }) => {
   const [response, isPending, _delBrand] = useAction(delBrand);
+  const isDemo = !!useAppSelector(
+    (state) => state.userInfo.user
+  )?.roles.includes("demo");
+  const handleDelete = async () => {
+    if (isDemo) message.warning("Chỉ được phép xem");
+    else await _delBrand(brandId);
+  };
   return (
-    <Button onClick={() => _delBrand(brandId)} variant="ghost" size="icon">
+    <Button onClick={handleDelete} variant="ghost" size="icon">
       <MdDeleteOutline size={20} />
     </Button>
   );
@@ -40,10 +52,17 @@ export const UpdateMethodStatusButton = ({
   const [reponse, isPending, _updateStatusPaymentMethod] = useAction(
     updateStatusPaymentMethod
   );
+  const isDemo = !!useAppSelector(
+    (state) => state.userInfo.user
+  )?.roles.includes("demo");
+  const handleDelete = async () => {
+    if (isDemo) message.warning("Chỉ được phép xem");
+    else await _updateStatusPaymentMethod(!status, paymenMethodId);
+  };
   return (
     <>
       <Button
-        onClick={() => updateStatusPaymentMethod(!status, paymenMethodId)}
+        onClick={handleDelete}
         disabled={isPending}
         variant="ghost"
         size="icon"
