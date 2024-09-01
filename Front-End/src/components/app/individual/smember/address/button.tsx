@@ -8,26 +8,11 @@ import { Button } from "antd";
 export const EditAddressButton = ({ address }: { address: Address }) => {
   const [data, isPending, _setAddressDefault] = useAction(setAddressDefault);
   return (
-    <Button
-      onClick={() => _setAddressDefault(address)}
-      loading={isPending}
-      type="primary"
-    >
-      Đặt làm mặc định
-    </Button>
+    <span onClick={() => _setAddressDefault(address)}>Đặt làm mặc định</span>
   );
 };
 
 export const DeleteAddressButton = ({ addressId }: { addressId: number }) => {
   const [data, isPending, _deleteAddress] = useAction(deleteAddress);
-  return (
-    <Button
-      onClick={() => deleteAddress(addressId)}
-      className="ml-auto"
-      loading={isPending}
-      danger
-    >
-      Xóa
-    </Button>
-  );
+  return <span onClick={() => deleteAddress(addressId)}>Xóa</span>;
 };

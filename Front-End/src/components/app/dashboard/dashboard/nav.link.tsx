@@ -7,7 +7,7 @@ import { FaHome, FaUser, FaComments } from "react-icons/fa";
 import { HiDocumentDuplicate } from "react-icons/hi";
 import { AiFillProduct } from "react-icons/ai";
 import { MdPowerSettingsNew } from "react-icons/md";
-import { signOut } from "next-auth/react";
+import { CgDetailsMore } from "react-icons/cg";
 import { logout } from "@/services/auth";
 import { setTotalQuantity } from "@/redux/cart/slice";
 import { setWishList } from "@/redux/wish-list/slice";
@@ -23,8 +23,7 @@ const links = [
   },
   { name: "Users", href: "/dashboard/users", icon: FaUser },
   { name: "Comments", href: "/dashboard/comments", icon: FaComments },
-  // { name: "Categories", href: "/dashboard/categories", icon: TbCategoryFilled },
-  // { name: "Brands", href: "/dashboard/brands", icon: FaRegHandshake },
+  { name: "More", href: "/dashboard/more", icon: CgDetailsMore },
 ];
 
 export default function NavLinks() {

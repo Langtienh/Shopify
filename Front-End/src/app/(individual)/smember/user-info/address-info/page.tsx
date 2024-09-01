@@ -4,6 +4,16 @@ import {
   EditAddressButton,
 } from "@/components/app/individual/smember/address/button";
 import RenderIf from "@/components/global/renderif";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { IoIosMore } from "react-icons/io";
 import { getMyAddress } from "@/services/address";
 import { Button, Tag } from "antd";
 import Image from "next/image";
@@ -39,8 +49,28 @@ export default async function Page() {
               </p>
               <p className="text-[13px] text-gray-500">{`${address.detail}, ${address.path}`}</p>
             </div>
-            <DeleteAddressButton addressId={address.id} />
-            <EditAddressButton address={address} />
+            <div className="ml-auto">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button>
+                    <IoIosMore size={20} />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent side="left" className="w-40">
+                  <DropdownMenuLabel>{address.name}</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem>
+                      <DeleteAddressButton addressId={address.id} />
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <EditAddressButton address={address} />
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>Close</DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </li>
         ))}
       </ul>

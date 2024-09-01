@@ -54,9 +54,7 @@ type CommentDTO = {
   productId: number;
 };
 
-type CategoryDTO = {
-  name: string;
-};
+type CategoryDTO = Omit<CategoryType, "id">;
 
 type CartItemDTO = {
   id: number;
@@ -71,6 +69,8 @@ type BrandDTO = {
 type AttributeDTO = {
   name: string;
 };
+
+type PaymentMethodDTO = Omit<PaymentMethod, "id", "status">;
 
 type paymentInfoType = {
   fullName?: string | null;

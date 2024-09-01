@@ -1,3 +1,3 @@
 import { getAllCategory } from "./query";
-import { update, del, create } from "./action";
-export { getAllCategory, update, del, create };
+import { updateCategory, delCategory, createCategory } from "./action";
+export { getAllCategory, updateCategory, delCategory, createCategory };

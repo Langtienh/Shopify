@@ -1,3 +1,9 @@
-import { getbrandsByCategory } from "./query";
-import { update, del, create } from "./action";
-export { getbrandsByCategory, update, del, create };
+import { getbrandsByCategory, getAllBrands } from "./query";
+import { updateBrand, delBrand, createBrand } from "./action";
+export {
+  getbrandsByCategory,
+  updateBrand,
+  delBrand,
+  createBrand,
+  getAllBrands,
+};

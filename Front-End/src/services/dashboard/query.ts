@@ -1,6 +1,9 @@
 "use server";
 import { get } from "../axios.helper";
+import { getAllBrands } from "../brand";
+import { getAllCategory } from "../category";
 import { getInvoice } from "../invoice";
+import { getPaymentMethods } from "../payment-method";
 import { getUser } from "../user";
 
 export const getCrud = async (query: string) => {
@@ -16,4 +19,13 @@ export const getCardData = async () => {
     totalPendingInvoices: 0,
     totalPaidInvoices: 0,
   };
+};
+
+export const getMore = async () => {
+  const [categories, brands, paymentMethods] = await Promise.all([
+    getAllCategory(),
+    getAllBrands(),
+    getPaymentMethods(),
+  ]);
+  return { categories, brands, paymentMethods };
 };

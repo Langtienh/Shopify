@@ -132,3 +132,11 @@ type Address = {
   code: string;
   default: boolean;
 };
+
+type PaymentMethod = {
+  id: number;
+  name: string;
+  description: string;
+  image: string;
+  status: boolean;
+};
