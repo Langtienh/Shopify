@@ -133,7 +133,6 @@ export default function ProductForm({
     if (isDemo) message.warning("Chỉ được phép xem");
     else {
       const attributes = attributesDatas.filter((item) => item.value);
-      console.log(productForm);
       if (product) {
         if (product.id < 413) message.error("Không được phép sửa sản phẩm gốc");
         else {
