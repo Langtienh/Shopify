@@ -8,12 +8,12 @@ import {
 } from "@/components/app/guiest/product-detail";
 import { notFound } from "next/navigation";
 
-export async function generateStaticParams() {
-  const products = await getAllProduct();
-  return products.map((product) => ({
-    slug: productToSlug(product.name, product.id),
-  }));
-}
+// export async function generateStaticParams() {
+//   const products = await getAllProduct();
+//   return products.map((product) => ({
+//     slug: productToSlug(product.name, product.id),
+//   }));
+// }
 export default async function Page({ params }: { params: { slug: string } }) {
   const productId = productSlugToId(params.slug);
   const product = await getProductById(productId);
