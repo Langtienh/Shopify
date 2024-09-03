@@ -297,6 +297,14 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Override
+    @Transactional
+    public void deleteUser(long id) {
+        User user = findById(id);
+        cartRepository.deleteByUser(user);
+        userRepository.delete(user);
+    }
+
     private String generateOtp(){
         StringBuilder builder = new StringBuilder();
         Random random = new Random();

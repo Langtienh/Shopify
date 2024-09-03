@@ -28,4 +28,5 @@ public interface UserService {
     void sendMailForgotPassword(String email);
     VerifyOtpResponse verifyOtp(String otp, String email);
     void resetPassword(long id, ResetPasswordDTO resetPasswordDTO);
+    void deleteUser(long id);
 }

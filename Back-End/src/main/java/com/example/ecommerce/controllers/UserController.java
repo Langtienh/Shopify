@@ -175,4 +175,14 @@ public class UserController{
                 .status(HttpStatus.OK.value())
                 .build());
     }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<ResponseSuccess> deleteUser(@PathVariable long id){
+        userService.deleteUser(id);
+        return ResponseEntity.ok().body(ResponseSuccess.builder()
+                .message(Translator.toLocale("user.delete.success"))
+                .status(HttpStatus.NO_CONTENT.value())
+                .build());
+    }
 }
