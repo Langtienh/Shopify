@@ -56,14 +56,12 @@ export default function UploadAvatar({ avatar }: { avatar?: string }) {
         )}
 
         <div className="absolute bottom-0 right-0">
-          <Button
-            icon={
-              <label htmlFor="upload12">
-                <FaCamera />
-              </label>
-            }
-            shape="circle"
-          />
+          <label
+            className="size-8 flex items-center justify-center rounded-full bg-white cursor-pointer border hover:border-blue-500 hover:text-blue-500"
+            htmlFor="upload12"
+          >
+            <FaCamera />
+          </label>
         </div>
       </span>
       <Input

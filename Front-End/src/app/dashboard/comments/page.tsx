@@ -11,15 +11,17 @@ type Props = {
 
 export default function Page({ searchParams: { limit, page } }: Props) {
   return (
-    <>
+    <div className="px-7 py-4 rounded-xl shadow-xl bg-white">
       <Breadcrumbs
         breadcrumbs={[
           { label: "Comments", href: "/dashboard/comments", active: true },
         ]}
       />
-      <Suspense fallback={"Loading comments"}>
-        <TableComments page={page} limit={limit} />
-      </Suspense>
-    </>
+      <div className="rounded-xl border pb-3">
+        <Suspense fallback={"Loading comments"}>
+          <TableComments page={page} limit={limit} />
+        </Suspense>
+      </div>
+    </div>
   );
 }
