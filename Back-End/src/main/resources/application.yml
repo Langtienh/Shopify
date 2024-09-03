@@ -9,7 +9,7 @@ spring:
     password: ${DATABASE_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
@@ -69,3 +69,15 @@ cloudinary:
   cloudName: ${CLOUDINARY_NAME}
   apiKey: ${CLOUDINARY_API_KEY}
   apiSecret: ${CLOUDINARY_API_SECRET}
+
+# Health check
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      base-path: ${HEALTH_CHECK_BASE_PATH}
+      exposure:
+        #include: "health"
+        include: "health, info"

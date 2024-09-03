@@ -56,6 +56,8 @@ public class EcommerceApplication {
         System.setProperty("CLOUDINARY_API_KEY", dotenv.get("CLOUDINARY_API_KEY"));
         System.setProperty("CLOUDINARY_API_SECRET", dotenv.get("CLOUDINARY_API_SECRET"));
 
+        // Health check
+        System.setProperty("HEALTH_CHECK_BASE_PATH", dotenv.get("HEALTH_CHECK_BASE_PATH"));
         SpringApplication.run(EcommerceApplication.class, args);
     }
     @Bean

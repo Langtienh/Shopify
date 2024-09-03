@@ -3,6 +3,7 @@ package com.example.ecommerce.configurations;
 import com.example.ecommerce.filters.JwtAuthenticationFilter;
 import com.example.ecommerce.utils.CustomAccessDeniedHandler;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.NonFinal;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -30,6 +31,17 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(requests -> {
                     requests
+                            .requestMatchers("/api-docs",
+                                    "/api-docs/**",
+                                    "/swagger-resources",
+                                    "/swagger-resources/**",
+                                    "/configuration/ui",
+                                    "/configuration/security",
+                                    "/swagger-ui/**",
+                                    "/swagger-ui.html",
+                                    "/webjars/swagger-ui/**",
+                                    "/swagger-ui/index.html").permitAll()
+                            .requestMatchers("/api/v1/actuator/**").permitAll()
                             .requestMatchers(HttpMethod.POST, "/api/v1/users/register").permitAll()
                             .requestMatchers(HttpMethod.POST, "/api/v1/users/login").permitAll()
                             .requestMatchers(HttpMethod.POST, "/api/v1/users/login-with-google/**").permitAll()
@@ -56,4 +68,5 @@ public class SecurityConfig {
                 .exceptionHandling(config -> config.accessDeniedHandler(customAccessDeniedHandler)); // Nếu dùng @PreAuthorize thì k dùng được cái này
         return http.build();
     }
+
 }

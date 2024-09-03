@@ -1,0 +1,34 @@
+version: '3.3'
+services:
+  mysql8-container:
+    container_name: mysql8-container
+    image: mysql:8.0.36-debian
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: springstudent
+      MYSQL_DATABASE: ecommerce
+    ports:
+      - 3307:3306
+    # volumes:
+    #  - /c/HostDataMysql:/var/opt/mysql
+    networks:
+      - ecommerce-network
+
+  ecommerce-container:
+    container_name: ecommerce-container
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    environment:
+      DATABASE_URL: jdbc:mysql://mysql8-container:3306/ecommerce
+      DATABASE_USER: root
+    depends_on:
+      - mysql8-container
+    networks:
+      - ecommerce-network
+
+networks:
+  ecommerce-network:
+    driver: bridge
