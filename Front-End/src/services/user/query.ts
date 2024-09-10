@@ -1,7 +1,7 @@
 "use server";
 import { get } from "../axios.helper";
 import { getMyAddress } from "../address";
-import { getConfigToken } from "../cookies";
+import { getConfigToken } from "../cookies/check-token";
 
 export const getUser = async (
   limit: number = 5,

@@ -1,14 +1,7 @@
 "use server";
-import { checkToken } from "./check-token";
-import { getToken } from "./gettoken";
+import { getConfigToken } from "./check-token";
 
 export const getConfigTokenClient = async () => {
-  await checkToken();
-  const { userId, token } = getToken();
-  const configToken = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
+  const { userId, configToken, token } = await getConfigToken();
   return { userId, configToken, token };
 };

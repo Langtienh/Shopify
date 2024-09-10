@@ -1,7 +1,7 @@
 "use server";
 import { wardCodeToPath } from "../address.helper";
 import { get } from "../axios.helper";
-import { getConfigToken } from "../cookies";
+import { getConfigToken } from "../cookies/check-token";
 
 export const getMyAddress = async () => {
   const { userId, configToken } = await getConfigToken();

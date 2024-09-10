@@ -6,8 +6,9 @@ import Profile from "@/components/app/individual/smember/user.info";
 import { Suspense } from "react";
 import WishListSkeleton from "@/components/app/individual/smember/homePage/slider/skeleton";
 import Link from "next/link";
+import { getMyInfo } from "@/services/user";
 
-export default function Page() {
+export default async function Page() {
   return (
     <div className="flex flex-col gap-4">
       <div className="grid lg:grid-cols-2 gap-4">
@@ -16,7 +17,7 @@ export default function Page() {
           <p className="text-center text-sm text-gray-500">
             Đưa mã này cho nhân viên để hưởng ưu đãi Smember
           </p>
-          <QRCode value="http://localhost:3000" />
+          <QRCode value="https://langtienk4-shopify.vercel.app" />
         </div>
       </div>
       <Alert

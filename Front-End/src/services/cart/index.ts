@@ -1,4 +1,4 @@
-import { getCart } from "./query";
+import { getCart, getCartInCookies } from "./query";
 import {
   addCartItem,
   addQuantity,
@@ -13,4 +13,5 @@ export {
   deleteCartItem,
   deleteListItem,
   subQuantity,
+  getCartInCookies,
 };

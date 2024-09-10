@@ -3,6 +3,7 @@ import { CartInfo } from "@/components/app/individual/payment/info";
 import UserInfo from "@/components/app/individual/payment/user.info";
 import { getMyAddress } from "@/services/address";
 import { getCart } from "@/services/cart";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function Page({
@@ -10,8 +11,10 @@ export default async function Page({
 }: {
   searchParams: { checkout?: string };
 }) {
-  const session = await auth();
-  if (!searchParams.checkout || !session?.user) redirect("/cart");
+  let user: User | undefined;
+  const _user = cookies().get("USER")?.value;
+  if (_user) user = JSON.parse(_user);
+  if (!searchParams.checkout || !user) redirect("/cart");
   const addresses = await getMyAddress();
   const checkout = searchParams.checkout.split(",").map((item) => +item);
   const cart = await getCart();
@@ -21,7 +24,7 @@ export default async function Page({
       <CartInfo cart={cartItems} />
       <UserInfo
         addresses={addresses}
-        user={session.user}
+        user={user}
         checkout={searchParams.checkout}
       />
     </div>

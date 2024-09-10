@@ -1,7 +1,7 @@
 "use server";
 
 import { del, post, put } from "../axios.helper";
-import { getConfigToken } from "../cookies";
+import { getConfigToken } from "../cookies/check-token";
 
 export const updateCategory = async (data: CategoryDTO, categoryId: number) => {
   const { configToken } = await getConfigToken();

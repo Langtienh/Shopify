@@ -4,31 +4,31 @@ import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, message, Spin } from "antd";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { signIn } from "next-auth/react";
-import { getMyInfoTrigger } from "@/services/trigger/query";
-import { updateUserInfo } from "@/redux/user-info/slice";
-import { useAppDispatch } from "@/redux/store";
+import { login } from "@/services/auth";
+import { useAuth } from "@/contexts/auth.context";
+import { useCart } from "@/contexts/cart.context";
+import { useWishList } from "@/contexts/wishLish.context";
 
 const LoginForm: React.FC = () => {
+  const { updateUser } = useAuth();
+  const { updateCart } = useCart();
+  const { updateWishList } = useWishList();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
   const router = useRouter();
   const [spinning, setSpinning] = useState<boolean>(false);
-  const dispatch = useAppDispatch();
   const onFinish = async (values: LoginDTO) => {
     setSpinning(true);
     try {
-      const res = await signIn("credentials", {
-        ...values,
-        redirect: false,
-      });
-      if (res?.error) message.error("Tài khoản hoặc mật khẩu không đúng");
-      else {
-        const user = await getMyInfoTrigger();
-        if (user) dispatch(updateUserInfo(user));
+      const res = await login(values);
+      if (res) {
         message.success("Đăng nhập thành công");
+        const { user, cart, wishList } = res;
+        updateCart(cart);
+        updateUser(user);
+        updateWishList(wishList);
         router.push(callbackUrl);
-      }
+      } else message.error("Tài khoản hoặc mật khẩu không đúng");
     } finally {
       setSpinning(false);
     }

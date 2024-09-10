@@ -1,16 +1,18 @@
 import { getAllOrderByUserId } from "@/services/invoice";
 import UserInfo from "./homePage/info";
 import { priceThrough } from "@/lib/utils2";
+import { getMyInfo } from "@/services/user";
 
 export default async function Profile() {
   const { totalItem, data, firstItem } = await getAllOrderByUserId();
+  const { user } = await getMyInfo();
   const totalPrice = data.reduce((accumulator, item) => {
     return accumulator + item.totalPrice;
   }, 0);
   return (
     <>
       <div className="flex flex-wrap gap-4">
-        <UserInfo />
+        <UserInfo user={user} />
         <div className="p-[10px] w-full mt-auto rounded-xl bg-white border grid grid-cols-2">
           <div className="text-center border-r">
             <div className="text-[28px] font-bold my-2">{totalItem}</div>

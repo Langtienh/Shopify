@@ -2,8 +2,8 @@
 
 import RenderIf from "@/components/global/renderif";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/auth.context";
 import useAction from "@/hooks/useAction";
-import { useAppSelector } from "@/redux/store";
 import { updateProductStasus } from "@/services/product/action";
 
 import { message, Select } from "antd";
@@ -47,9 +47,8 @@ export const DelProduct = ({
 }) => {
   const [response, isPending, _updateProductStasus] =
     useAction(updateProductStasus);
-  const isDemo = !!useAppSelector(
-    (state) => state.userInfo.user
-  )?.roles.includes("demo");
+  const auth = useAuth();
+  const isDemo = !!auth.user?.roles.includes("demo");
   const handleChange = async () => {
     if (isDemo) {
       message.warning("Chỉ được phép xem");

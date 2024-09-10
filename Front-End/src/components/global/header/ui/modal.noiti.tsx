@@ -1,17 +1,18 @@
 "use client";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/contexts/auth.context";
 import Image from "next/image";
 import Link from "next/link";
 import { MdNavigateNext } from "react-icons/md";
 
 type PropsType = {
   hiddenNoiti: () => void;
-  show: boolean;
+  isShow: boolean;
 };
 
-export default function Noiti({ hiddenNoiti, show }: PropsType) {
-  const isAdmin = useSession().data?.user?.roles?.includes("admin");
-  if (show) {
+export default function Noiti({ hiddenNoiti, isShow }: PropsType) {
+  const { user } = useAuth();
+  const isAdmin = user?.roles.includes("admin");
+  if (isShow) {
     return (
       <div className="fixed z-50 top-14 w-full left-1/2 -translate-x-1/2 bottom-0">
         <div

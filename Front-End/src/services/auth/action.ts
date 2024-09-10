@@ -2,72 +2,117 @@
 
 import { cookies } from "next/headers";
 import { get, post, put } from "../axios.helper";
-import { signOut } from "@/auth/auth";
-import { checkToken } from "../cookies";
-import { getConfigToken } from "../cookies";
+import { getWishList } from "../wish-list";
+import { getCart } from "../cart";
+import { redirect } from "next/navigation";
+import { getConfigToken } from "../cookies/check-token";
 
 const EXP_REFRESH_TOKEN = +process.env.REFRESH_TOKEN! || 604800;
 const EXP_TOKEN = +process.env.TOKEN! || 36000;
 
+export const setCookies = (
+  key: string,
+  value: string,
+  maxAge: number = EXP_REFRESH_TOKEN,
+  secure: boolean = true,
+  httpOnly: boolean = true
+) => {
+  cookies().set({
+    name: key,
+    value,
+    maxAge,
+    secure,
+    httpOnly,
+    path: "/",
+  });
+};
+
+const initCart: CartType = {
+  cartItems: [],
+  id: 0,
+  total: 0,
+  totalProduct: 0,
+  totalQuantity: 0,
+  userId: 0,
+};
+
+const subTrigger = async () => {
+  try {
+    const wishList = await getWishList();
+    const _wishList = wishList.map((item) => item.productId);
+    const cart = await getCart();
+    return {
+      cart,
+      wishList: _wishList,
+    };
+  } catch {
+    return { cart: initCart, wishList: [] };
+  }
+};
+
+export const triggerLogin = async (data: LoginResponse) => {
+  setCookies("REFRESH_TOKEN", data.refreshToken, EXP_REFRESH_TOKEN);
+  setCookies("TOKEN", data.token, EXP_TOKEN);
+  setCookies("USER", JSON.stringify(data.user));
+  setCookies("USER_ID", data.user.id.toString());
+  const { cart, wishList } = await subTrigger();
+  setCookies("WISH_LIST", JSON.stringify(wishList));
+  setCookies("cart", JSON.stringify(cart));
+  return { wishList, cart };
+};
+
+const triggerLogout = async () => {
+  cookies().delete("TOKEN");
+  cookies().delete("REFRESH_TOKEN");
+  cookies().delete("USER");
+  cookies().delete("USER_ID");
+  cookies().delete("Cart");
+  cookies().delete("WISH_LIST");
+  cookies().delete("setIsFirstLogin");
+};
+
 export const login = async (input: LoginDTO) => {
   try {
-    const res = await post<LoginResponse | null>("/users/login", input);
-    return res;
+    const res = await post<LoginResponse>("/users/login", input);
+    const data = res.data;
+    const { cart, wishList } = await triggerLogin(data);
+    cookies().set("isCredentials", JSON.stringify(true));
+    return { cart, wishList, user: data.user };
   } catch {
-    return null;
+    return undefined;
   }
 };
 
 export const checkAccount = async (id: string) => {
   try {
-    const res = await get<LoginResponse | null>(
-      `/users/login-with-google/${id}`
-    );
-    return res.data;
+    const res = await get<LoginResponse>(`/users/login-with-google/${id}`);
+    const data = res.data;
+    return data;
   } catch {
-    return null;
+    return undefined;
   }
 };
 
 export const firstLoginByprovider = async (input: FirstLoginDTO) => {
   const res = await post<LoginResponse>("/users/login-with-google", input);
   const data = res.data;
-  const dataCustom = {
-    user: data.user,
-    refreshToken: data.refreshToken,
-    token: data.token,
-  };
-  cookies().set({
-    name: "REFRESH_TOKEN",
-    value: dataCustom.refreshToken,
-    maxAge: EXP_REFRESH_TOKEN,
-    secure: true,
-    httpOnly: true,
-    path: "/",
-  });
-  cookies().set({
-    name: "TOKEN",
-    value: dataCustom.token,
-    maxAge: EXP_TOKEN,
-    secure: true,
-    httpOnly: true,
-    path: "/",
-  });
-  return {
-    ...res,
-    data: dataCustom,
-  };
+  await triggerLogin(data);
+  cookies().delete("isFirstLogin");
+  await triggerLogin(data);
+  return data.user;
 };
 
 export const logout = async () => {
-  await checkToken();
-  const token = cookies().get("TOKEN")?.value;
-  cookies().delete("TOKEN");
-  cookies().delete("REFRESH_TOKEN");
+  const { token } = await getConfigToken();
   await post(`/users/logout`, {
     token,
   });
-  await signOut({ redirectTo: "/login" });
+  await triggerLogout();
+  const isCredentials = cookies().has("isCredentials");
+  if (isCredentials) {
+    cookies().delete("isCredentials");
+    redirect("/login");
+  }
 };
 
 export const register = async (input: RegisterForm) => {
@@ -117,4 +162,24 @@ export const updatePassword = async (
     configToken
   );
   return res;
+};
+
+const getCookies = (key: string) => cookies().get(key)?.value;
+
+export const triggerUser = async () => {
+  const _user = getCookies("USER");
+  if (_user) {
+    const user: User = JSON.parse(_user);
+    return user;
+  }
+};
+
+export const triggerCheckFirstLogin = async () => {
+  cookies().has("isFirstLogin");
+};
+export const triggerDelFirstLogin = async () => {
+  cookies().delete("isFirstLogin");
+};
+export const setIsFirstLogin = async () => {
+  cookies().set("isFirstLogin", JSON.stringify(true));
 };

@@ -11,8 +11,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useAuth } from "@/contexts/auth.context";
 import useAction from "@/hooks/useAction";
-import { useAppSelector } from "@/redux/store";
 import {
   createPaymentMethod,
   updatePaymentMethod,
@@ -42,9 +42,8 @@ export default function PaymentMethodForm({
       setImage(paymentMethod.image);
     }
   }, [paymentMethod]);
-  const isDemo = !!useAppSelector(
-    (state) => state.userInfo.user
-  )?.roles.includes("demo");
+  const auth = useAuth();
+  const isDemo = !!auth.user?.roles.includes("demo");
   const handleSubmit = async () => {
     try {
       if (isDemo) message.warning("Chỉ được phép xem");

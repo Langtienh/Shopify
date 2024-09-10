@@ -1,15 +1,14 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/auth.context";
+import { useCart } from "@/contexts/cart.context";
+import { useLoginModal } from "@/contexts/loginModal.context";
 import useAction from "@/hooks/useAction";
 import { converPriceToVN } from "@/lib/utils2";
-import { pushCartItem } from "@/redux/cart/slice";
-import { showLoginModal } from "@/redux/login-modal/slice";
-import { useAppDispatch } from "@/redux/store";
-import { addCartItem } from "@/services/cart";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
+import { addCartItem } from "@/services/cart";
 
 const dataColor: {
   color: Color;
@@ -61,16 +60,17 @@ export const SelectColor = ({ price }: { price: number }) => {
 
 export const BuyButton = ({ productId }: { productId: number }) => {
   const path = usePathname();
-  const session = useSession().data;
-  const isLogin = session?.user && session.refreshToken;
+  const { triggerUpdateCart } = useCart();
+  const { user } = useAuth();
+  const { showLoginModal } = useLoginModal();
   const router = useRouter();
-  const dispatch = useAppDispatch();
   const [response, isPending, _addCartItem] = useAction(addCartItem);
   const onclick = async () => {
-    if (isLogin) {
+    if (user) {
       const res = await _addCartItem(productId);
-      if (res) router.push(`/cart?checkList=${res.data.cartItems[0].id}`);
-    } else dispatch(showLoginModal(path));
+      if (res?.data) router.push(`/cart?checkList=${res.data}`);
+    } else showLoginModal(path);
+    await triggerUpdateCart();
   };
   return (
     <Button
@@ -86,16 +86,16 @@ export const BuyButton = ({ productId }: { productId: number }) => {
   );
 };
 export const AddToCartButton = ({ productId }: { productId: number }) => {
+  const { triggerUpdateCart } = useCart();
   const [response, isPending, _addCartItem] = useAction(addCartItem);
   const path = usePathname();
-  const dispatch = useAppDispatch();
-  const session = useSession().data;
-  const isLogin = session?.user && session.refreshToken;
+  const { user } = useAuth();
+  const { showLoginModal } = useLoginModal();
   const onClick = async () => {
-    if (isLogin) {
-      const res = await _addCartItem(productId);
-      if (res) dispatch(pushCartItem());
-    } else dispatch(showLoginModal(path));
+    if (user) {
+      await _addCartItem(productId);
+    } else showLoginModal(path);
+    await triggerUpdateCart();
   };
   return (
     <Button

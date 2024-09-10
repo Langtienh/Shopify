@@ -6,6 +6,7 @@ import {
   resetPassword,
   updatePassword,
   checkAccount,
+  setCookies,
 } from "./action";
 export {
   login,
@@ -15,4 +16,5 @@ export {
   resetPassword,
   updatePassword,
   checkAccount,
+  setCookies,
 };

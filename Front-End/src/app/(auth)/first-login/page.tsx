@@ -1,10 +1,13 @@
 import { FirstLoginForm } from "@/components/app/auth/firstLogin";
 import { auth } from "@/auth/auth";
 import Image from "next/image";
+import { redirect } from "next/navigation";
 
 export default async function Page() {
   const session = await auth();
-  if (session?.user)
+  const user = session?.user;
+  if (!user) redirect("/login");
+  else
     return (
       <>
         <div className="text-center">
@@ -19,8 +22,7 @@ export default async function Page() {
             Cập nhật thông tin tài khoản
           </h2>
         </div>
-        <FirstLoginForm user={session.user} />
+        <FirstLoginForm user={user} />
       </>
     );
-  return <>Server hông tìm thấy thông tin tài khoản</>;
 }

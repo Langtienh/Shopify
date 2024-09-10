@@ -24,7 +24,7 @@ import Image from "next/image";
 import { getbrandsByCategory } from "@/services/brand";
 import { uploadProductImage } from "@/services/upload";
 import useAction from "@/hooks/useAction";
-import { useAppSelector } from "@/redux/store";
+import { useAuth } from "@/contexts/auth.context";
 
 type FormField = {
   name: string;
@@ -126,9 +126,8 @@ export default function ProductForm({
     useAction(uploadProductImage);
   const [responseUpdate, isUpdating, _updateProduct] = useAction(updateProduct);
   const isPending = isCreating || uploading || isUpdating;
-  const isDemo = !!useAppSelector(
-    (state) => state.userInfo.user
-  )?.roles.includes("demo");
+  const auth = useAuth();
+  const isDemo = !!auth.user?.roles.includes("demo");
   const onFinish = async (productForm: FormField) => {
     if (isDemo) message.warning("Chỉ được phép xem");
     else {

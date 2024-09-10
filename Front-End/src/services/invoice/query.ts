@@ -1,19 +1,14 @@
 "use server";
 import { get } from "../axios.helper";
 import { getAddressDetail } from "../address.helper";
-import { getToken, checkToken } from "../cookies";
 import { converPriceToVN, formatDate } from "@/lib/utils2";
+import { getConfigToken } from "../cookies/check-token";
 
 export const getInvoice = async (limit: number = 5, page: number = 1) => {
-  await checkToken();
-  const { token } = getToken();
+  const { configToken } = await getConfigToken();
   const res = await get<Page<OrderResponse>>(
     `/orders?page=${page}&limit=${limit}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
+    configToken
   );
   const data = res.data.result.map((item) => {
     const totalPrice = converPriceToVN(item.totalPrice, "đ");
@@ -27,13 +22,9 @@ export const getInvoice = async (limit: number = 5, page: number = 1) => {
 export const getInvoiceDetailById = async (id: string | number) => {
   let _id = `${id}`;
   _id = _id.replace("INV0", "");
-  await checkToken();
-  const { token } = getToken();
-  const order = await get<OrderResponse>(`/orders/${_id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const { token, configToken } = await getConfigToken();
+
+  const order = await get<OrderResponse>(`/orders/${_id}`, configToken);
 
   const orderDetail = await get<OrderDetailType[]>(
     `/order-details/order/${_id}`,
@@ -56,42 +47,27 @@ export const getLatestInvoices = async () => {
 };
 
 export const getOrderById = async (id: string | number) => {
-  await checkToken();
-  let { token } = getToken();
-
-  const res = await get<OrderType>(`/orders/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const { configToken } = await getConfigToken();
+  const res = await get<OrderType>(`/orders/${id}`, configToken);
   const address = await getAddressDetail(res.data.address);
   return { ...res.data, address };
 };
 
 export const getOrderDetailById = async (id: string | number) => {
-  await checkToken();
-  let { token } = getToken();
-
-  const res = await get<OrderDetailType[]>(`/order-details/order/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const { configToken } = await getConfigToken();
+  const res = await get<OrderDetailType[]>(
+    `/order-details/order/${id}`,
+    configToken
+  );
   return res.data;
 };
 
 export const getAllOrderByUserId = async () => {
   try {
-    await checkToken();
-    let { userId, token } = getToken();
-
+    const { userId, configToken } = await getConfigToken();
     const res = await get<Page<OrderResponse>>(
       `/orders/user/${userId}?limit=100`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
+      configToken
     );
     const data = res.data.result;
     // Sử dụng map để tạo ra một mảng các Promise

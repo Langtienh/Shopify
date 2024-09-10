@@ -1,18 +1,16 @@
 "use client";
 
-import { IUser } from "@/auth/next-auth";
 import { Button, Checkbox, FormProps, Radio, Tag } from "antd";
 import React, { useEffect, useState } from "react";
 import { Form, Input } from "antd";
-import { useAppDispatch } from "@/redux/store";
 import { useRouter } from "next/navigation";
-import { updateUserInfo } from "@/redux/checkout/slice";
 import AddressForm from "@/components/global/address/form";
 import RenderIf from "@/components/global/renderif";
 import { MdNavigateNext } from "react-icons/md";
+import { useCheckout } from "@/contexts/checkout.context";
 
 type TProps = {
-  user: IUser;
+  user: User;
   checkout: string;
   addresses: (Address & { path: string | undefined })[];
 };
@@ -29,11 +27,10 @@ type FieldType = {
 
 export default function UserInfo({ user, checkout, addresses }: TProps) {
   const [form] = Form.useForm();
-  const dispath = useAppDispatch();
   const router = useRouter();
   const [isEditAddress, setEditAddress] = useState<boolean>(false);
   const [path, setPath] = useState<string>("");
-
+  const { updateUserInfo } = useCheckout();
   useEffect(() => {
     if (!addresses.length) setEditAddress(true);
     else {
@@ -55,7 +52,7 @@ export default function UserInfo({ user, checkout, addresses }: TProps) {
       address,
     };
 
-    dispath(updateUserInfo(_address));
+    updateUserInfo(_address);
     router.push(`/cart/payment?checkout=${checkout}`);
   };
 

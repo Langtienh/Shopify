@@ -1,7 +1,7 @@
 "use server";
 
 import { del } from "../axios.helper";
-import { getConfigToken } from "../cookies";
+import { getConfigToken } from "../cookies/check-token";
 
 export const update = async () => {};
 

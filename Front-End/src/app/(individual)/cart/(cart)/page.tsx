@@ -18,7 +18,6 @@ import {
 import { getCart } from "@/services/cart";
 import RenderIf from "@/components/global/renderif";
 import { CheckAll, CheckItem } from "@/components/app/individual/cart/checked";
-import CartTriggerAction from "@/components/trigger/cart.action";
 
 export default async function Page({
   searchParams,
@@ -44,7 +43,6 @@ export default async function Page({
   );
   return (
     <>
-      <CartTriggerAction totalQuantity={cart.totalQuantity} />
       <RenderIf renderIf={cartItems.length}>
         <div className="flex justify-between items-center mb-[10px] h-9">
           <CheckAll

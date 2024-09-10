@@ -8,11 +8,8 @@ import { HiDocumentDuplicate } from "react-icons/hi";
 import { AiFillProduct } from "react-icons/ai";
 import { MdPowerSettingsNew } from "react-icons/md";
 import { CgDetailsMore } from "react-icons/cg";
-import { logout } from "@/services/auth";
-import { setTotalQuantity } from "@/redux/cart/slice";
-import { setWishList } from "@/redux/wish-list/slice";
-import { useAppDispatch } from "@/redux/store";
-import { updateUserInfo } from "@/redux/user-info/slice";
+import { useAuth } from "@/contexts/auth.context";
+import { useState } from "react";
 const links = [
   { name: "Home", href: "/dashboard", icon: FaHome },
   { name: "Products", href: "/dashboard/products", icon: AiFillProduct },
@@ -57,16 +54,20 @@ export default function NavLinks() {
 }
 
 export const LogoutBtn = () => {
-  const dispatch = useAppDispatch();
+  const [isPending, setPending] = useState<boolean>(false);
+  const { authLogout } = useAuth();
   const handleLogout = async () => {
-    dispatch(setTotalQuantity(0));
-    dispatch(setWishList([]));
-    dispatch(updateUserInfo(null));
-    await logout();
+    setPending(true);
+    try {
+      await authLogout();
+    } finally {
+      setPending(false);
+    }
   };
   return (
     <>
       <button
+        disabled={isPending}
         onClick={handleLogout}
         className="flex w-full grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3  font-bold hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3"
       >

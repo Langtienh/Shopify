@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import RenderIf from "@/components/global/renderif";
 import { Button as MyButton } from "@/components/ui/button";
 import { updateUserById } from "@/services/user/action";
-import { useAppSelector } from "@/redux/store";
+import { useAuth } from "@/contexts/auth.context";
 
 export default function RegesterForm({
   isCreateByAdmin,
@@ -28,9 +28,8 @@ export default function RegesterForm({
   // xử lý đăng kí
   const router = useRouter();
   const [isPending, setPending] = useState<boolean>(false);
-  const isDemo = !!useAppSelector(
-    (state) => state.userInfo.user
-  )?.roles.includes("demo");
+  const auth = useAuth();
+  const isDemo = !!auth.user?.roles.includes("demo");
   const onFinish = async (values: RegisterForm) => {
     setPending(true);
     try {

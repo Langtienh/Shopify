@@ -9,11 +9,11 @@ import { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { MdNavigateNext } from "react-icons/md";
 import { AddressInfo } from "./info";
-import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { getAddressDetail } from "@/services/address.helper";
 import { createInvoice, createInvoiceByVNPay } from "@/services/invoice";
-import { popCartItem } from "@/redux/cart/slice";
 import useAction from "@/hooks/useAction";
+import { useCart } from "@/contexts/cart.context";
+import { useCheckout } from "@/contexts/checkout.context";
 
 export default function CheckoutInfo({
   checkout,
@@ -22,19 +22,23 @@ export default function CheckoutInfo({
   checkout: string;
   totalPrice: number;
 }) {
-  const dispatch = useAppDispatch();
   const cartItemIds = checkout.split(",").map((item) => +item);
   const router = useRouter();
-  const userInfo = useAppSelector((state) => state.checkout.userInfo);
+  const { userInfo } = useCheckout();
   const [path, setPath] = useState<string>("");
   const [response, isPending, _createInvoice] = useAction(createInvoice);
   useEffect(() => {
     const getPath = async () => {
-      const path = await getAddressDetail(userInfo.address);
-      setPath(path);
+      if (userInfo) {
+        const path = await getAddressDetail(userInfo.address);
+        setPath(path);
+      }
     };
     getPath();
   }, [userInfo]);
+
+  const { triggerUpdateCart } = useCart();
+
   const onFinish = async () => {
     if (paymentId === 0) message.error("Vui lòng chọn phương thức thanh toán");
     else if (paymentId === 1) {
@@ -45,7 +49,7 @@ export default function CheckoutInfo({
       const data = { ...userInfo, paymentMethodId: 2, cartItemIds };
       const res = await _createInvoice(data);
       if (res) {
-        dispatch(popCartItem(cartItemIds.length));
+        await triggerUpdateCart();
         router.push("/");
       }
     } else message.error("Đã xảy ra lỗi, vui lòng thử lại sau");

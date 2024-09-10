@@ -3,35 +3,24 @@
 import Image from "next/image";
 import Link from "next/link";
 import RenderIf from "@/components/global/renderif";
-import { useAppDispatch, useAppSelector } from "@/redux/store";
-import { useEffect } from "react";
-import { hiddenLoginModal } from "@/redux/login-modal/slice";
-import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
+import { useLoginModal } from "@/contexts/loginModal.context";
+import { triggerDelFirstLogin } from "@/services/auth/action";
 
 export default function LoginModal() {
-  const session = useSession().data;
-  const isFirstLoginByProvider = session?.user && !session.refreshToken;
-  const path = usePathname();
-  const dispatch = useAppDispatch();
-  const calbackUrl = useAppSelector((state) => state.loginModal.calbackUrl);
-  const isShow = useAppSelector((state) => state.loginModal.show);
-  const _calbackUrl = !calbackUrl
-    ? `/login`
-    : `/login?callbackUrl=${calbackUrl}`;
-
-  useEffect(() => {
-    dispatch(hiddenLoginModal());
-  }, [path, dispatch]);
+  const data = useSession().data;
+  const isFirstLogin = data?.user && !data.customUser;
+  const { calbackUrl, isShow, hiddenLoginModal } = useLoginModal();
   const handleLogout = async () => {
+    await triggerDelFirstLogin();
     await signOut({ callbackUrl: "/login" });
   };
   return (
     <RenderIf renderIf={isShow}>
-      <RenderIf renderIf={!isFirstLoginByProvider}>
+      <RenderIf renderIf={!isFirstLogin}>
         <div className="fixed top-0 left-0 right-0 bottom-0 z-50">
           <div
-            onClick={() => dispatch(hiddenLoginModal())}
+            onClick={() => hiddenLoginModal()}
             className="absolute z-50 top-0 left-0 right-0 bottom-0 bg-black opacity-50"
           ></div>
           <div className="relative z-[51] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] flex flex-col items-center justify-center p-[15px] bg-white rounded-2xl">
@@ -56,7 +45,7 @@ export default function LoginModal() {
                 </span>
               </Link>
               <Link
-                href={_calbackUrl.replace("/login", "/first-login")}
+                href={calbackUrl}
                 type="button"
                 className="hover:scale-[1.02] text-white font-bold bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800  rounded-lg  py-2.5 text-center me-2 "
               >
@@ -66,10 +55,10 @@ export default function LoginModal() {
           </div>
         </div>
       </RenderIf>
-      <RenderIf renderIf={isFirstLoginByProvider}>
+      <RenderIf renderIf={isFirstLogin}>
         <div className="fixed top-0 left-0 right-0 bottom-0 z-50">
           <div
-            onClick={() => dispatch(hiddenLoginModal())}
+            onClick={() => hiddenLoginModal()}
             className="absolute z-50 top-0 left-0 right-0 bottom-0 bg-black opacity-50"
           ></div>
           <div className="relative z-[51] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] flex flex-col items-center justify-center p-[15px] bg-white rounded-2xl">
@@ -93,7 +82,7 @@ export default function LoginModal() {
                 </span>
               </button>
               <Link
-                href={_calbackUrl.replace("/login", "/first-login")}
+                href={calbackUrl.replace("/login", "/first-login")}
                 type="button"
                 className="hover:scale-[1.02] text-white font-bold bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800  rounded-lg  py-2.5 text-center me-2 "
               >

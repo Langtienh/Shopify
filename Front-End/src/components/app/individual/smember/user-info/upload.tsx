@@ -1,9 +1,8 @@
 "use client";
 import RenderIf from "@/components/global/renderif";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/contexts/auth.context";
 import useAction from "@/hooks/useAction";
-import { useAppDispatch } from "@/redux/store";
-import { updateAvatar } from "@/redux/user-info/slice";
 import { uploadAvatar } from "@/services/upload";
 import { Button } from "antd";
 import Image from "next/image";
@@ -17,18 +16,19 @@ export default function UploadAvatar({ avatar }: { avatar?: string }) {
 
   const [response, isPending, _uploadAvatar] = useAction(uploadAvatar);
 
+  const { updateAvatar } = useAuth();
+
   useEffect(() => {
     if (avatar) setUrl(avatar);
     else setUrl("/images/default/avatar.jpg");
   }, [avatar]);
-  const dispatch = useAppDispatch();
   const router = useRouter();
   const handleUpload = async () => {
     const formData = new FormData();
     formData.append("files", files as File);
     const res = await _uploadAvatar(formData);
     if (res) {
-      if (url) dispatch(updateAvatar(url));
+      if (url) updateAvatar(url);
     }
     setFiles(null);
     router.refresh();

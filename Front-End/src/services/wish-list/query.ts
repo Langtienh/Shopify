@@ -1,16 +1,14 @@
 "use server";
 import { get } from "../axios.helper";
-import { checkToken, getToken } from "../cookies";
+import { getConfigToken } from "../cookies/check-token";
 
 export async function getWishList() {
-  await checkToken();
-  const { userId, token } = getToken();
+  const { token, configToken, userId } = await getConfigToken();
   try {
-    const res = await get<WishList[]>(`/wish-lists/user/${userId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const res = await get<WishList[]>(
+      `/wish-lists/user/${userId}`,
+      configToken
+    );
     return res.data;
   } catch (error) {
     return [];

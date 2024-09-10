@@ -1,7 +1,7 @@
 "use server";
 
 import { post, put } from "../axios.helper";
-import { getConfigToken } from "../cookies";
+import { getConfigToken } from "../cookies/check-token";
 
 export const createProduct = async (product: ProductDTO) => {
   const { configToken } = await getConfigToken();

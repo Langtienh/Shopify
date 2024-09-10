@@ -1,13 +1,12 @@
 "use client";
 
+import { useCart } from "@/contexts/cart.context";
+import { useCheckout } from "@/contexts/checkout.context";
 import useAction from "@/hooks/useAction";
 import { converPriceToVN } from "@/lib/utils2";
-import { updateTotalPrice } from "@/redux/checkout/slice";
-
-import { useAppDispatch } from "@/redux/store";
 import {
-  addQuantity,
   deleteCartItem,
+  addQuantity,
   deleteListItem,
   subQuantity,
 } from "@/services/cart";
@@ -25,6 +24,7 @@ export function DeleteItemBTN({
   id: number;
   checkList: number[];
 }) {
+  const { triggerUpdateCart } = useCart();
   const [response, isPending, _deleteCartItem] = useAction(deleteCartItem);
   const { replace } = useRouter();
   const patchName = usePathname();
@@ -32,13 +32,13 @@ export function DeleteItemBTN({
   const handleDelCartItem = async () => {
     const res = await _deleteCartItem(id);
     if (res) {
-      message.success(res.message);
       const params = new URLSearchParams(searchParams);
       const _checkList = checkList.filter((item) => item !== id);
       if (_checkList.length) params.set("checkList", _checkList.toString());
       else params.delete("checkList");
       replace(`${patchName}?${params}`, { scroll: false });
     }
+    await triggerUpdateCart();
   };
   return (
     <Button
@@ -52,12 +52,14 @@ export function DeleteItemBTN({
 
 export function AddItemBTN({ cartItem }: { cartItem: CartItemResponse }) {
   const [isLoading, setLoading] = useState<boolean>(false);
+  const { triggerUpdateCart } = useCart();
   const handleAddCartItem = async () => {
     if (cartItem.stock < cartItem.quantity + 1)
       message.error("Hết hàng, vui lòng iên hệ với quản trị viên để mua thêm");
     setLoading(true);
     await addQuantity(cartItem.id, cartItem.quantity);
     setLoading(false);
+    await triggerUpdateCart();
   };
   return (
     <Button
@@ -76,13 +78,13 @@ export function SubItemBTN({
   disabled: boolean;
 }) {
   const [isLoading, setLoading] = useState<boolean>(false);
+  const { triggerUpdateCart } = useCart();
 
   const handleSubQuantity = async () => {
     setLoading(true);
-    try {
-      await subQuantity(cartItem.id, cartItem.quantity);
-    } catch {}
+    await subQuantity(cartItem.id, cartItem.quantity);
     setLoading(false);
+    await triggerUpdateCart();
   };
   return (
     <Button
@@ -95,6 +97,7 @@ export function SubItemBTN({
 }
 
 export const ClearListBtn = ({ checkList }: { checkList: number[] }) => {
+  const { triggerUpdateCart } = useCart();
   const [response, isPending, _deleteListItem] = useAction(deleteListItem);
   const { replace } = useRouter();
   const patchName = usePathname();
@@ -106,6 +109,7 @@ export const ClearListBtn = ({ checkList }: { checkList: number[] }) => {
       params.delete("checkList");
       replace(`${patchName}?${params}`, { scroll: false });
     }
+    await triggerUpdateCart();
   };
   return (
     <Button loading={isPending} type="text">
@@ -126,10 +130,11 @@ export function BuyBtn({
   totalPrice: number;
   checkList: number[];
 }) {
-  const dispatch = useAppDispatch();
+  const { updateTotalPrice } = useCheckout();
   const router = useRouter();
   const handleClick = () => {
-    dispatch(updateTotalPrice(totalPrice));
+    console.log(totalPrice, checkList);
+    updateTotalPrice(totalPrice);
     router.push(`/cart/payment-info?checkout=${checkList.toString()}`);
   };
   return (

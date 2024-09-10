@@ -2,15 +2,15 @@
 
 import BackBtn from "@/components/app/auth/btn.back";
 import { Button } from "@/components/ui/button";
+import { useCheckout } from "@/contexts/checkout.context";
 import { converPriceToVN } from "@/lib/utils2";
-import { useAppSelector } from "@/redux/store";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export default function NavPayment() {
   const path = usePathname();
   const step1 = path === "/cart/payment-info";
-  const userInfo = !useAppSelector((state) => state.checkout.userInfo.address);
+  const { userInfo } = useCheckout();
   return (
     <>
       <div className="flex w-full gap-5 *:flex-1 mb-[10px] p-[10px] pt-[5px] sticky z-10 top-0 bg-[#f4f6f8]">
@@ -23,7 +23,7 @@ export default function NavPayment() {
           <Link href="/cart/payment-info">1. Thông tin</Link>
         </Button>
         <Button
-          disabled={userInfo}
+          disabled={!!userInfo}
           className={`hover:no-underline border-b-[3px] rounded-none text-lg font-bold ${
             !step1 ? "text-red-600 border-red-600" : "border-[#a9b4be]"
           }`}
@@ -50,7 +50,7 @@ export const NavHeader = () => {
 };
 
 export const NavSubmit = () => {
-  const totalPrice = useAppSelector((state) => state.checkout.totalprice);
+  const { totalPrice } = useCheckout();
   const path = usePathname();
   const step1 = path === "/cart/payment-info";
   return (

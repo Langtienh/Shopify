@@ -1,7 +1,7 @@
 "use server";
 
 import { put } from "../axios.helper";
-import { getConfigToken } from "../cookies";
+import { getConfigToken } from "../cookies/check-token";
 
 export const updateStatus = async (userId: number, status: boolean) => {
   const _status = status ? "true" : "false";

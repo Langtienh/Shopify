@@ -1,13 +1,11 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button, Checkbox, Form, Input, message, Spin } from "antd";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { IUser } from "@/auth/next-auth";
 import { firstLoginByprovider } from "@/services/auth";
-import { useAppDispatch } from "@/redux/store";
-import { updateUserInfo } from "@/redux/user-info/slice";
-import useAction from "@/hooks/useAction";
+import { useAuth } from "@/contexts/auth.context";
+import { AuthUser } from "@/auth/next-auth";
+import { useSession } from "next-auth/react";
 
 type FieldType = {
   fullName: string;
@@ -15,40 +13,43 @@ type FieldType = {
   agreement: boolean;
   phone: string;
 };
-const FirstLoginForm = ({ user }: { user: IUser }) => {
+const FirstLoginForm = ({ user }: { user: AuthUser }) => {
+  const session = useSession();
   const callbackUrl = useSearchParams().get("callbackUrl") || "/";
   const router = useRouter();
-  const session = useSession();
   const initialValues = {
-    fullName: user?.fullName,
-    email: user?.email,
+    fullName: user.name,
+    email: user.email,
     agreement: true,
   };
-  const [res, isPending, _firstLoginByprovider] =
-    useAction(firstLoginByprovider);
-  const dispatch = useAppDispatch();
-  useEffect(() => {
-    const updateData = async () => {
-      if (res) {
-        dispatch(updateUserInfo(res.user));
-        router.push(callbackUrl);
-        await session.update(res);
-      }
-    };
-    updateData();
-  }, [res, dispatch, callbackUrl, router, session]);
-
+  const { updateUser } = useAuth();
+  const [isPending, setPending] = useState<boolean>(false);
   const [form] = Form.useForm();
   // xử lý đăng kí
   const onFinish = async (values: Omit<FieldType, "agreement">) => {
-    const input = {
-      providerId: user?.providerId!,
-      avatar: user.avatar!,
-      fullName: values.fullName,
-      phone: values.phone,
-      email: values.email,
-    };
-    await _firstLoginByprovider(input);
+    setPending(true);
+    try {
+      const input = {
+        providerId: user.id,
+        avatar: user.image,
+        fullName: values.fullName,
+        phone: values.phone,
+        email: values.email,
+      };
+      const _user = await firstLoginByprovider(input);
+      await session.update(_user);
+      updateUser(_user);
+      message.success("Cập nhật số điện thoại thành công");
+      router.push(callbackUrl);
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message);
+      } else {
+        message.error("Server error");
+      }
+    } finally {
+      setPending(false);
+    }
   };
 
   return (

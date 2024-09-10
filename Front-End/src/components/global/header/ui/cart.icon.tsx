@@ -1,27 +1,28 @@
 "use client";
 import RenderIf from "@/components/global/renderif";
-import { showLoginModal } from "@/redux/login-modal/slice";
-import { useAppDispatch, useAppSelector } from "@/redux/store";
+import { useAuth } from "@/contexts/auth.context";
+import { useCart } from "@/contexts/cart.context";
+import { useLoginModal } from "@/contexts/loginModal.context";
 import { Badge } from "antd";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 
 export const Cart = () => {
-  const cartSize = useAppSelector((state) => state.cart.totalQuantity);
-  const dispatch = useAppDispatch();
-  const session = useSession().data;
-  const isLogin = session?.user && session.refreshToken;
+  const { showLoginModal } = useLoginModal();
+  const { user } = useAuth();
+  const { itemsInCart } = useCart();
   return (
     <>
-      <RenderIf renderIf={isLogin}>
+      <RenderIf renderIf={user}>
         <Link href="/cart">
           <div className="flex flex-col md:flex-row gap-1 items-center text-white">
             <Badge
               offset={[-13, 15]}
               size="small"
               count={
-                <span className="text-white text-sm font-bold">{cartSize}</span>
+                <span className="text-white text-sm font-bold">
+                  {itemsInCart}
+                </span>
               }
             >
               <Image
@@ -38,9 +39,9 @@ export const Cart = () => {
           </div>
         </Link>
       </RenderIf>
-      <RenderIf renderIf={!isLogin}>
+      <RenderIf renderIf={!user}>
         <div
-          onClick={() => dispatch(showLoginModal("/cart"))}
+          onClick={() => showLoginModal("/cart")}
           className="flex cursor-pointer flex-col md:flex-row gap-1 items-center text-white"
         >
           <Image

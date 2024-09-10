@@ -1,7 +1,7 @@
 "use server";
 
 import { del, post, put } from "../axios.helper";
-import { getConfigToken } from "../cookies";
+import { getConfigToken } from "../cookies/check-token";
 
 export const createAddress = async (address: Omit<Address, "id">) => {
   const { userId, configToken } = await getConfigToken();

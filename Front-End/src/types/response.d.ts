@@ -48,7 +48,6 @@ type AttibulteResponse = AttibulteType;
 type LoginResponse = {
   token: string;
   refreshToken: string;
-  tokenType: string;
   user: User;
 };
 

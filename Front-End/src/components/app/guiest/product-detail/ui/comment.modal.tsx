@@ -7,12 +7,12 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { ChangeEvent, useState } from "react";
 import { MdClose } from "react-icons/md";
-import { showLoginModal } from "@/redux/login-modal/slice";
-import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { createComment } from "@/services/upload";
 import { FaCamera } from "react-icons/fa";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import useAction from "@/hooks/useAction";
+import { useAuth } from "@/contexts/auth.context";
+import { useLoginModal } from "@/contexts/loginModal.context";
 
 export default function CommentModal({
   title,
@@ -21,8 +21,8 @@ export default function CommentModal({
   title: string;
   productId: number;
 }) {
-  const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.userInfo.user);
+  const { user } = useAuth();
+  const { showLoginModal } = useLoginModal();
   const isLogin = !!user;
   const [show, setShow] = useState<boolean>(false);
   const [response, isPending, _createComment] = useAction(createComment);
@@ -53,7 +53,7 @@ export default function CommentModal({
   };
   const showModalHandle = () => {
     if (isLogin) setShow(true);
-    else dispatch(showLoginModal(path));
+    else showLoginModal(path);
   };
   return (
     <>

@@ -1,18 +1,16 @@
 "use client";
 import RenderIf from "@/components/global/renderif";
-import { showLoginModal } from "@/redux/login-modal/slice";
-import { useAppDispatch } from "@/redux/store";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/contexts/auth.context";
+import { useLoginModal } from "@/contexts/loginModal.context";
 import Link from "next/link";
 import { CiDeliveryTruck } from "react-icons/ci";
 
 export const InvoiceIcon = () => {
-  const session = useSession().data;
-  const isLogin = session?.user && session.refreshToken;
-  const dispatch = useAppDispatch();
+  const { showLoginModal } = useLoginModal();
+  const { user } = useAuth();
   return (
     <>
-      <RenderIf renderIf={isLogin}>
+      <RenderIf renderIf={user}>
         <Link
           href={"/smember/order"}
           className="hidden md:flex gap-1 cursor-pointer"
@@ -24,9 +22,9 @@ export const InvoiceIcon = () => {
           </p>
         </Link>
       </RenderIf>
-      <RenderIf renderIf={!isLogin}>
+      <RenderIf renderIf={!user}>
         <div
-          onClick={() => dispatch(showLoginModal("/smember/order"))}
+          onClick={() => showLoginModal("/smember/order")}
           className="hidden md:flex gap-1 cursor-pointer"
         >
           <CiDeliveryTruck size={34} />

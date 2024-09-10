@@ -1,19 +1,20 @@
 "use client";
 import Image from "next/image";
 import { Tooltip } from "antd";
-import { logout } from "@/services/auth";
-import { useAppDispatch } from "@/redux/store";
-import { setTotalQuantity } from "@/redux/cart/slice";
-import { setWishList } from "@/redux/wish-list/slice";
-import { updateUserInfo } from "@/redux/user-info/slice";
+import { useAuth } from "@/contexts/auth.context";
+import { useState } from "react";
+import { useCart } from "@/contexts/cart.context";
 
 export const LogoutBtn = () => {
-  const dispatch = useAppDispatch();
+  const [isPending, setPending] = useState<boolean>(false);
+  const { authLogout } = useAuth();
   const handleLogout = async () => {
-    dispatch(setTotalQuantity(0));
-    dispatch(setWishList([]));
-    dispatch(updateUserInfo(null));
-    await logout();
+    setPending(true);
+    try {
+      await authLogout();
+    } finally {
+      setPending(false);
+    }
   };
   return (
     <Tooltip title="Đăng suất" placement="bottom" color="red">

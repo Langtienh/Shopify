@@ -4,36 +4,32 @@ import { Button } from "antd";
 import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import { usePathname } from "next/navigation";
 import RenderIf from "@/components/global/renderif";
-import { createWishListItem, delWishListItem } from "@/services/wish-list";
-import { useSession } from "next-auth/react";
-import { useAppDispatch, useAppSelector } from "@/redux/store";
-import { showLoginModal } from "@/redux/login-modal/slice";
-import { popWishListItem, pushWishListItem } from "@/redux/wish-list/slice";
 import useAction from "@/hooks/useAction";
+import { useAuth } from "@/contexts/auth.context";
+import { useLoginModal } from "@/contexts/loginModal.context";
+import { useWishList } from "@/contexts/wishLish.context";
 
 export default function WishListButton({ productId }: { productId: number }) {
-  const session = useSession().data;
-  const isLogin = session?.user && session.refreshToken;
-  const wishList = useAppSelector((state) => state.wishLish.data);
-
-  const dispatch = useAppDispatch();
+  const { user } = useAuth();
+  const { wishList } = useWishList();
+  const { showLoginModal } = useLoginModal();
   const isLoved = wishList.includes(productId);
+
+  const { deleteWishList, createWishList } = useWishList();
+
   const [responseDel, isPendingDel, _delWishListItem] =
-    useAction(delWishListItem);
+    useAction(deleteWishList);
   const [responseCreate, isPendingCreate, _createWishListItem] =
-    useAction(createWishListItem);
-  const isPending = isPendingDel && isPendingCreate;
+    useAction(createWishList);
+
+  const isPending = isPendingDel || isPendingCreate;
+
   const path = usePathname();
   const onclick = async () => {
-    if (!isLogin) dispatch(showLoginModal(path));
+    if (!user) showLoginModal(path);
     else {
-      if (isLoved) {
-        const res = await _delWishListItem(productId);
-        if (res) dispatch(popWishListItem(productId));
-      } else {
-        const res = await _createWishListItem(productId);
-        if (res) dispatch(pushWishListItem(productId));
-      }
+      if (isLoved) await _delWishListItem(productId);
+      else await _createWishListItem(productId);
     }
   };
   return (
