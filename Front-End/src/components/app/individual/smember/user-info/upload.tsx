@@ -3,7 +3,7 @@ import RenderIf from "@/components/global/renderif";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/contexts/auth.context";
 import useAction from "@/hooks/useAction";
-import { uploadAvatar } from "@/services/upload";
+import proxyUpload from "@/services/upload/proxy";
 import { Button } from "antd";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -14,7 +14,7 @@ export default function UploadAvatar({ avatar }: { avatar?: string }) {
   const [url, setUrl] = useState<string | null>(null);
   const [files, setFiles] = useState<File | null>(null);
 
-  const [response, isPending, _uploadAvatar] = useAction(uploadAvatar);
+  const [response, isPending, _uploadAvatar] = useAction(proxyUpload);
 
   const { updateAvatar } = useAuth();
 
@@ -26,7 +26,7 @@ export default function UploadAvatar({ avatar }: { avatar?: string }) {
   const handleUpload = async () => {
     const formData = new FormData();
     formData.append("files", files as File);
-    const res = await _uploadAvatar(formData);
+    const res = await _uploadAvatar("avatar", formData);
     if (res) {
       if (url) updateAvatar(url);
     }

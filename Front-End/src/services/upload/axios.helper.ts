@@ -10,14 +10,41 @@ const axiosInstance: AxiosInstance = axios.create({
   },
 });
 
+export const axiosProxy: AxiosInstance = axios.create({
+  baseURL: "/api/upload",
+  headers: {
+    "Content-Type": "multipart/form-data",
+    "Accept-Language": "vi",
+  },
+});
+
 // Middleware
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
     return response;
   },
   (error) => {
-    const data = error.response.data;
-    if (data) return Promise.reject({ isError: true, ...data });
+    const messageError = error?.response?.data?.message;
+    const statusError = error?.response?.data?.status;
+    if (messageError && statusError) {
+      const err = new Error(`${statusError} ${messageError}`);
+      return Promise.reject(err);
+    }
+    return Promise.reject(error);
+  }
+);
+
+axiosProxy.interceptors.response.use(
+  (response: AxiosResponse) => {
+    return response;
+  },
+  (error) => {
+    const messageError = error?.response?.data?.message;
+    const statusError = error?.response?.data?.status;
+    if (messageError && statusError) {
+      const err = new Error(`${statusError} ${messageError}`);
+      return Promise.reject(err);
+    }
     return Promise.reject(error);
   }
 );

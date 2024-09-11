@@ -7,12 +7,12 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { ChangeEvent, useState } from "react";
 import { MdClose } from "react-icons/md";
-import { createComment } from "@/services/upload";
 import { FaCamera } from "react-icons/fa";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import useAction from "@/hooks/useAction";
 import { useAuth } from "@/contexts/auth.context";
 import { useLoginModal } from "@/contexts/loginModal.context";
+import proxyUpload from "@/services/upload/proxy";
 
 export default function CommentModal({
   title,
@@ -25,7 +25,7 @@ export default function CommentModal({
   const { showLoginModal } = useLoginModal();
   const isLogin = !!user;
   const [show, setShow] = useState<boolean>(false);
-  const [response, isPending, _createComment] = useAction(createComment);
+  const [response, isPending, _createComment] = useAction(proxyUpload);
   const [rate, setRate] = useState<number>(5);
   const [content, setContent] = useState<string>("");
   const path = usePathname();
@@ -46,7 +46,7 @@ export default function CommentModal({
     files.forEach((file) => {
       formData.append("images", file); // Tất cả các file đều sẽ có key "images"
     });
-    await _createComment(formData);
+    const res = await _createComment("comment", formData);
     setFiles([]);
     setShow(false);
     router.refresh();

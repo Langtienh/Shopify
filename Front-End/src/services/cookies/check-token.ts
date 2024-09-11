@@ -67,14 +67,5 @@ const RefreshToken = async (refreshToken: string) => {
   });
   setToken(res.data.token);
   setRefreshToken(res.data.refreshToken);
-  // gia hạn lại nếu refresh token được gia hạn
-  const USER = cookies().get("USER")?.value;
-  if (USER) cookies().set("USER", USER);
-  const USER_ID = cookies().get("USER_ID")?.value;
-  if (USER_ID) cookies().set("USER_ID", USER_ID);
-  const Cart = cookies().get("Cart")?.value;
-  if (Cart) cookies().set("Cart", Cart);
-  const WISH_LIST = cookies().get("WISH_LIST")?.value;
-  if (WISH_LIST) cookies().set("WISH_LIST", WISH_LIST);
   return res.data.token;
 };

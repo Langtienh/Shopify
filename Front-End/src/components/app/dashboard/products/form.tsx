@@ -22,7 +22,7 @@ import {
 import { AiFillProduct } from "react-icons/ai";
 import Image from "next/image";
 import { getbrandsByCategory } from "@/services/brand";
-import { uploadProductImage } from "@/services/upload";
+import proxyUpload from "@/services/upload/proxy";
 import useAction from "@/hooks/useAction";
 import { useAuth } from "@/contexts/auth.context";
 
@@ -123,7 +123,7 @@ export default function ProductForm({
   const router = useRouter();
   const [response, isCreating, _createProduct] = useAction(createProduct);
   const [responseUpload, uploading, _uploadProductImage] =
-    useAction(uploadProductImage);
+    useAction(proxyUpload);
   const [responseUpdate, isUpdating, _updateProduct] = useAction(updateProduct);
   const isPending = isCreating || uploading || isUpdating;
   const auth = useAuth();
@@ -153,6 +153,7 @@ export default function ProductForm({
               const formData = new FormData();
               formData.append("files", file);
               const resUpload = await _uploadProductImage(
+                "product",
                 formData,
                 newProductId
               );
@@ -174,7 +175,11 @@ export default function ProductForm({
             const newProductId = res.data.id;
             const formData = new FormData();
             formData.append("files", file);
-            const resUpload = await _uploadProductImage(formData, newProductId);
+            const resUpload = await _uploadProductImage(
+              "product",
+              formData,
+              newProductId
+            );
             if (resUpload) router.push("/dashboard/products");
           }
         }
