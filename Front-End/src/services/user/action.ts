@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { put } from "../axios.helper";
 import { getConfigToken } from "../cookies/check-token";
 
@@ -11,6 +12,7 @@ export const updateStatus = async (userId: number, status: boolean) => {
     undefined,
     configToken
   );
+  revalidatePath("/dashboard/users");
   return res;
 };
 
@@ -21,6 +23,7 @@ export const updateUser = async (user: {
 }) => {
   const { userId, configToken } = await getConfigToken();
   const res = await put(`/users/${userId}`, user, configToken);
+  revalidatePath("/dashboard/users");
   return res;
 };
 
@@ -34,5 +37,6 @@ export const updateUserById = async (
 ) => {
   const { configToken } = await getConfigToken();
   const res = await put(`/users/${userId}`, user, configToken);
+  revalidatePath("/dashboard/users");
   return res;
 };

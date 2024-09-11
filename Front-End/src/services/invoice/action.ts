@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { post, put } from "../axios.helper";
 import { getConfigToken } from "../cookies/check-token";
 
@@ -11,12 +12,14 @@ export const updateInvoiceStatus = async (id: string, status: OrderStatus) => {
     undefined,
     configToken
   );
+  revalidatePath("/dashboard/invoices");
   return res;
 };
 
 export const createInvoice = async (data: {}) => {
   const { userId, configToken } = await getConfigToken();
   const res = await post("/orders", { ...data, userId }, configToken);
+  revalidatePath("/dashboard/invoices");
   return res;
 };
 
@@ -27,5 +30,6 @@ export const createInvoiceByVNPay = async (data: {}, totalPrice: number) => {
     { ...data, userId: userId, paymentMethodId: 1 },
     configToken
   );
+  revalidatePath("/dashboard/invoices");
   return res.data.paymentUrl;
 };

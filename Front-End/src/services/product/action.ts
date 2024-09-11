@@ -1,11 +1,13 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { post, put } from "../axios.helper";
 import { getConfigToken } from "../cookies/check-token";
 
 export const createProduct = async (product: ProductDTO) => {
   const { configToken } = await getConfigToken();
   const res = await post<Product>("/products", product, configToken);
+  revalidatePath("/dashboard/products");
   return res;
 };
 
@@ -16,6 +18,8 @@ export const updateProductStasus = async (id: number, isActive: boolean) => {
     undefined,
     configToken
   );
+  revalidatePath("/dashboard/products");
+  revalidatePath("/dashboard/products/deleted");
   return res;
 };
 
@@ -26,6 +30,7 @@ export const updateProduct = async (product: ProductDTO, productId: number) => {
     product,
     configToken
   );
+  revalidatePath("/dashboard/products");
   return res;
 };
 
