@@ -5,10 +5,10 @@ import { useCart } from "@/contexts/cart.context";
 import { useLoginModal } from "@/contexts/loginModal.context";
 import useAction from "@/hooks/useAction";
 import { converPriceToVN } from "@/lib/utils2";
+import { addCartItem } from "@/services/cart";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-import { addCartItem } from "@/services/cart";
 
 const dataColor: {
   color: Color;
@@ -68,7 +68,7 @@ export const BuyButton = ({ productId }: { productId: number }) => {
   const onclick = async () => {
     if (user) {
       const res = await _addCartItem(productId);
-      if (res?.data) router.push(`/cart?checkList=${res.data}`);
+      if (res?.data) router.push(`/cart?checkList=${res.data.cartItems[0].id}`);
     } else showLoginModal(path);
     await triggerUpdateCart();
   };
